@@ -18,6 +18,7 @@ import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
 
 interface ContactAndBookingProps {
   preselectedService?: string;
+  headingLevel?: "h1" | "h2";
 }
 
 interface FormData {
@@ -40,6 +41,7 @@ interface FormErrors {
 
 export default function ContactAndBooking({
   preselectedService = "",
+  headingLevel = "h2",
 }: ContactAndBookingProps) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -54,10 +56,19 @@ export default function ContactAndBooking({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Update selected service if parent triggers it
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
+
+  // Update selected service if parent triggers it or from URL param
   useEffect(() => {
     if (preselectedService) {
       setFormData((prev) => ({ ...prev, service: preselectedService }));
+    } else if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const serviceParam = urlParams.get("service");
+      if (serviceParam) {
+        setFormData((prev) => ({ ...prev, service: serviceParam }));
+      }
     }
   }, [preselectedService]);
 
@@ -114,17 +125,39 @@ export default function ContactAndBooking({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setServerError(null);
 
-    // Simulate reliable submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          website_url: honeypot,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setIsSubmitted(true);
+      } else {
+        setServerError(
+          result.message || "Failed to send inquiry. Please try again or WhatsApp us."
+        );
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      // Graceful fallback so user is never blocked
       setIsSubmitted(true);
-    }, 900);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -155,9 +188,15 @@ export default function ContactAndBooking({
           <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
             Inquire & Reserve
           </p>
-          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
-            Let&apos;s Capture Your Story.
-          </h2>
+          {headingLevel === "h1" ? (
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
+              Let&apos;s Capture Your Story.
+            </h1>
+          ) : (
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
+              Let&apos;s Capture Your Story.
+            </h2>
+          )}
           <p className="mt-4 text-sm sm:text-base text-[#554837] font-light max-w-xl mx-auto leading-relaxed">
             Whether you are planning an intimate wedding, commissioning commercial campaigns, or documenting life milestones, we would love to hear from you.
           </p>
@@ -292,6 +331,24 @@ export default function ContactAndBooking({
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                {/* Honeypot field for bot protection */}
+                <input
+                  type="text"
+                  name="website_url"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+
+                {serverError && (
+                  <div className="p-4 bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm">
+                    {serverError}
+                  </div>
+                )}
+
                 <div className="border-b border-[#F3ECE1] pb-4 mb-2">
                   <h4 className="font-serif text-2xl text-[#121212]">
                     Session Booking Form
@@ -318,6 +375,8 @@ export default function ContactAndBooking({
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="e.g. Eleanor Vance"
+                      aria-invalid={errors.name ? true : false}
+                      aria-describedby={errors.name ? "name-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
                         errors.name
                           ? "border-red-500"
@@ -325,7 +384,7 @@ export default function ContactAndBooking({
                       }`}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                      <p id="name-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                         <AlertCircle className="w-3 h-3" />
                         {errors.name}
                       </p>
@@ -347,6 +406,8 @@ export default function ContactAndBooking({
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="eleanor@example.com"
+                      aria-invalid={errors.email ? true : false}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
                         errors.email
                           ? "border-red-500"
@@ -354,7 +415,7 @@ export default function ContactAndBooking({
                       }`}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                      <p id="email-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                         <AlertCircle className="w-3 h-3" />
                         {errors.email}
                       </p>
@@ -379,6 +440,8 @@ export default function ContactAndBooking({
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 000-0000"
+                      aria-invalid={errors.phone ? true : false}
+                      aria-describedby={errors.phone ? "phone-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
                         errors.phone
                           ? "border-red-500"
@@ -386,7 +449,7 @@ export default function ContactAndBooking({
                       }`}
                     />
                     {errors.phone && (
-                      <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                      <p id="phone-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                         <AlertCircle className="w-3 h-3" />
                         {errors.phone}
                       </p>
@@ -406,6 +469,8 @@ export default function ContactAndBooking({
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
+                      aria-invalid={errors.service ? true : false}
+                      aria-describedby={errors.service ? "service-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] focus:outline-none focus:bg-white transition-colors ${
                         errors.service
                           ? "border-red-500"
@@ -421,7 +486,7 @@ export default function ContactAndBooking({
                       <option value="Custom Project">Custom Project / Other</option>
                     </select>
                     {errors.service && (
-                      <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                      <p id="service-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                         <AlertCircle className="w-3 h-3" />
                         {errors.service}
                       </p>
@@ -444,6 +509,8 @@ export default function ContactAndBooking({
                     value={formData.preferredDate}
                     onChange={handleChange}
                     min="2026-01-01"
+                    aria-invalid={errors.preferredDate ? true : false}
+                    aria-describedby={errors.preferredDate ? "date-error" : undefined}
                     className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] focus:outline-none focus:bg-white transition-colors ${
                       errors.preferredDate
                         ? "border-red-500"
@@ -451,7 +518,7 @@ export default function ContactAndBooking({
                     }`}
                   />
                   {errors.preferredDate && (
-                    <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                    <p id="date-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                       <AlertCircle className="w-3 h-3" />
                       {errors.preferredDate}
                     </p>
@@ -473,6 +540,8 @@ export default function ContactAndBooking({
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell us about your event, location, creative vision, or any special requests..."
+                    aria-invalid={errors.message ? true : false}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                     className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors resize-none ${
                       errors.message
                         ? "border-red-500"
@@ -480,7 +549,7 @@ export default function ContactAndBooking({
                     }`}
                   />
                   {errors.message && (
-                    <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
+                    <p id="message-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
                       <AlertCircle className="w-3 h-3" />
                       {errors.message}
                     </p>

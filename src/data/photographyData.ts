@@ -1,3 +1,5 @@
+import { siteConfig } from "@/config/siteConfig";
+
 export interface PortfolioItem {
   id: string;
   title: string;
@@ -336,17 +338,17 @@ export const SERVICES: ServiceItem[] = [
 ];
 
 export const PHOTOGRAPHER_INFO: PhotographerInfo = {
-  name: "Julian Rivera",
-  role: "Lead Photographer & Visual Director",
+  name: siteConfig.photographer.name,
+  role: siteConfig.photographer.role,
   bioParagraph1:
     "For over twelve years, I have dedicated my life to the delicate art of seeing. Photography, to me, is not merely capturing what is before the lens, but feeling the heartbeat of a fleeting moment and preserving it before it disappears into memory.",
   bioParagraph2:
     "Trained in classical fine-art, documentary, and dynamic action photography, my style blends soft, warm natural light with subtle editorial composition. I look for the unscripted pauses: the quiet touch of hands before vows, the fleeting glint in an eye, or the explosive energy of an athlete in mid-air.",
   quote:
     "“Light reveals what exists; emotion reveals what truly matters.”",
-  portraitUrl: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1000&q=80",
+  portraitUrl: siteConfig.photographer.portraitUrl,
   stats: [
-    { label: "Years of Craft", value: "12+" },
+    { label: "Years of Craft", value: siteConfig.photographer.experienceYears },
     { label: "Sessions Completed", value: "650+" },
     { label: "Weddings Documented", value: "180+" },
     { label: "Editorial Features", value: "24+" },
@@ -354,15 +356,16 @@ export const PHOTOGRAPHER_INFO: PhotographerInfo = {
 };
 
 export const CONTACT_DETAILS = {
-  email: "hello@yourphotography.com",
-  phone: "+1 (555) 234-5678",
-  whatsappNumber: "1234567890",
-  whatsappDisplay: "+1 (555) 234-5678",
-  address: "Studio 18, 452 Artisan Way, Soho Arts District, New York, NY 10013",
-  workingHours: "Monday – Saturday: 9:00 AM – 6:30 PM (Sunday by Appointment)",
+  email: siteConfig.business.email,
+  phone: siteConfig.business.phone,
+  whatsappNumber: siteConfig.business.whatsappNumber,
+  whatsappDisplay: siteConfig.business.whatsappDisplay,
+  address: `${siteConfig.business.address.streetAddress}, ${siteConfig.business.address.addressLocality}, ${siteConfig.business.address.addressRegion} ${siteConfig.business.address.postalCode}`,
+  hindiAddress: siteConfig.business.address.hindiAddress,
+  workingHours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
   instagramHandle: "@yourphotography",
-  instagramUrl: "https://instagram.com",
-  pinterestUrl: "https://pinterest.com",
-  fiveHundredPxUrl: "https://500px.com",
-  facebookUrl: "https://facebook.com",
+  instagramUrl: siteConfig.socialProfiles.instagram,
+  pinterestUrl: siteConfig.socialProfiles.pinterest,
+  fiveHundredPxUrl: siteConfig.socialProfiles.fiveHundredPx,
+  facebookUrl: siteConfig.socialProfiles.facebook,
 };

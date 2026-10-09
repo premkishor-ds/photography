@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { siteConfig } from "@/config/siteConfig";
+import Analytics from "@/components/Analytics";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
@@ -23,9 +25,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Your Photography | Capturing Moments, Creating Memories",
-  description:
-    "Professional photography for life's most meaningful moments. Specializing in portrait, wedding, event, sports, commercial, travel, and wildlife photography.",
+  metadataBase: new URL(siteConfig.baseUrl),
+  title: {
+    default: `${siteConfig.siteName} | ${siteConfig.brandTagline}`,
+    template: `%s | ${siteConfig.siteName}`,
+  },
+  description: siteConfig.brandSubtitle,
   keywords: [
     "photography",
     "wedding photography",
@@ -37,32 +42,36 @@ export const metadata: Metadata = {
     "wildlife photography",
     "professional photographer",
   ],
-  authors: [{ name: "Your Photography" }],
-  creator: "Your Photography",
-  metadataBase: new URL("https://yourphotography.com"),
+  authors: [{ name: siteConfig.photographer.name }],
+  creator: siteConfig.siteName,
+  publisher: siteConfig.business.legalName,
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://yourphotography.com",
-    title: "Your Photography | Capturing Moments, Creating Memories",
-    description:
-      "Professional photography for life's most meaningful moments. Specializing in portrait, wedding, event, and commercial photography.",
-    siteName: "Your Photography",
+    locale: siteConfig.defaultLocale,
+    url: siteConfig.baseUrl,
+    title: `${siteConfig.siteName} | ${siteConfig.brandTagline}`,
+    description: siteConfig.brandSubtitle,
+    siteName: siteConfig.siteName,
     images: [
       {
-        url: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80",
+        url: siteConfig.defaultOgImage,
         width: 1200,
-        height: 800,
-        alt: "Your Photography - Capturing Moments, Creating Memories",
+        height: 630,
+        alt: siteConfig.brandTagline,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Photography | Capturing Moments, Creating Memories",
-    description: "Professional photography for life's most meaningful moments.",
-    images: ["https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80"],
+    title: `${siteConfig.siteName} | ${siteConfig.brandTagline}`,
+    description: siteConfig.brandSubtitle,
+    images: [siteConfig.defaultOgImage],
   },
+  ...(siteConfig.verification.google && {
+    verification: {
+      google: siteConfig.verification.google,
+    },
+  }),
 };
 
 export default function RootLayout({
@@ -74,6 +83,7 @@ export default function RootLayout({
     <html lang="en" className={`${cormorant.variable} ${jakarta.variable} scroll-smooth`}>
       <body className="min-h-screen bg-[#FAF7F2] text-[#121212] font-sans antialiased selection:bg-[#121212] selection:text-[#FAF7F2]">
         {children}
+        <Analytics />
       </body>
     </html>
   );

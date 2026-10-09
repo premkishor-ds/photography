@@ -14,46 +14,51 @@ export const siteConfig = {
 
   // Brand & Visual Identity
   brandTagline: "Capturing Moments, Creating Memories",
+  brandTaglineHindi: "क्षणों को कैद करना, यादें बनाना",
   brandSubtitle:
-    "Professional fine-art, portrait, wedding, sports, and commercial photography for life's most meaningful moments.",
+    "Professional fine-art, portrait, royal wedding, sports, and commercial photography across Jaipur, Rajasthan, and India.",
   logoUrl: "/logo.png",
   defaultOgImage:
-    "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&h=630&q=85",
+    "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&h=630&q=85",
 
   // Business Entity Details (LocalBusiness / PhotographyBusiness Schema)
   business: {
-    legalName: "Your Photography Studio LLC",
+    legalName: "Your Photography Studio",
     tradingName: "Your Photography",
     foundingYear: "2014",
-    priceRange: "$$$",
-    currenciesAccepted: "USD",
-    paymentAccepted: "Credit Card, Bank Transfer, Check",
+    priceRange: "₹₹₹",
+    currenciesAccepted: "INR",
+    currencySymbol: "₹",
+    paymentAccepted: "UPI (Google Pay, PhonePe, Paytm), Net Banking, Credit/Debit Card, Cash",
 
-    // Contact Information (Configurable Placeholders)
+    // Contact Information
     email: "hello@yourphotography.com",
-    phone: "+1 (555) 234-5678",
-    phoneRaw: "+15552345678",
-    whatsappNumber: "1234567890",
-    whatsappDisplay: "+1 (555) 234-5678",
+    phone: "+91 98290 12345",
+    phoneRaw: "+919829012345",
+    whatsappNumber: "919829012345",
+    whatsappDisplay: "+91 98290 12345",
 
-    // Physical Location (Placeholder configured for business owner verification)
+    // Physical Location (Jaipur, Rajasthan, India)
     address: {
-      streetAddress: "Studio 18, 452 Artisan Way, Soho Arts District",
-      addressLocality: "New York",
-      addressRegion: "NY",
-      postalCode: "10013",
-      addressCountry: "US",
+      roomNo: "Second Floor, Room No. 215",
+      plusCode: "RV2J+5PQ",
+      streetAddress: "Second Floor, Room No. 215, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura",
+      addressLocality: "Jaipur",
+      addressRegion: "Rajasthan",
+      postalCode: "302017",
+      addressCountry: "IN",
+      hindiAddress: "कमरा नं. 215, द्वितीय तल, कैरोलन का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
     },
     geo: {
-      latitude: 40.7223,
-      longitude: -74.0001,
+      latitude: 26.8285,
+      longitude: 75.8654,
     },
     // Service Areas (Verified coverage)
     serviceAreas: [
-      "New York City Metropolitan Area",
-      "Hudson Valley, NY",
-      "Long Island & The Hamptons, NY",
-      "Worldwide Destination Inquiries",
+      "Jaipur & Pink City Heritage Districts",
+      "Jagatpura, Malviya Nagar, Tonk Road & C-Scheme, Jaipur",
+      "Rajasthan Destination Weddings (Udaipur, Jodhpur, Jaisalmer, Pushkar)",
+      "Delhi NCR & Pan-India Commissions",
     ],
     // Studio Operating Hours
     openingHours: [
@@ -66,8 +71,8 @@ export const siteConfig = {
           "Friday",
           "Saturday",
         ],
-        opens: "09:00",
-        closes: "18:30",
+        opens: "09:30",
+        closes: "19:00",
       },
     ],
   },
@@ -77,7 +82,7 @@ export const siteConfig = {
     name: "Julian Rivera",
     role: "Principal Photographer & Creative Director",
     biography:
-      "Trained in classical fine-art and documentary photography with over 12 years of professional experience across editorial portraits, weddings, high-speed athletics, and commercial commissions.",
+      "Trained in classical fine-art and documentary photography with over 12 years of experience documenting royal palace weddings in Rajasthan, high-speed sports, editorial portraits, and cultural heritage across India.",
     portraitUrl:
       "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1000&q=80",
     experienceYears: "12+",
