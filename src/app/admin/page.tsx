@@ -40,9 +40,12 @@ import {
   ChevronDown,
   ChevronRight,
   Check,
+  HelpCircle,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
+import AdminBlogManager from "@/components/admin/AdminBlogManager";
+import AdminFaqManager from "@/components/admin/AdminFaqManager";
 
 interface Inquiry {
   id: string;
@@ -123,6 +126,8 @@ interface Stats {
   confirmedBookings: number;
   totalPortfolio: number;
   totalServices: number;
+  totalBlogPosts?: number;
+  totalFaqs?: number;
   dbStatus: string;
   projectRef: string;
   region: string;
@@ -134,7 +139,7 @@ export default function AdminPage() {
   const [authError, setAuthError] = useState("");
 
   const [activeTab, setActiveTab] = useState<
-    "inquiries" | "portfolio" | "services" | "studio" | "photographer" | "db"
+    "inquiries" | "portfolio" | "services" | "studio" | "photographer" | "blog" | "faq" | "db"
   >("inquiries");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -1257,6 +1262,30 @@ export default function AdminPage() {
             >
               <User className="w-3.5 h-3.5" />
               <span>Photographer Profile</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("blog")}
+              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+                activeTab === "blog"
+                  ? "border-[#121212] text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Blog & Guides</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("faq")}
+              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+                activeTab === "faq"
+                  ? "border-[#121212] text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+              }`}
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>FAQ Knowledge</span>
             </button>
 
             <button
@@ -3942,7 +3971,13 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* TAB 4: Supabase Details */}
+        {/* TAB: Blog Manager */}
+        {activeTab === "blog" && <AdminBlogManager />}
+
+        {/* TAB: FAQ Manager */}
+        {activeTab === "faq" && <AdminFaqManager />}
+
+        {/* TAB: Supabase Details */}
         {activeTab === "db" && (
           <div className="space-y-6">
             <div className="bg-white p-8 border border-[#E8DED0] space-y-6">
@@ -3955,7 +3990,7 @@ export default function AdminPage() {
                     Supabase PostgreSQL Connection
                   </h3>
                   <p className="text-xs text-[#7B6955]">
-                    Connected cloud database powering live inquiries, gallery, and services.
+                    Connected cloud database powering live inquiries, gallery, services, blog, and FAQs.
                   </p>
                 </div>
               </div>
@@ -4013,7 +4048,7 @@ export default function AdminPage() {
                 <p className="uppercase tracking-widest font-semibold text-[#7B6955] text-[10px]">
                   Database Tables Active
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono">
                   <div className="p-2 bg-white border border-[#E8DED0]">
                     ✓ public.inquiries
                   </div>
@@ -4025,6 +4060,12 @@ export default function AdminPage() {
                   </div>
                   <div className="p-2 bg-white border border-[#E8DED0]">
                     ✓ public.studio_settings
+                  </div>
+                  <div className="p-2 bg-white border border-[#E8DED0]">
+                    ✓ public.blog_posts
+                  </div>
+                  <div className="p-2 bg-white border border-[#E8DED0]">
+                    ✓ public.faqs
                   </div>
                 </div>
               </div>

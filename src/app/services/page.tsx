@@ -11,7 +11,7 @@ import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema, generateServiceSchema } from "@/lib/schema";
 import { SERVICES_DATA } from "@/data/servicesData";
-import { FAQ_ITEMS } from "@/data/faqData";
+import { fetchFaqItems } from "@/lib/supabase";
 
 export const metadata = constructMetadata({
   title: "Photography Services & Offerings",
@@ -20,8 +20,9 @@ export const metadata = constructMetadata({
   path: "/services",
 });
 
-export default function ServicesPage() {
-  const serviceFaqs = FAQ_ITEMS.filter(
+export default async function ServicesPage() {
+  const allFaqs = await fetchFaqItems();
+  const serviceFaqs = allFaqs.filter(
     (f) => f.category === "General" || f.category === "Booking & Pricing"
   ).slice(0, 5);
 

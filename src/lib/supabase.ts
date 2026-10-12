@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { PORTFOLIO_ITEMS, SERVICES, PortfolioItem, ServiceItem } from "@/data/photographyData";
+import { BLOG_POSTS, BlogPost } from "@/data/blogData";
+import { FAQ_ITEMS, FAQItem } from "@/data/faqData";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -198,4 +200,123 @@ export async function fetchStudioSettings(): Promise<StudioSettingsRecord | null
     return null;
   }
 }
+
+export interface DynamicBlogPostRecord {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  author: string;
+  author_role: string;
+  read_time: string;
+  hero_image: string;
+  hero_alt: string;
+  content: any;
+  related_service_slug: string;
+  published_date: string;
+  modified_date: string;
+  created_at?: string;
+}
+
+export async function fetchBlogPosts(): Promise<BlogPost[]> {
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return BLOG_POSTS;
+    }
+
+    return data.map((item: DynamicBlogPostRecord) => ({
+      slug: item.slug,
+      title: item.title,
+      excerpt: item.excerpt,
+      category: item.category as any,
+      author: item.author,
+      authorRole: item.author_role,
+      readTime: item.read_time,
+      heroImage: item.hero_image,
+      heroAlt: item.hero_alt,
+      content: typeof item.content === "string" ? JSON.parse(item.content) : item.content,
+      relatedServiceSlug: item.related_service_slug,
+      publishedDate: item.published_date,
+      modifiedDate: item.modified_date,
+    }));
+  } catch (err) {
+    console.error("Failed to fetch dynamic blog posts:", err);
+    return BLOG_POSTS;
+  }
+}
+
+export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) {
+      return BLOG_POSTS.find((p) => p.slug === slug) || null;
+    }
+
+    const item = data as DynamicBlogPostRecord;
+    return {
+      slug: item.slug,
+      title: item.title,
+      excerpt: item.excerpt,
+      category: item.category as any,
+      author: item.author,
+      authorRole: item.author_role,
+      readTime: item.read_time,
+      heroImage: item.hero_image,
+      heroAlt: item.hero_alt,
+      content: typeof item.content === "string" ? JSON.parse(item.content) : item.content,
+      relatedServiceSlug: item.related_service_slug,
+      publishedDate: item.published_date,
+      modifiedDate: item.modified_date,
+    };
+  } catch (err) {
+    console.error("Failed to fetch dynamic blog post by slug:", err);
+    return BLOG_POSTS.find((p) => p.slug === slug) || null;
+  }
+}
+
+export interface DynamicFaqRecord {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+  related_service_slug?: string;
+  order_index?: number;
+  created_at?: string;
+}
+
+export async function fetchFaqItems(): Promise<FAQItem[]> {
+  try {
+    const { data, error } = await supabase
+      .from("faqs")
+      .select("*")
+      .order("order_index", { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      return FAQ_ITEMS;
+    }
+
+    return data.map((item: DynamicFaqRecord) => ({
+      id: item.id,
+      category: item.category as any,
+      question: item.question,
+      answer: item.answer,
+      relatedServiceSlug: item.related_service_slug,
+    }));
+  } catch (err) {
+    console.error("Failed to fetch dynamic FAQ items:", err);
+    return FAQ_ITEMS;
+  }
+}
+
 

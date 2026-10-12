@@ -3,11 +3,12 @@ import { siteConfig } from "@/config/siteConfig";
 import { getAbsoluteUrl } from "@/lib/schema";
 import { SERVICES_DATA } from "@/data/servicesData";
 import { PORTFOLIO_CATEGORIES_META } from "@/data/portfolioData";
-import { BLOG_POSTS } from "@/data/blogData";
+import { fetchBlogPosts } from "@/lib/supabase";
 import { GEAR_ITEMS, GEAR_COMPARISONS } from "@/data/gearData";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString().split("T")[0];
+  const dynamicBlogPosts = await fetchBlogPosts();
 
   // Core Static Landing Pages (Exact 1:1 match with canonical tags)
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -110,7 +111,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   // Dedicated Blog / Photography Guides
-  const blogRoutes: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+  const blogRoutes: MetadataRoute.Sitemap = dynamicBlogPosts.map((post) => ({
     url: getAbsoluteUrl(`/blog/${post.slug}`),
     lastModified: post.modifiedDate || post.publishedDate,
     changeFrequency: "monthly",

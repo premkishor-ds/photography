@@ -10,7 +10,7 @@ import BookingCtaBanner from "@/components/BookingCtaBanner";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateArticleSchema } from "@/lib/schema";
-import { BLOG_POSTS } from "@/data/blogData";
+import { fetchBlogPosts, fetchBlogPostBySlug } from "@/lib/supabase";
 import { SERVICES_DATA } from "@/data/servicesData";
 
 interface PageProps {
@@ -20,14 +20,15 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
+  const posts = await fetchBlogPosts();
+  return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = await fetchBlogPostBySlug(slug);
 
   if (!post) {
     return constructMetadata({
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = await fetchBlogPostBySlug(slug);
 
   if (!post) {
     notFound();

@@ -9,7 +9,7 @@ import BookingCtaBanner from "@/components/BookingCtaBanner";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema } from "@/lib/schema";
-import { BLOG_POSTS } from "@/data/blogData";
+import { fetchBlogPosts } from "@/lib/supabase";
 import { siteConfig } from "@/config/siteConfig";
 
 export const metadata = constructMetadata({
@@ -19,7 +19,8 @@ export const metadata = constructMetadata({
   path: "/blog",
 });
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const posts = await fetchBlogPosts();
   const webPageSchema = generateWebPageSchema(
     "/blog",
     "Photography Journal & Client Planning Guides",
@@ -50,7 +51,7 @@ export default function BlogIndexPage() {
 
           {/* Articles Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {BLOG_POSTS.map((post) => (
+            {posts.map((post) => (
               <article
                 key={post.slug}
                 className="bg-white border border-[#E8DED0] shadow-sm overflow-hidden flex flex-col justify-between group hover:shadow-xl transition-all duration-300"

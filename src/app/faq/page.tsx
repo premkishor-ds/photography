@@ -7,7 +7,7 @@ import BookingCtaBanner from "@/components/BookingCtaBanner";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema, generateFAQSchema } from "@/lib/schema";
-import { FAQ_ITEMS } from "@/data/faqData";
+import { fetchFaqItems } from "@/lib/supabase";
 
 export const metadata = constructMetadata({
   title: "Frequently Asked Questions & Answers",
@@ -16,14 +16,15 @@ export const metadata = constructMetadata({
   path: "/faq",
 });
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const faqItems = await fetchFaqItems();
   const webPageSchema = generateWebPageSchema(
     "/faq",
     "Frequently Asked Photography Questions",
     "Answers to common client questions regarding booking workflows, turnaround, and session preparation."
   );
 
-  const faqSchema = generateFAQSchema(FAQ_ITEMS);
+  const faqSchema = generateFAQSchema(faqItems);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#121212]">
@@ -49,7 +50,7 @@ export default function FaqPage() {
           </div>
 
           {/* Interactive Client Search & Filter */}
-          <FaqClient faqItems={FAQ_ITEMS} />
+          <FaqClient faqItems={faqItems} />
 
           {/* Booking CTA */}
           <BookingCtaBanner
