@@ -66,10 +66,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: getAbsoluteUrl("/locations/jaipur"),
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: getAbsoluteUrl("/locations/new-york"),
       lastModified: currentDate,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
     },
     {
       url: getAbsoluteUrl("/privacy-policy"),

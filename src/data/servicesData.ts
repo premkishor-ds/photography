@@ -186,21 +186,21 @@ export const SERVICES_DATA: ServiceDetail[] = [
     slug: "event-photography",
     title: "Event Photography",
     shortDescription:
-      "Discreet and comprehensive coverage for corporate conferences, luxury galas, art exhibitions, and milestone anniversaries.",
-    heroHeading: "Corporate Galas & Cultural Event Photography",
+      "Discreet and comprehensive coverage for corporate summits, literature festivals, luxury palace galas, and milestone celebrations.",
+    heroHeading: "Corporate Galas & Cultural Event Photography in Jaipur",
     heroDescription:
-      "Polished, dynamic visual documentation for prestigious galas, corporate summits, brand activations, and private gatherings.",
+      "Polished, dynamic visual documentation for prestigious galas, corporate summits, brand activations, and cultural festivals across Jaipur and India.",
     imageUrl:
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Elegant evening gala dining table with warm candlelight and guest conversations",
+    imageAlt: "Atmospheric evening gala dining courtyard with glowing candlelight and elegant guests in Jaipur",
     duration: "Half-Day to Multi-Day",
     deliveryTime: "48 – 72 hours express delivery",
-    startingPriceNote: "Tiered hourly and day rates for conferences and corporate summits.",
+    startingPriceNote: "Bespoke packages starting from ₹20,000 for corporate summits, literature festivals, and luxury palace galas.",
     idealFor: [
-      "Annual charity galas and foundation fundraisers",
-      "Corporate conferences, keynote addresses, and panel discussions",
+      "Jaipur Literature Festival, cultural summits, and art exhibitions",
+      "Corporate conferences, keynote addresses, and industry summits",
       "Brand activations, product launches, and fashion week events",
-      "Milestone birthday celebrations and private VIP dinners",
+      "Milestone birthday celebrations and private royal palace dinners",
     ],
     deliverables: [
       "Comprehensive chronological event narrative",
@@ -246,9 +246,9 @@ export const SERVICES_DATA: ServiceDetail[] = [
           "Yes, we provide expedited same-day highlights for press releases, social media channels, and sponsor deliverables upon request.",
       },
       {
-        question: "How do you handle low-light event environments?",
+        question: "How do you handle low-light event environments in heritage venues?",
         answer:
-          "We use flagship low-noise sensors and ultra-fast prime lenses capable of capturing rich atmospheric ambient light without harsh, unflattering flash bursts.",
+          "We use flagship low-noise sensors and ultra-fast prime lenses capable of capturing rich atmospheric ambient light in palace courtyards without harsh flash bursts.",
       },
     ],
     relatedPortfolioCategory: "Event Photography",
@@ -258,21 +258,21 @@ export const SERVICES_DATA: ServiceDetail[] = [
     slug: "sports-photography",
     title: "Sports Photography",
     shortDescription:
-      "High-speed, cinematic documentation of raw athletic intensity, tournament adrenaline, and championship triumph.",
-    heroHeading: "High-Speed Athletic & Sports Photography",
+      "High-speed, cinematic documentation of raw athletic intensity, cricket tournaments, polo matches, and championship triumph.",
+    heroHeading: "High-Speed Cricket, Polo & Athletic Sports Photography",
     heroDescription:
-      "Freezing split-second human triumph, speed, and tournament emotion with pro-grade telephoto precision.",
+      "Freezing split-second human triumph, speed, and tournament emotion with pro-grade telephoto precision across Sawai Mansingh Stadium, polo grounds, and athletic arenas.",
     imageUrl:
-      "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Athletic runner in dramatic stadium lighting showing speed and competitive focus",
+      "https://images.unsplash.com/photo-1531415074868-036b107e775a?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "High-speed cricket batsman action during intense competitive match under stadium lights",
     duration: "Half-Day / Match / Tournament",
     deliveryTime: "24 – 48 hours expedited",
-    startingPriceNote: "Match rates and tournament day passes available.",
+    startingPriceNote: "Match and tournament coverage packages starting from ₹35,000 across Jaipur and India.",
     idealFor: [
-      "Professional sports teams, athletic clubs, and collegiate programs",
-      "Marathons, triathlons, and outdoor endurance competitions",
+      "Cricket tournaments, premier leagues, and academy matches",
+      "Jaipur Polo Club championships and equestrian competitions",
+      "Jaipur Marathon, endurance triathlons, and athletic meets",
       "Fitness apparel campaigns and athlete sponsorship portfolios",
-      "Action sports, surfing, motorsport, and combat athletics",
     ],
     deliverables: [
       "High-speed burst action captures preserving peak athletic form",
@@ -286,7 +286,7 @@ export const SERVICES_DATA: ServiceDetail[] = [
         step: "01",
         title: "Course & Arena Scouting",
         description:
-          "Mapping sightlines, finish-line angles, lighting patterns, and athlete trajectories before competition begins.",
+          "Mapping sightlines, boundary angles, lighting patterns, and athlete trajectories before competition begins.",
       },
       {
         step: "02",
@@ -309,18 +309,18 @@ export const SERVICES_DATA: ServiceDetail[] = [
     ],
     overviewText: [
       "Sports photography is defined by anticipation. A fraction of a second differentiates an ordinary picture from an iconic image of triumph.",
-      "Combining professional high-speed telephoto lenses with deep understanding of game rhythm, we capture the grit, speed, and drama of athletics across competitive arenas and outdoor expeditions.",
+      "Combining professional high-speed telephoto lenses with deep understanding of sports rhythm, we capture the grit, speed, and drama of athletics across competitive arenas and outdoor expeditions.",
     ],
     faqs: [
       {
         question: "What equipment do you use for sports photography?",
         answer:
-          "We utilize high-speed mirrorless bodies shooting up to 30 frames per second paired with fast f/2.8 telephoto primes and zoom lenses (70-200mm, 300mm, 400mm) for tack-sharp subject isolation.",
+          "We utilize high-speed mirrorless bodies shooting up to 30 frames per second paired with fast f/2.8 telephoto primes and zoom lenses (70-200mm, 200-600mm) for tack-sharp subject isolation.",
       },
       {
-        question: "Can athletes purchase individual digital downloads?",
+        question: "Can athletes and academies purchase individual digital downloads?",
         answer:
-          "Yes, we can provide dedicated client galleries where individual athletes and participants can securely view and license high-resolution downloads.",
+          "Yes, we provide dedicated client galleries where sports academies, athletes, and participants can securely view and license high-resolution downloads.",
       },
     ],
     relatedPortfolioCategory: "Sports Photography",
@@ -330,20 +330,20 @@ export const SERVICES_DATA: ServiceDetail[] = [
     slug: "commercial-photography",
     title: "Commercial Photography",
     shortDescription:
-      "Strategic visual content for luxury brands, architects, culinary masters, and advertising campaigns.",
-    heroHeading: "Commercial & Advertising Brand Photography",
+      "Strategic visual content for luxury heritage hotels, jewellery brands, textile designers, and advertising campaigns.",
+    heroHeading: "Commercial, Jewellery & Architecture Photography",
     heroDescription:
-      "Meticulous art direction, color fidelity, and visual storytelling crafted to elevate products and architectural spaces.",
+      "Meticulous art direction, color fidelity, and visual storytelling crafted to elevate handcrafted jewellery, luxury heritage properties, and brand campaigns.",
     imageUrl:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Luxury designer boutique interior and fashion display with architectural illumination",
+      "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Intricate architectural details of Jaipur palace gateway with grand symmetry and golden illumination",
     duration: "Full-Day Production Basis",
     deliveryTime: "Per production agreement",
-    startingPriceNote: "Custom project estimates based on licensing and production scope.",
+    startingPriceNote: "Commercial campaign packages starting from ₹50,000 for luxury heritage hotels, jewellery brands, and lifestyle advertising.",
     idealFor: [
-      "Architectural firms, interior designers, and luxury real estate",
-      "Apparel, jewelry, and artisanal consumer goods brands",
-      "Hospitality, boutique hotels, and culinary destinations",
+      "Jaipur Kundan & Meenakari jewellery houses and gemstone designers",
+      "Heritage palace hotels, luxury resorts, and architectural firms",
+      "Handcrafted textile, block print, and luxury fashion exporters",
       "Multi-channel marketing and billboard advertising campaigns",
     ],
     deliverables: [
@@ -385,7 +385,7 @@ export const SERVICES_DATA: ServiceDetail[] = [
     ],
     faqs: [
       {
-        question: "Do commercial sessions include licensing for advertising?",
+        question: "Do commercial sessions include licensing for advertising in India and globally?",
         answer:
           "Yes, our commercial contracts explicitly define usage rights, including digital marketing, print editorial, billboard, and social advertising as required by your campaign.",
       },
@@ -402,19 +402,19 @@ export const SERVICES_DATA: ServiceDetail[] = [
     slug: "travel-and-wildlife-photography",
     title: "Travel & Wildlife Photography",
     shortDescription:
-      "Expedition photography capturing the awe-inspiring raw natural world, remote landscapes, and conservation stories.",
-    heroHeading: "Expedition, Landscape & Wildlife Photography",
+      "Expedition photography capturing the awe-inspiring raw natural world, Ranthambore tigers, desert sands, and conservation stories.",
+    heroHeading: "Ranthambore, Thar Desert & Indian Wildlife Photography",
     heroDescription:
-      "Fine-art landscape prints, editorial travel features, and conservation storytelling commissions across remote terrains.",
+      "Fine-art landscape prints, Ranthambore Royal Bengal tiger documentation, Thar desert dunes, and conservation storytelling across Rajasthan and India.",
     imageUrl:
-      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Misty mountain peaks and alpine forest caught in early golden morning light",
+      "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Majestic Royal Bengal Tiger roaming peacefully through dense forest foliage in Ranthambore",
     duration: "Assignment / Expedition Basis",
     deliveryTime: "Per project timeline",
-    startingPriceNote: "Fine-art collector prints and editorial commission rates.",
+    startingPriceNote: "Expedition commissions and limited-edition fine-art archival prints starting from ₹45,000.",
     idealFor: [
       "Travel and lifestyle editorial publications",
-      "Eco-tourism lodges, national parks, and expedition companies",
+      "Ranthambore and Sariska luxury safari lodges and national parks",
       "Conservation NGOs and environmental research foundations",
       "Private art collectors and corporate interior installations",
     ],
@@ -453,13 +453,13 @@ export const SERVICES_DATA: ServiceDetail[] = [
     ],
     overviewText: [
       "The wilderness demands patience and deep ethical reverence. We approach travel and wildlife photography as an act of witness, preserving fragile ecosystems and ancient terrains with documentary integrity.",
-      "Our work has taken us from mist-shrouded alpine valleys to remote coastal cliffs, creating fine-art prints that bring the sublime serenity of nature into homes and institutions.",
+      "From the tiger trails of Ranthambore to the golden sand dunes of Jaisalmer, we create fine-art imagery celebrating the sublime natural heritage of India.",
     ],
     faqs: [
       {
-        question: "Can I purchase fine-art prints for my home or office?",
+        question: "Can I purchase fine-art prints for my home or office in India?",
         answer:
-          "Yes, we offer limited-edition museum-quality prints produced on archival Hahnemühle cotton rag paper with custom conservation framing available.",
+          "Yes, we offer limited-edition museum-quality prints produced on archival Hahnemühle cotton rag paper with custom conservation framing shipped securely across India and globally.",
       },
       {
         question: "Do you follow ethical wildlife photography guidelines?",

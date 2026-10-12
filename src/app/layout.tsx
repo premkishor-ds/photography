@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
@@ -82,6 +83,29 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${jakarta.variable} scroll-smooth`}>
       <body className="min-h-screen bg-[#FAF7F2] text-[#121212] font-sans antialiased selection:bg-[#121212] selection:text-[#FAF7F2]">
+        <div id="google_translate_element" className="hidden" aria-hidden="true" />
+        <Script
+          id="google-translate-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                if (window.google && window.google.translate) {
+                  new window.google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,hi',
+                    autoDisplay: false
+                  }, 'google_translate_element');
+                }
+              }
+            `,
+          }}
+        />
+        <Script
+          id="google-translate-script"
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
         {children}
         <Analytics />
       </body>

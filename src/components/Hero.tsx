@@ -21,8 +21,8 @@ export default function Hero() {
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=2000&q=85"
-          alt="Atmospheric landscape and editorial portraiture"
+          src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85"
+          alt="Majestic Hawa Mahal in Jaipur Rajasthan during golden sunrise light"
           fill
           priority
           sizes="100vw"

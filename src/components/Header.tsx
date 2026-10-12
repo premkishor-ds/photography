@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Camera, Menu, X, ArrowRight } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export const PRIMARY_NAV_LINKS = [
   { name: "Home", href: "/" },
@@ -119,8 +120,13 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Desktop CTA Button */}
-        <div className="hidden lg:flex items-center">
+        {/* Desktop CTA & Language Switcher */}
+        <div className="hidden lg:flex items-center gap-3">
+          <LanguageSwitcher
+            variant="header"
+            isScrolled={isScrolled}
+            isHomepage={isHomepage}
+          />
           <Link
             href="/contact"
             className={`px-5 py-2.5 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-300 rounded-none border flex items-center gap-2 group ${
@@ -160,7 +166,7 @@ export default function Header() {
       {/* Mobile Drawer Menu */}
       <div
         className={`lg:hidden fixed inset-x-0 top-full bg-[#FAF7F2] border-b border-[#E8DED0] shadow-xl transition-all duration-300 overflow-hidden ${
-          mobileMenuOpen ? "max-h-[500px] opacity-100 py-6" : "max-h-0 opacity-0 py-0"
+          mobileMenuOpen ? "max-h-[550px] opacity-100 py-6" : "max-h-0 opacity-0 py-0"
         }`}
       >
         <div className="flex flex-col px-8 space-y-3">
@@ -174,7 +180,8 @@ export default function Header() {
               {link.name}
             </Link>
           ))}
-          <div className="pt-3">
+          <LanguageSwitcher variant="mobile" />
+          <div className="pt-2">
             <Link
               href="/contact"
               onClick={() => setMobileMenuOpen(false)}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Camera, ArrowUp, Mail, Phone, MapPin } from "lucide-react";
 import { InstagramIcon, FacebookIcon, PinterestIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export const FOOTER_NAV_LINKS = [
   { name: "Home", href: "/" },
@@ -47,13 +48,13 @@ export default function Footer() {
                   {siteConfig.siteName}
                 </span>
                 <span className="text-[10px] tracking-[0.3em] uppercase text-[#BFA076] font-sans">
-                  Fine Art & Editorial Studio
+                  Fine Art & Editorial Studio • Jaipur, Rajasthan
                 </span>
               </div>
             </div>
 
-            <p className="text-sm text-[#FAF7F2]/70 font-light leading-relaxed max-w-md font-sans">
-              Capturing moments, creating memories. Timeless visual storytelling dedicated to fine-art portraits, weddings, authentic events, sports, and commercial commissions.
+            <p className="text-sm text-[#FAF7F2]/75 font-light leading-relaxed max-w-md font-sans">
+              Capturing moments, creating memories • क्षणों को कैद करना, यादें बनाना। Timeless visual storytelling dedicated to fine-art portraits, royal Rajasthan weddings, authentic events, high-speed sports, and commercial commissions.
             </p>
 
             {/* Social Icons */}
@@ -159,19 +160,27 @@ export default function Footer() {
                   {siteConfig.business.phone}
                 </a>
               </p>
-              <p className="flex items-start gap-2.5">
+              <div className="flex items-start gap-2.5">
                 <MapPin className="w-3.5 h-3.5 text-[#BFA076] shrink-0 mt-0.5" />
-                <span>{siteConfig.business.address.streetAddress}, {siteConfig.business.address.addressLocality}, {siteConfig.business.address.addressRegion}</span>
-              </p>
+                <div className="space-y-1">
+                  <p>
+                    {siteConfig.business.address.streetAddress}, {siteConfig.business.address.addressLocality}, {siteConfig.business.address.addressRegion} {siteConfig.business.address.postalCode}
+                  </p>
+                  <p className="text-[11px] text-[#FAF7F2]/60 font-sans">
+                    {siteConfig.business.address.hindiAddress}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Legal Links & Copyright 2026 */}
+        {/* Bottom Bar: Language Switcher, Legal Links & Copyright 2026 */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#FAF7F2]/60 font-sans">
           <p>© 2026 {siteConfig.siteName}. All rights reserved.</p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <LanguageSwitcher variant="footer" />
             <Link
               href="/privacy-policy"
               className="hover:text-white transition-colors"

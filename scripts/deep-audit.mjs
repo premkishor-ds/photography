@@ -26,6 +26,7 @@ const ALL_ROUTES = [
   "/blog/understanding-commercial-photography-licensing",
   "/blog/capturing-high-speed-sports-action-techniques",
   "/locations",
+  "/locations/jaipur",
   "/locations/new-york",
   "/contact",
   "/privacy-policy",

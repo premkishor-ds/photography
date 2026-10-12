@@ -89,6 +89,8 @@ async function runAudit() {
     { path: "/blog", name: "Blog Index" },
     { path: "/blog/what-to-wear-for-a-portrait-photoshoot", name: "Blog Article" },
     { path: "/contact", name: "Contact Page" },
+    { path: "/locations", name: "Locations Hub" },
+    { path: "/locations/jaipur", name: "Jaipur Flagship Studio" },
     { path: "/privacy-policy", name: "Privacy Policy" },
     { path: "/terms-and-conditions", name: "Terms & Conditions" },
     { path: "/photography-gear", name: "Photography Gear Hub" },

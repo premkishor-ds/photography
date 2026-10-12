@@ -257,9 +257,14 @@ export default function ContactAndBooking({
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
                       Studio Location
                     </p>
-                    <p className="text-xs sm:text-sm text-[#121212]">
+                    <p className="text-xs sm:text-sm text-[#121212] font-medium">
                       {CONTACT_DETAILS.address}
                     </p>
+                    {CONTACT_DETAILS.hindiAddress && (
+                      <p className="text-xs text-[#7B6955] font-sans mt-1">
+                        {CONTACT_DETAILS.hindiAddress}
+                      </p>
+                    )}
                   </div>
                 </div>
 
