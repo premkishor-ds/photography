@@ -110,6 +110,11 @@ interface StudioSettingsData {
   pinterest_url: string;
   five_hundred_px_url: string;
   youtube_url: string;
+  terms_conditions_custom?: string;
+  privacy_policy_custom?: string;
+  booking_retainer_percent?: string;
+  governing_jurisdiction?: string;
+  cancellation_policy?: string;
 }
 
 interface DayScheduleRow {
@@ -229,6 +234,11 @@ export default function AdminPage() {
     pinterest_url: "https://pinterest.com/yourphotography",
     five_hundred_px_url: "https://500px.com/yourphotography",
     youtube_url: "https://youtube.com/@yourphotography",
+    terms_conditions_custom: "",
+    privacy_policy_custom: "",
+    booking_retainer_percent: "30–50%",
+    governing_jurisdiction: "Jaipur, Rajasthan, India",
+    cancellation_policy: "For outdoor portrait and landscape shoots affected by severe adverse weather (heavy rain, extreme storms), sessions will be rescheduled to the earliest mutually agreed date at zero fee.",
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsFeedback, setSettingsFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -3571,6 +3581,96 @@ export default function AdminPage() {
                         setStudioSettings({ ...studioSettings, youtube_url: e.target.value })
                       }
                       placeholder="https://youtube.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 4: Legal Governance & Client Policies */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-[#BFA076]" />
+                    <span>Legal Governance, Retainers &amp; Client Policies</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Manage booking retainers, legal jurisdiction, terms &amp; conditions addenda, and privacy policies live across the website.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Governing Legal Jurisdiction
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.governing_jurisdiction || ""}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, governing_jurisdiction: e.target.value })
+                      }
+                      placeholder="e.g. Jaipur, Rajasthan, India"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Booking Retainer Deposit Percentage
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.booking_retainer_percent || ""}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, booking_retainer_percent: e.target.value })
+                      }
+                      placeholder="e.g. 30–50% or 50%"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Rescheduling &amp; Weather Contingency Policy
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={studioSettings.cancellation_policy || ""}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, cancellation_policy: e.target.value })
+                      }
+                      placeholder="For outdoor portrait and landscape shoots affected by severe adverse weather..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Custom Terms &amp; Conditions Clauses (Optional Addenda)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={studioSettings.terms_conditions_custom || ""}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, terms_conditions_custom: e.target.value })
+                      }
+                      placeholder="Add any specific studio agreements, overtime rates, or delivery terms to show on /terms-and-conditions..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Custom Privacy Policy Commitments (Optional Addenda)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={studioSettings.privacy_policy_custom || ""}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, privacy_policy_custom: e.target.value })
+                      }
+                      placeholder="Add any specific NDA or data confidentiality commitments to show on /privacy-policy..."
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
                     />
                   </div>

@@ -51,6 +51,11 @@ export async function PUT(req: NextRequest) {
       pinterest_url: body.pinterest_url,
       five_hundred_px_url: body.five_hundred_px_url,
       youtube_url: body.youtube_url,
+      terms_conditions_custom: body.terms_conditions_custom ?? "",
+      privacy_policy_custom: body.privacy_policy_custom ?? "",
+      booking_retainer_percent: body.booking_retainer_percent ?? "30–50%",
+      governing_jurisdiction: body.governing_jurisdiction ?? "Jaipur, Rajasthan, India",
+      cancellation_policy: body.cancellation_policy ?? "",
       updated_at: new Date().toISOString(),
     };
 

@@ -180,6 +180,11 @@ export interface StudioSettingsRecord {
   pinterest_url?: string;
   five_hundred_px_url?: string;
   youtube_url?: string;
+  terms_conditions_custom?: string;
+  privacy_policy_custom?: string;
+  booking_retainer_percent?: string;
+  governing_jurisdiction?: string;
+  cancellation_policy?: string;
   updated_at?: string;
 }
 

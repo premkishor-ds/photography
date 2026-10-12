@@ -6,15 +6,22 @@ import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema } from "@/lib/schema";
 import { siteConfig } from "@/config/siteConfig";
+import { fetchStudioSettings } from "@/lib/supabase";
 
 export const metadata = constructMetadata({
-  title: "Privacy Policy | Your Photography Studio",
+  title: "Privacy Policy | Client Data Protection",
   description:
     "Transparent explanation of how customer contact information and photoshoot booking data are protected and handled.",
   path: "/privacy-policy",
 });
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const settings = await fetchStudioSettings();
+
+  const studioName = settings?.studio_name || siteConfig.business.legalName;
+  const email = settings?.email || siteConfig.business.email;
+  const customPrivacy = settings?.privacy_policy_custom?.trim() || "";
+
   const webPageSchema = generateWebPageSchema(
     "/privacy-policy",
     "Privacy Policy",
@@ -33,7 +40,7 @@ export default function PrivacyPolicyPage() {
           <article className="py-10 space-y-8">
             <div className="space-y-3">
               <span className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium">
-                Legal & Trust
+                Legal &amp; Trust
               </span>
               <h1 className="font-serif text-3xl sm:text-5xl font-light text-[#121212]">
                 Privacy Policy
@@ -49,7 +56,7 @@ export default function PrivacyPolicyPage() {
                   1. Our Commitment to Your Privacy
                 </h2>
                 <p>
-                  At {siteConfig.business.legalName} (&ldquo;{siteConfig.siteName}&rdquo;), we recognize that planning a photoshoot involves sharing personal details and memorable milestones. We treat your personal data with the same care and respect that we dedicate to your photographs.
+                  At {studioName}, we recognize that planning a photoshoot involves sharing personal details and memorable milestones. We treat your personal data with the same care and respect that we dedicate to your photographs.
                 </p>
               </section>
 
@@ -86,7 +93,7 @@ export default function PrivacyPolicyPage() {
 
               <section className="space-y-3">
                 <h2 className="font-serif text-xl sm:text-2xl text-[#121212]">
-                  4. Image Privacy & Model Releases
+                  4. Image Privacy &amp; Model Releases
                 </h2>
                 <p>
                   We never publish images from private family sessions, portrait clients, or confidential corporate productions without explicit prior consent or an executed model release agreement.
@@ -99,11 +106,22 @@ export default function PrivacyPolicyPage() {
                 </h2>
                 <p>
                   For any questions regarding this Privacy Policy or to request the deletion of your contact information, please email us at{" "}
-                  <a href={`mailto:${siteConfig.business.email}`} className="text-[#121212] underline">
-                    {siteConfig.business.email}
+                  <a href={`mailto:${email}`} className="text-[#121212] underline font-medium">
+                    {email}
                   </a>.
                 </p>
               </section>
+
+              {customPrivacy && (
+                <section className="space-y-3 p-6 bg-white border border-[#E8DED0]">
+                  <h2 className="font-serif text-xl sm:text-2xl text-[#121212]">
+                    6. Additional Privacy &amp; Data Protections
+                  </h2>
+                  <div className="text-xs sm:text-sm text-[#554837] whitespace-pre-line leading-relaxed">
+                    {customPrivacy}
+                  </div>
+                </section>
+              )}
             </div>
           </article>
         </div>
