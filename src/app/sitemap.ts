@@ -3,12 +3,15 @@ import { siteConfig } from "@/config/siteConfig";
 import { getAbsoluteUrl } from "@/lib/schema";
 import { SERVICES_DATA } from "@/data/servicesData";
 import { PORTFOLIO_CATEGORIES_META } from "@/data/portfolioData";
-import { fetchBlogPosts } from "@/lib/supabase";
+import { fetchBlogPosts, fetchGearItems } from "@/lib/supabase";
 import { GEAR_ITEMS, GEAR_COMPARISONS } from "@/data/gearData";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString().split("T")[0];
-  const dynamicBlogPosts = await fetchBlogPosts();
+  const [dynamicBlogPosts, dynamicGearItems] = await Promise.all([
+    fetchBlogPosts(),
+    fetchGearItems(),
+  ]);
 
   // Core Static Landing Pages (Exact 1:1 match with canonical tags)
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -119,7 +122,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Dedicated Photography Gear Reviews
-  const gearRoutes: MetadataRoute.Sitemap = GEAR_ITEMS.map((gear) => ({
+  const gearRoutes: MetadataRoute.Sitemap = dynamicGearItems.map((gear) => ({
     url: getAbsoluteUrl(`/photography-gear/${gear.slug}`),
     lastModified: currentDate,
     changeFrequency: "monthly",

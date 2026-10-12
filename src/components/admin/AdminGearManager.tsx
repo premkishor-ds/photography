@@ -277,7 +277,7 @@ export default function AdminGearManager() {
             Photography Gear Management
           </h2>
           <p className="text-xs text-[#554837] font-light mt-1 max-w-xl">
-            Manage camera bodies, lenses, audio equipment, action cameras, and tripods. Modify configurations, compatibility notes, and verified technical specifications in real time.
+            Manage camera bodies, lenses, action cameras, audio equipment, tripods, storage & memory media, and accessories/filters. Modify configurations, compatibility notes, and verified technical specifications in real time.
           </p>
         </div>
 
@@ -531,7 +531,7 @@ export default function AdminGearManager() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-[#121212] font-medium mb-1.5">
-                    Category (5 Primary Categories) *
+                    Category (Equipment Category) *
                   </label>
                   <select
                     value={formData.category}

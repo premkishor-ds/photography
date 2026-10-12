@@ -8,9 +8,9 @@ import AffiliateDisclosure from "@/components/AffiliateDisclosure";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema, generateBreadcrumbSchema } from "@/lib/schema";
+import { fetchGearItems } from "@/lib/supabase";
 import {
   GEAR_CATEGORIES,
-  GEAR_ITEMS,
   GEAR_COMPARISONS,
   GearCategory,
 } from "@/data/gearData";
@@ -23,7 +23,9 @@ export const metadata = constructMetadata({
   path: "/photography-gear",
 });
 
-export default function PhotographyGearHubPage() {
+export default async function PhotographyGearHubPage() {
+  const gearItems = await fetchGearItems();
+
   const webPageSchema = generateWebPageSchema(
     "/photography-gear",
     "My Photography Gear",
@@ -93,10 +95,10 @@ export default function PhotographyGearHubPage() {
             </a>
           </div>
 
-          {/* Categorized Equipment Showcase (5 Organized Categories) */}
+          {/* Categorized Equipment Showcase (7 Organized Categories) */}
           <div className="space-y-24">
             {GEAR_CATEGORIES.map((cat, idx) => {
-              const categoryItems = GEAR_ITEMS.filter((item) => item.category === cat.id && item.published);
+              const categoryItems = gearItems.filter((item) => item.category === cat.id && item.published);
               if (categoryItems.length === 0) return null;
 
               return (

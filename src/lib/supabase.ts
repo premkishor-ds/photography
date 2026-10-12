@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { PORTFOLIO_ITEMS, SERVICES, PortfolioItem, ServiceItem } from "@/data/photographyData";
 import { BLOG_POSTS, BlogPost } from "@/data/blogData";
 import { FAQ_ITEMS, FAQItem } from "@/data/faqData";
+import { GEAR_ITEMS, GearItem, getGearItemBySlug } from "@/data/gearData";
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -348,6 +349,97 @@ export async function fetchFaqItems(): Promise<FAQItem[]> {
   } catch (err) {
     console.error("Failed to fetch dynamic FAQ items:", err);
     return FAQ_ITEMS;
+  }
+}
+
+export interface DynamicGearRecord {
+  id: string;
+  slug: string;
+  name: string;
+  manufacturer: string;
+  category: string;
+  category_label: string;
+  model_number: string | null;
+  description: string;
+  primary_uses: string[] | string;
+  compatibility: string;
+  image_url: string;
+  image_alt: string;
+  specifications: { label: string; value: string | null }[] | string;
+  review_url: string | null;
+  related_portfolio_urls: { label: string; url: string }[] | string;
+  ownership_status: string;
+  published: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export async function fetchGearItems(): Promise<GearItem[]> {
+  try {
+    const { data, error } = await supabase
+      .from("gear_items")
+      .select("*")
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return GEAR_ITEMS;
+    }
+
+    return data.map((item: DynamicGearRecord) => {
+      const baseStatic = GEAR_ITEMS.find((g) => g.id === item.id || g.slug === item.slug);
+      return {
+        ...(baseStatic || {}),
+        id: item.id,
+        slug: item.slug,
+        name: item.name,
+        manufacturer: item.manufacturer,
+        category: item.category as any,
+        categoryLabel: item.category_label,
+        modelNumber: item.model_number,
+        description: item.description,
+        primaryUses: Array.isArray(item.primary_uses)
+          ? item.primary_uses
+          : typeof item.primary_uses === "string"
+          ? JSON.parse(item.primary_uses)
+          : [],
+        compatibility: item.compatibility,
+        imageUrl: item.image_url,
+        imageAlt: item.image_alt,
+        specifications: Array.isArray(item.specifications)
+          ? item.specifications
+          : typeof item.specifications === "string"
+          ? JSON.parse(item.specifications)
+          : [],
+        reviewUrl: item.review_url,
+        relatedPortfolioUrls: Array.isArray(item.related_portfolio_urls)
+          ? item.related_portfolio_urls
+          : typeof item.related_portfolio_urls === "string"
+          ? JSON.parse(item.related_portfolio_urls)
+          : [],
+        ownershipStatus: item.ownership_status,
+        published: item.published !== false,
+      } as GearItem;
+    });
+  } catch (err) {
+    console.error("Failed to fetch dynamic gear items:", err);
+    return GEAR_ITEMS;
+  }
+}
+
+export async function fetchGearItemBySlug(slug: string): Promise<GearItem | null> {
+  try {
+    const items = await fetchGearItems();
+    const normalized = slug.toLowerCase();
+    const found = items.find(
+      (i) =>
+        i.slug.toLowerCase() === normalized ||
+        (i.aliases && i.aliases.some((a) => a.toLowerCase() === normalized))
+    );
+    return found || getGearItemBySlug(slug) || null;
+  } catch (err) {
+    console.error("Failed to fetch dynamic gear item by slug:", err);
+    return getGearItemBySlug(slug) || null;
   }
 }
 

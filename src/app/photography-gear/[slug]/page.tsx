@@ -13,6 +13,7 @@ import {
   generateFAQSchema,
   getAbsoluteUrl,
 } from "@/lib/schema";
+import { fetchGearItems, fetchGearItemBySlug } from "@/lib/supabase";
 import {
   GEAR_ITEMS,
   GearItem,
@@ -39,8 +40,9 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
+  const items = await fetchGearItems();
   const params: { slug: string }[] = [];
-  GEAR_ITEMS.forEach((item) => {
+  items.forEach((item) => {
     params.push({ slug: item.slug });
     if (item.aliases && item.aliases.length > 0) {
       item.aliases.forEach((alias) => params.push({ slug: alias }));
@@ -51,7 +53,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const item = getGearItemBySlug(slug);
+  const item = await fetchGearItemBySlug(slug);
 
   if (!item) {
     return constructMetadata({
@@ -81,7 +83,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function GearReviewPage({ params }: PageProps) {
   const { slug } = await params;
-  const item = getGearItemBySlug(slug);
+  const item = await fetchGearItemBySlug(slug);
 
   if (!item) {
     notFound();
