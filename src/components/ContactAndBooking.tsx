@@ -327,8 +327,8 @@ export default function ContactAndBooking({
                   </h4>
                   <p className="text-sm text-[#554837] max-w-md mx-auto leading-relaxed">
                     {language === "hi"
-                      ? `आपकी सेवा (${formData.service}) के लिए पूछताछ प्राप्त हो गई है। जूलियन आपकी पसंदीदा तिथि (${formData.preferredDate}) की समीक्षा करेंगे और 24 घंटे के भीतर ${formData.email} पर जवाब देंगे।`
-                      : `Your inquiry for ${formData.service} has been received. Julian will review your preferred date (${formData.preferredDate}) and reply to ${formData.email} within 24 hours.`}
+                      ? `आपकी सेवा (${formData.service}) के लिए पूछताछ प्राप्त हो गई है। ${settings.photographer_name || "हमारी टीम"} आपकी पसंदीदा तिथि (${formData.preferredDate}) की समीक्षा करेंगे और 24 घंटे के भीतर ${formData.email} पर जवाब देंगे।`
+                      : `Your inquiry for ${formData.service} has been received. ${settings.photographer_name || "Our studio team"} will review your preferred date (${formData.preferredDate}) and reply to ${formData.email} within 24 hours.`}
                   </p>
                 </div>
 
@@ -459,7 +459,7 @@ export default function ContactAndBooking({
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 98290 12345"
                       aria-invalid={errors.phone ? true : false}
                       aria-describedby={errors.phone ? "phone-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${

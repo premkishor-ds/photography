@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Camera, ArrowUp, Mail, Phone, MapPin } from "lucide-react";
-import { InstagramIcon, FacebookIcon, PinterestIcon } from "@/components/Icons";
+import { InstagramIcon, FacebookIcon, PinterestIcon, YouTubeIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
@@ -100,6 +100,17 @@ export default function Footer() {
               >
                 <FacebookIcon className="w-4 h-4" />
               </a>
+              {(settings.youtube_url || siteConfig.socialProfiles.youtube) && (
+                <a
+                  href={settings.youtube_url || siteConfig.socialProfiles.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-[#1F1F1F] hover:bg-[#BFA076] hover:text-[#121212] transition-colors flex items-center justify-center text-white/80"
+                  aria-label="YouTube Channel"
+                >
+                  <YouTubeIcon className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
 

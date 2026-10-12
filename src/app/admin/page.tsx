@@ -39,6 +39,7 @@ import {
   Info,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
+import { siteConfig } from "@/config/siteConfig";
 
 interface Inquiry {
   id: string;
@@ -189,9 +190,9 @@ export default function AdminPage() {
     tagline: "Capturing Moments, Creating Memories",
     subtagline: "Fine Art & Editorial Studio • Jaipur, Rajasthan",
     hero_image_url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85",
-    email: "contact@yourphotography.com",
-    phone: "+91 98765 43210",
-    whatsapp_number: "919876543210",
+    email: siteConfig.business.email || "hello@yourphotography.com",
+    phone: siteConfig.business.phone || "+91 98290 12345",
+    whatsapp_number: siteConfig.business.whatsappNumber || "919829012345",
     address: "Room 215, 2nd Floor, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura, Jaipur, Rajasthan 302017",
     hindi_address: "कमरा नं. 215, द्वितीय तल, RV2J+5PQ, करोलां का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
     working_hours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
@@ -2753,7 +2754,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setStudioSettings({ ...studioSettings, phone: e.target.value })
                       }
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 98290 12345"
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                     />
                   </div>
@@ -2769,11 +2770,11 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setStudioSettings({ ...studioSettings, whatsapp_number: e.target.value })
                       }
-                      placeholder="919876543210"
+                      placeholder="919829012345"
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                     />
                     <p className="text-[10px] text-[#7B6955] mt-1 font-sans">
-                      Used for wa.me links (digits only, e.g. 919876543210)
+                      Used for wa.me links (digits only, e.g. 919829012345)
                     </p>
                   </div>
                 </div>

@@ -41,7 +41,7 @@ export default function TermsAndConditionsPage() {
                 Terms & Conditions
               </h1>
               <p className="text-xs text-[#7B6955] font-sans">
-                Last Updated: March 2026 • Governing Law: State of New York
+                Last Updated: March 2026 • Governing Law: Jaipur, Rajasthan, India
               </p>
             </div>
 
@@ -60,7 +60,7 @@ export default function TermsAndConditionsPage() {
                   2. Copyright & Image Usage Rights
                 </h2>
                 <p>
-                  In accordance with United States and international copyright law, {siteConfig.business.legalName} and Julian Rivera retain moral and intellectual property copyright to all photographic works created.
+                  In accordance with the Indian Copyright Act, 1957 and international copyright conventions, {siteConfig.business.legalName} and {siteConfig.photographer.name} retain moral and intellectual property copyright to all photographic works created.
                 </p>
                 <p>
                   <strong>Private & Wedding Clients:</strong> Receive full personal reproduction rights for non-commercial printing, social media sharing, and family archiving.

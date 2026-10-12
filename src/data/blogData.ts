@@ -1,3 +1,5 @@
+import { siteConfig } from "@/config/siteConfig";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -26,8 +28,8 @@ export const BLOG_POSTS: BlogPost[] = [
       "Essential wardrobe advice, flattering color palettes, and texture combinations to ensure your portraits look timeless, authentic, and effortlessly elegant.",
     publishedDate: "2026-02-14",
     modifiedDate: "2026-03-01",
-    author: "Julian Rivera",
-    authorRole: "Principal Photographer",
+    author: siteConfig.photographer.name,
+    authorRole: siteConfig.photographer.role,
     readTime: "5 min read",
     category: "Portrait Tips",
     heroImage:
@@ -70,8 +72,8 @@ export const BLOG_POSTS: BlogPost[] = [
       "From documentary storytelling versus posed editorial styles to second shooters and backup workflows, here is how to find your ideal wedding visual storyteller.",
     publishedDate: "2026-01-20",
     modifiedDate: "2026-02-28",
-    author: "Julian Rivera",
-    authorRole: "Principal Photographer",
+    author: siteConfig.photographer.name,
+    authorRole: siteConfig.photographer.role,
     readTime: "6 min read",
     category: "Wedding Guides",
     heroImage:
@@ -114,8 +116,8 @@ export const BLOG_POSTS: BlogPost[] = [
       "A clear breakdown of commercial usage rights, buyout contracts, digital advertising permissions, and why proper licensing protects your brand investment.",
     publishedDate: "2026-02-02",
     modifiedDate: "2026-03-05",
-    author: "Julian Rivera",
-    authorRole: "Principal Photographer",
+    author: siteConfig.photographer.name,
+    authorRole: siteConfig.photographer.role,
     readTime: "7 min read",
     category: "Commercial & Brand",
     heroImage:
@@ -151,8 +153,8 @@ export const BLOG_POSTS: BlogPost[] = [
       "How professional sports photographers utilize telephoto compression, predictive autofocus tracking, and high shutter speeds to capture raw athletic drama.",
     publishedDate: "2026-02-25",
     modifiedDate: "2026-03-08",
-    author: "Julian Rivera",
-    authorRole: "Principal Photographer",
+    author: siteConfig.photographer.name,
+    authorRole: siteConfig.photographer.role,
     readTime: "5 min read",
     category: "Action & Technique",
     heroImage:

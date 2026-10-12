@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { siteConfig } from "@/config/siteConfig";
 
 export async function POST(req: NextRequest) {
   try {
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Your inquiry has been received. Julian will contact you within 24 hours.",
+        message: `Your inquiry has been received. ${siteConfig.photographer.name || "Our studio team"} will contact you within 24 hours.`,
         data: {
           id: dbId,
           name: sanitizedInquiry.name,

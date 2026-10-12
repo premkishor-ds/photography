@@ -89,7 +89,7 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "contact.form.submitting": "Sending inquiry...",
     "contact.form.privacyNote": "We treat your details with absolute privacy. No spam guaranteed.",
     "contact.form.thankYou": "Thank You",
-    "contact.form.received": "Your inquiry for {service} has been received. Julian will review your preferred date ({date}) and reply to {email} within 24 hours.",
+    "contact.form.received": "Your inquiry for {service} has been received. Our studio team will review your preferred date ({date}) and reply to {email} within 24 hours.",
     "contact.form.followUp": "Follow up on WhatsApp",
     "contact.form.sendAnother": "Send Another Message",
 
@@ -193,7 +193,7 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "contact.form.submitting": "भेजा जा रहा है...",
     "contact.form.privacyNote": "हम आपके विवरण को पूर्ण गोपनीयता के साथ रखते हैं। स्पैम मुक्त गारंटी।",
     "contact.form.thankYou": "धन्यवाद",
-    "contact.form.received": "आपकी पूछताछ प्राप्त हो गई है। जूलियन आपकी पसंदीदा तिथि की समीक्षा करेंगे और 24 घंटे के भीतर ईमेल पर जवाब देंगे।",
+    "contact.form.received": "आपकी पूछताछ प्राप्त हो गई है। हमारी स्टूडियो टीम आपकी पसंदीदा तिथि की समीक्षा करेगी और 24 घंटे के भीतर ईमेल पर जवाब देगी।",
     "contact.form.followUp": "व्हाट्सएप पर संपर्क जारी रखें",
     "contact.form.sendAnother": "एक और संदेश भेजें",
 

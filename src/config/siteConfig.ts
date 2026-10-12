@@ -79,7 +79,7 @@ export const siteConfig = {
 
   // Photographer Lead Identity (Person Schema)
   photographer: {
-    name: "Julian Rivera",
+    name: "Kishor Prem",
     role: "Principal Photographer & Creative Director",
     biography:
       "Trained in classical fine-art and documentary photography with over 12 years of experience documenting royal palace weddings in Rajasthan, high-speed sports, editorial portraits, and cultural heritage across India.",
@@ -89,13 +89,14 @@ export const siteConfig = {
     awardsNote: "Published in international design and lifestyle editorials.",
   },
 
-  // Social Profile URLs (Verified placeholders for sameAs schema)
+  // Social Profile URLs (Verified placeholders for sameAs schema & UI links)
   socialProfiles: {
-    instagram: "https://instagram.com/yourphotography",
-    pinterest: "https://pinterest.com/yourphotography",
-    fiveHundredPx: "https://500px.com/p/yourphotography",
-    facebook: "https://facebook.com/yourphotography",
-    linkedin: "https://linkedin.com/company/yourphotography",
+    instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/yourphotography",
+    pinterest: process.env.NEXT_PUBLIC_PINTEREST_URL || "https://pinterest.com/yourphotography",
+    fiveHundredPx: process.env.NEXT_PUBLIC_500PX_URL || "https://500px.com/p/yourphotography",
+    facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://facebook.com/yourphotography",
+    youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://youtube.com/@yourphotography",
+    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/company/yourphotography",
   },
 
   // Search Engine Verification Placeholders

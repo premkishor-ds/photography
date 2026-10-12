@@ -6,6 +6,7 @@ import { ArrowRight, MessageSquare, Calendar } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 import { WhatsAppIcon } from "@/components/Icons";
 import { useLanguage } from "@/context/LanguageContext";
+import { useStudioSettings } from "@/context/StudioContext";
 
 interface BookingCtaBannerProps {
   title?: string;
@@ -19,7 +20,13 @@ export default function BookingCtaBanner({
   serviceName,
 }: BookingCtaBannerProps) {
   const { t, language } = useLanguage();
-  const whatsappUrl = `https://wa.me/${siteConfig.business.whatsappNumber}?text=${encodeURIComponent(
+  const { settings } = useStudioSettings();
+
+  const whatsappNumber = settings.whatsapp_number || siteConfig.business.whatsappNumber;
+  const email = settings.email || siteConfig.business.email;
+  const phone = settings.phone || siteConfig.business.phone;
+
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     `Hello! I'd like to check availability for ${serviceName || "a photography session"}.`
   )}`;
 
@@ -66,12 +73,12 @@ export default function BookingCtaBanner({
         <p className="text-[11px] text-[#FAF7F2]/60 font-sans pt-2">
           Direct email:{" "}
           <a
-            href={`mailto:${siteConfig.business.email}`}
+            href={`mailto:${email}`}
             className="text-[#FAF7F2] underline hover:text-[#BFA076]"
           >
-            {siteConfig.business.email}
+            {email}
           </a>{" "}
-          • Phone: {siteConfig.business.phone}
+          • Phone: {phone}
         </p>
       </div>
 

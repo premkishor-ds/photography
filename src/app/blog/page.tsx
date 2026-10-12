@@ -10,11 +10,12 @@ import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import { generateWebPageSchema } from "@/lib/schema";
 import { BLOG_POSTS } from "@/data/blogData";
+import { siteConfig } from "@/config/siteConfig";
 
 export const metadata = constructMetadata({
   title: "Photography Journal & Guides",
   description:
-    "Expert photography advice, photoshoot preparation guides, wardrobe recommendations, and technical insights from principal photographer Julian Rivera.",
+    `Expert photography advice, photoshoot preparation guides, wardrobe recommendations, and technical insights from principal photographer ${siteConfig.photographer.name}.`,
   path: "/blog",
 });
 

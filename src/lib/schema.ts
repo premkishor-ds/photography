@@ -153,6 +153,7 @@ export function generatePersonSchema() {
       "@id": `${siteConfig.baseUrl}/#business`,
     },
     url: getAbsoluteUrl("/about"),
+    sameAs: Object.values(siteConfig.socialProfiles).filter(Boolean),
   };
 }
 

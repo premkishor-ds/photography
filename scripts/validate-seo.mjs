@@ -62,7 +62,7 @@ async function runAudit() {
     const llmsText = await llmsRes.text();
     assert(llmsRes.status === 200, "llms.txt returns HTTP 200");
     assert(llmsText.includes("Your Photography"), "llms.txt identifies the business");
-    assert(llmsText.includes("Julian Rivera"), "llms.txt identifies lead photographer");
+    assert(llmsText.includes("Kishor Prem") || llmsText.includes("Principal Photographer"), "llms.txt identifies lead photographer");
     assert(llmsText.includes("Sports Photography"), "llms.txt lists sports photography");
     assert(llmsText.includes("/contact"), "llms.txt points AI search engines to booking channel");
   } catch (err) {

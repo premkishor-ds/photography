@@ -202,7 +202,7 @@ export default async function GearReviewPage({ params }: PageProps) {
                     {item.personalUsage}
                   </p>
                   <p className="text-xs text-[#7B6955] italic font-light">
-                    Note: Equipment observations are documented from our real studio and on-location client commissions in New York and travel destinations.
+                    Note: Equipment observations are documented from our real studio and on-location client commissions in Jaipur, Rajasthan, and pan-India destination assignments.
                   </p>
                 </div>
               </section>
