@@ -1383,14 +1383,14 @@ export default function AdminPage() {
         </div>
 
         {/* Tab Selector */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E8DED0] pb-2">
-          <div className="flex items-center gap-2 sm:gap-4">
+        <div className="border-b border-[#E8DED0] flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-none -mb-px flex-1 min-w-0">
             <button
               onClick={() => setActiveTab("inquiries")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "inquiries"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <Mail className="w-3.5 h-3.5" />
@@ -1404,10 +1404,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("portfolio")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "portfolio"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <Camera className="w-3.5 h-3.5" />
@@ -1416,10 +1416,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("services")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "services"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <IndianRupee className="w-3.5 h-3.5" />
@@ -1428,10 +1428,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("studio")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "studio"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <Building className="w-3.5 h-3.5" />
@@ -1440,10 +1440,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("photographer")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "photographer"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <User className="w-3.5 h-3.5" />
@@ -1452,10 +1452,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("blog")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "blog"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
@@ -1464,10 +1464,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("faq")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "faq"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <HelpCircle className="w-3.5 h-3.5" />
@@ -1476,10 +1476,10 @@ export default function AdminPage() {
 
             <button
               onClick={() => setActiveTab("db")}
-              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
                 activeTab === "db"
                   ? "border-[#121212] text-[#121212]"
-                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
               }`}
             >
               <Database className="w-3.5 h-3.5" />
@@ -1487,18 +1487,22 @@ export default function AdminPage() {
             </button>
           </div>
 
-          <button
-            onClick={loadAllData}
-            disabled={isLoading}
-            className="px-3 py-1.5 text-xs uppercase tracking-wider text-[#554837] hover:text-[#121212] border border-[#D7C7B2] bg-white flex items-center gap-1.5 cursor-pointer"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-            <span>Refresh</span>
-          </button>
+          <div className="shrink-0 pb-1">
+            <button
+              onClick={loadAllData}
+              disabled={isLoading}
+              className="px-3 py-1.5 text-xs uppercase tracking-wider text-[#554837] hover:text-[#121212] border border-[#D7C7B2] bg-white flex items-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+              <span>Refresh</span>
+            </button>
+          </div>
         </div>
 
-        {/* TAB 1: Inquiries & Bookings */}
-        {activeTab === "inquiries" && (
+        {/* Tab Content Container */}
+        <div className="min-h-[560px]">
+          {/* TAB 1: Inquiries & Bookings */}
+          {activeTab === "inquiries" && (
           <div className="space-y-6">
             {/* Filter and Search Bar */}
             <div className="bg-white p-4 border border-[#E8DED0] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
@@ -4891,6 +4895,7 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+        </div>
       </main>
     </div>
   );
