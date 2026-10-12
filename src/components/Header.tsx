@@ -5,19 +5,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Camera, Menu, X, ArrowRight } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const PRIMARY_NAV_LINKS = [
-  { name: "Home", href: "/" },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Services", href: "/services" },
-  { name: "Gear", href: "/photography-gear" },
-  { name: "About", href: "/about" },
-  { name: "Journal", href: "/blog" },
-  { name: "FAQ", href: "/faq" },
-  { name: "Contact", href: "/contact" },
+  { key: "nav.home", name: "Home", href: "/" },
+  { key: "nav.portfolio", name: "Portfolio", href: "/portfolio" },
+  { key: "nav.services", name: "Services", href: "/services" },
+  { key: "nav.gear", name: "Gear", href: "/photography-gear" },
+  { key: "nav.about", name: "About", href: "/about" },
+  { key: "nav.journal", name: "Journal", href: "/blog" },
+  { key: "nav.faq", name: "FAQ", href: "/faq" },
+  { key: "nav.contact", name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
+  const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -107,7 +109,7 @@ export default function Header() {
                     : "text-white/80 hover:text-white"
                 }`}
               >
-                {link.name}
+                {t(link.key, link.name)}
                 {isActive && (
                   <span
                     className={`absolute bottom-0 left-0 right-0 h-[1.5px] transition-colors duration-300 ${
@@ -135,7 +137,7 @@ export default function Header() {
                 : "bg-white text-[#121212] border-white hover:bg-transparent hover:text-white hover:border-white"
             }`}
           >
-            <span>Book a Session</span>
+            <span>{t("nav.book", "Book a Session")}</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
@@ -177,7 +179,7 @@ export default function Header() {
               onClick={() => handleLinkClick(link.href)}
               className="text-sm tracking-[0.15em] uppercase text-[#121212] py-2 border-b border-[#F3ECE1] hover:text-[#7B6955] transition-colors"
             >
-              {link.name}
+              {t(link.key, link.name)}
             </Link>
           ))}
           <LanguageSwitcher variant="mobile" />
@@ -187,7 +189,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center block py-3 text-xs uppercase tracking-[0.2em] font-medium bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] transition-colors"
             >
-              Book a Session
+              {t("nav.book", "Book a Session")}
             </Link>
           </div>
         </div>

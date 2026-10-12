@@ -156,7 +156,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: "5 min read",
     category: "Action & Technique",
     heroImage:
-      "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1600&q=80",
     heroAlt: "Sprinter accelerating forward on a stadium track",
     relatedServiceSlug: "sports-photography",
     content: [

@@ -243,7 +243,7 @@ export const ALL_PORTFOLIO_ITEMS: DetailedPortfolioItem[] = [
     category: "Sports Photography",
     categorySlug: "sports",
     imageUrl:
-      "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "High-speed competitive polo action freezing horses and players at full gallop on turf",
     location: "Jaipur Polo Club, Jaipur",
     year: "2026",

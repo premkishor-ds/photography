@@ -4,8 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { ArrowRight, Award, Camera, Heart, Sparkles } from "lucide-react";
 import { PHOTOGRAPHER_INFO } from "@/data/photographyData";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AboutMe() {
+  const { t } = useLanguage();
+
   const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const contactEl = document.getElementById("contact");
@@ -54,10 +57,10 @@ export default function AboutMe() {
           <div className="lg:col-span-7 space-y-8">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-                Behind The Lens
+                {t("about.badge", "Behind The Lens")}
               </p>
               <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-tight text-[#121212]">
-                Meet The Photographer
+                {t("about.title", "Meet The Photographer")}
               </h2>
             </div>
 
@@ -93,7 +96,7 @@ export default function AboutMe() {
                 onClick={handleScrollToContact}
                 className="inline-flex items-center gap-3 px-8 py-4 text-xs uppercase tracking-[0.22em] font-medium bg-[#121212] text-[#FAF7F2] border border-[#121212] hover:bg-transparent hover:text-[#121212] transition-all duration-300 group"
               >
-                <span>Let&apos;s Work Together</span>
+                <span>{t("about.cta", "Let's Work Together")}</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>

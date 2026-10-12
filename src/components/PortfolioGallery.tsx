@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { ZoomIn, MapPin } from "lucide-react";
 import {
@@ -9,24 +9,71 @@ import {
   PortfolioItem,
 } from "@/data/photographyData";
 import Lightbox from "./Lightbox";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PortfolioGallery() {
+  const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("All Works");
+  const [galleryItems, setGalleryItems] = useState<PortfolioItem[]>(PORTFOLIO_ITEMS);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Dynamically load updated items from Supabase
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDynamicPortfolio() {
+      try {
+        const res = await fetch("/api/admin/portfolio");
+        const data = await res.json();
+        if (isMounted && data.success && Array.isArray(data.items) && data.items.length > 0) {
+          const mapped: PortfolioItem[] = data.items.map((it: any) => ({
+            id: it.id,
+            title: it.title,
+            category: it.category,
+            imageUrl: it.image_url,
+            aspectRatio: it.aspect_ratio || "landscape",
+            location: it.location || "Jaipur, India",
+            year: it.year || "2026",
+            description: it.description || "",
+          }));
+          setGalleryItems(mapped);
+        }
+      } catch (err) {
+        // Fallback to static items
+      }
+    }
+    loadDynamicPortfolio();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filter items based on category
   const filteredItems = useMemo(() => {
     if (selectedCategory === "All Works") {
-      return PORTFOLIO_ITEMS;
+      return galleryItems;
     }
-    return PORTFOLIO_ITEMS.filter((item) => item.category === selectedCategory);
-  }, [selectedCategory]);
+    return galleryItems.filter((item) => item.category === selectedCategory);
+  }, [selectedCategory, galleryItems]);
 
   const handleOpenLightbox = (item: PortfolioItem) => {
     const index = filteredItems.findIndex((i) => i.id === item.id);
     setActiveImageIndex(index !== -1 ? index : 0);
     setLightboxOpen(true);
+  };
+
+  const getCategoryLabel = (category: string) => {
+    if (language !== "hi") return category;
+    switch (category) {
+      case "All Works": return "सभी कार्य";
+      case "Portrait Photography": return "पोर्ट्रेट";
+      case "Wedding Photography": return "विवाह";
+      case "Event Photography": return "कार्यक्रम";
+      case "Sports Photography": return "खेल";
+      case "Commercial Photography": return "कमर्शियल";
+      case "Travel & Wildlife": return "यात्रा एवं वन्यजीव";
+      default: return category;
+    }
   };
 
   return (
@@ -35,13 +82,13 @@ export default function PortfolioGallery() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
           <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-            Selected Works
+            {t("portfolio.badge", "Selected Works")}
           </p>
           <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-tight text-[#121212]">
-            Portfolio Gallery
+            {t("portfolio.title", "Portfolio Gallery")}
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#554837] font-light max-w-xl mx-auto leading-relaxed">
-            A curated collection of captured light, raw emotion, and timeless storytelling spanning fine-art portraits, weddings, and natural landscapes.
+            {t("portfolio.desc", "A curated collection of captured light, raw emotion, and timeless storytelling spanning fine-art portraits, weddings, and natural landscapes.")}
           </p>
         </div>
 
@@ -59,7 +106,7 @@ export default function PortfolioGallery() {
                     : "bg-[#F3ECE1]/80 text-[#554837] hover:bg-[#E8DED0] hover:text-[#121212]"
                 }`}
               >
-                {category}
+                {getCategoryLabel(category)}
               </button>
             );
           })}

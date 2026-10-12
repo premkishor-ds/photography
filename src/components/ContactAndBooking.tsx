@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ContactAndBookingProps {
   preselectedService?: string;
@@ -43,6 +44,7 @@ export default function ContactAndBooking({
   preselectedService = "",
   headingLevel = "h2",
 }: ContactAndBookingProps) {
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -186,19 +188,19 @@ export default function ContactAndBooking({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
           <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-            Inquire & Reserve
+            {t("contact.badge", "Inquire & Reserve")}
           </p>
           {headingLevel === "h1" ? (
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
-              Let&apos;s Capture Your Story.
+              {t("contact.title", "Let's Capture Your Story.")}
             </h1>
           ) : (
             <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
-              Let&apos;s Capture Your Story.
+              {t("contact.title", "Let's Capture Your Story.")}
             </h2>
           )}
           <p className="mt-4 text-sm sm:text-base text-[#554837] font-light max-w-xl mx-auto leading-relaxed">
-            Whether you are planning an intimate wedding, commissioning commercial campaigns, or documenting life milestones, we would love to hear from you.
+            {t("contact.desc", "Whether you are planning an intimate wedding, commissioning commercial campaigns, or documenting life milestones, we would love to hear from you.")}
           </p>
         </div>
 
@@ -207,10 +209,10 @@ export default function ContactAndBooking({
           <div className="lg:col-span-5 space-y-8 flex flex-col justify-between">
             <div className="space-y-6">
               <h3 className="font-serif text-2xl text-[#121212]">
-                Studio & Booking Inquiries
+                {t("contact.studioTitle", "Studio & Booking Inquiries")}
               </h3>
               <p className="text-sm text-[#554837] leading-relaxed font-light">
-                We accept a limited number of commissions each year to give every client our undivided artistic dedication. Reach out below or message us directly via WhatsApp.
+                {t("contact.studioDesc", "We accept a limited number of commissions each year to give every client our undivided artistic dedication. Reach out below or message us directly via WhatsApp.")}
               </p>
 
               {/* Direct Info List */}
@@ -221,7 +223,7 @@ export default function ContactAndBooking({
                   </div>
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
-                      Email Address
+                      {t("contact.email", "Email Address")}
                     </p>
                     <a
                       href={`mailto:${CONTACT_DETAILS.email}`}
@@ -238,7 +240,7 @@ export default function ContactAndBooking({
                   </div>
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
-                      Phone Number
+                      {t("contact.phone", "Phone Number")}
                     </p>
                     <a
                       href={`tel:${CONTACT_DETAILS.phone.replace(/[^0-9+]/g, "")}`}
@@ -255,12 +257,14 @@ export default function ContactAndBooking({
                   </div>
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
-                      Studio Location
+                      {t("contact.location", "Studio Location")}
                     </p>
                     <p className="text-xs sm:text-sm text-[#121212] font-medium">
-                      {CONTACT_DETAILS.address}
+                      {language === "hi" && CONTACT_DETAILS.hindiAddress
+                        ? CONTACT_DETAILS.hindiAddress
+                        : CONTACT_DETAILS.address}
                     </p>
-                    {CONTACT_DETAILS.hindiAddress && (
+                    {language !== "hi" && CONTACT_DETAILS.hindiAddress && (
                       <p className="text-xs text-[#7B6955] font-sans mt-1">
                         {CONTACT_DETAILS.hindiAddress}
                       </p>
@@ -274,7 +278,7 @@ export default function ContactAndBooking({
                   </div>
                   <div>
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
-                      Studio Hours
+                      {t("contact.hours", "Studio Hours")}
                     </p>
                     <p className="text-xs sm:text-sm text-[#121212]">
                       {CONTACT_DETAILS.workingHours}
@@ -293,10 +297,10 @@ export default function ContactAndBooking({
                 className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-medium text-xs sm:text-sm uppercase tracking-[0.18em] transition-all shadow-md group"
               >
                 <WhatsAppIcon className="w-4 h-4 fill-white" />
-                <span>Chat Directly on WhatsApp</span>
+                <span>{t("contact.whatsappBtn", "Chat Directly on WhatsApp")}</span>
               </a>
               <p className="text-[11px] text-center text-[#7B6955] mt-2 font-sans">
-                Quick responses typically within 1-2 hours during business hours.
+                {t("contact.whatsappResponse", "Quick responses typically within 1-2 hours during business hours.")}
               </p>
             </div>
           </div>
@@ -310,10 +314,12 @@ export default function ContactAndBooking({
                 </div>
                 <div className="space-y-2">
                   <h4 className="font-serif text-2xl sm:text-3xl text-[#121212]">
-                    Thank You, {formData.name}!
+                    {t("contact.form.thankYou", "Thank You")}, {formData.name}!
                   </h4>
                   <p className="text-sm text-[#554837] max-w-md mx-auto leading-relaxed">
-                    Your inquiry for <strong>{formData.service}</strong> has been received. Julian will review your preferred date (<strong>{formData.preferredDate}</strong>) and reply to <strong>{formData.email}</strong> within 24 hours.
+                    {language === "hi"
+                      ? `आपकी सेवा (${formData.service}) के लिए पूछताछ प्राप्त हो गई है। जूलियन आपकी पसंदीदा तिथि (${formData.preferredDate}) की समीक्षा करेंगे और 24 घंटे के भीतर ${formData.email} पर जवाब देंगे।`
+                      : `Your inquiry for ${formData.service} has been received. Julian will review your preferred date (${formData.preferredDate}) and reply to ${formData.email} within 24 hours.`}
                   </p>
                 </div>
 
@@ -324,13 +330,13 @@ export default function ContactAndBooking({
                     rel="noopener noreferrer"
                     className="px-6 py-3 text-xs uppercase tracking-widest bg-[#25D366] text-white hover:bg-[#20ba5a] transition-colors"
                   >
-                    Follow up on WhatsApp
+                    {t("contact.form.followUp", "Follow up on WhatsApp")}
                   </a>
                   <button
                     onClick={handleReset}
                     className="px-6 py-3 text-xs uppercase tracking-widest border border-[#121212] text-[#121212] hover:bg-[#121212] hover:text-white transition-colors"
                   >
-                    Send Another Message
+                    {t("contact.form.sendAnother", "Send Another Message")}
                   </button>
                 </div>
               </div>
@@ -356,10 +362,10 @@ export default function ContactAndBooking({
 
                 <div className="border-b border-[#F3ECE1] pb-4 mb-2">
                   <h4 className="font-serif text-2xl text-[#121212]">
-                    Session Booking Form
+                    {t("contact.formTitle", "Session Booking Form")}
                   </h4>
                   <p className="text-xs text-[#7B6955] mt-1 font-sans">
-                    Fill out the form below to secure your date or request a personalized consultation.
+                    {t("contact.formSubtitle", "Fill out the form below to secure your date or request a personalized consultation.")}
                   </p>
                 </div>
 
@@ -371,7 +377,7 @@ export default function ContactAndBooking({
                       htmlFor="name"
                       className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                     >
-                      Your Name <span className="text-red-500">*</span>
+                      {t("contact.form.name", "Your Name")} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -379,7 +385,7 @@ export default function ContactAndBooking({
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="e.g. Eleanor Vance"
+                      placeholder={language === "hi" ? "उदा. राहुल शर्मा" : "e.g. Eleanor Vance"}
                       aria-invalid={errors.name ? true : false}
                       aria-describedby={errors.name ? "name-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
@@ -402,7 +408,7 @@ export default function ContactAndBooking({
                       htmlFor="email"
                       className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                     >
-                      Email Address <span className="text-red-500">*</span>
+                      {t("contact.form.email", "Email Address")} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -436,7 +442,7 @@ export default function ContactAndBooking({
                       htmlFor="phone"
                       className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                     >
-                      Phone Number <span className="text-red-500">*</span>
+                      {t("contact.form.phone", "Phone Number")} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -444,7 +450,7 @@ export default function ContactAndBooking({
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+91 98765 43210"
                       aria-invalid={errors.phone ? true : false}
                       aria-describedby={errors.phone ? "phone-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
@@ -467,7 +473,7 @@ export default function ContactAndBooking({
                       htmlFor="service"
                       className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                     >
-                      Photography Service <span className="text-red-500">*</span>
+                      {t("contact.form.service", "Photography Service")} <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="service"
@@ -482,13 +488,13 @@ export default function ContactAndBooking({
                           : "border-[#D7C7B2] focus:border-[#121212]"
                       }`}
                     >
-                      <option value="">Select a service category</option>
+                      <option value="">{t("contact.form.selectService", "Select a service category")}</option>
                       {SERVICES.map((s) => (
                         <option key={s.id} value={s.title}>
                           {s.title}
                         </option>
                       ))}
-                      <option value="Custom Project">Custom Project / Other</option>
+                      <option value="Custom Project">{t("contact.form.customProject", "Custom Project / Other")}</option>
                     </select>
                     {errors.service && (
                       <p id="service-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
@@ -505,7 +511,7 @@ export default function ContactAndBooking({
                     htmlFor="preferredDate"
                     className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                   >
-                    Preferred Date <span className="text-red-500">*</span>
+                    {t("contact.form.date", "Preferred Date")} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
@@ -536,7 +542,7 @@ export default function ContactAndBooking({
                     htmlFor="message"
                     className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
                   >
-                    Message / Project Details <span className="text-red-500">*</span>
+                    {t("contact.form.message", "Message / Project Details")} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -544,7 +550,7 @@ export default function ContactAndBooking({
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Tell us about your event, location, creative vision, or any special requests..."
+                    placeholder={t("contact.form.messagePlaceholder", "Tell us about your event, location, creative vision, or any special requests...")}
                     aria-invalid={errors.message ? true : false}
                     aria-describedby={errors.message ? "message-error" : undefined}
                     className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors resize-none ${
@@ -569,16 +575,16 @@ export default function ContactAndBooking({
                     className="w-full py-4 text-xs uppercase tracking-[0.22em] font-medium bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
                     {isSubmitting ? (
-                      <span>Sending inquiry...</span>
+                      <span>{t("contact.form.submitting", "Sending inquiry...")}</span>
                     ) : (
                       <>
-                        <span>Submit Booking Request</span>
+                        <span>{t("contact.form.submit", "Submit Booking Request")}</span>
                         <Send className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>
                   <p className="text-[11px] text-center text-[#7B6955] mt-3 font-sans">
-                    We treat your details with absolute privacy. No spam guaranteed.
+                    {t("contact.form.privacyNote", "We treat your details with absolute privacy. No spam guaranteed.")}
                   </p>
                 </div>
               </form>

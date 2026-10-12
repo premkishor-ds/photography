@@ -63,8 +63,19 @@ export async function POST(req: NextRequest) {
       receivedAt: new Date().toISOString(),
     };
 
-    // In a production environment with email provider configured (e.g. Resend / SendGrid / Postmark):
-    // await sendNotificationEmail(sanitizedInquiry);
+    // Store directly in Supabase inquiries table
+    let dbId: string | undefined;
+    try {
+      const { insertInquiry } = await import("@/lib/supabase");
+      const res = await insertInquiry(sanitizedInquiry);
+      if (res.success) {
+        dbId = res.id;
+        console.log("Inquiry saved to Supabase with ID:", dbId);
+      }
+    } catch (dbErr) {
+      console.warn("Failed to save to Supabase (continuing gracefully):", dbErr);
+    }
+
     console.log("Inquiry received successfully:", sanitizedInquiry);
 
     return NextResponse.json(
@@ -72,6 +83,7 @@ export async function POST(req: NextRequest) {
         success: true,
         message: "Your inquiry has been received. Julian will contact you within 24 hours.",
         data: {
+          id: dbId,
           name: sanitizedInquiry.name,
           service: sanitizedInquiry.service,
           preferredDate: sanitizedInquiry.preferredDate,

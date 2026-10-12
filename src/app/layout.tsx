@@ -4,6 +4,7 @@ import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import Analytics from "@/components/Analytics";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
@@ -83,31 +84,47 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${jakarta.variable} scroll-smooth`}>
       <body className="min-h-screen bg-[#FAF7F2] text-[#121212] font-sans antialiased selection:bg-[#121212] selection:text-[#FAF7F2]">
-        <div id="google_translate_element" className="hidden" aria-hidden="true" />
-        <Script
-          id="google-translate-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              function googleTranslateElementInit() {
-                if (window.google && window.google.translate) {
-                  new window.google.translate.TranslateElement({
-                    pageLanguage: 'en',
-                    includedLanguages: 'en,hi',
-                    autoDisplay: false
-                  }, 'google_translate_element');
+        <LanguageProvider>
+          {/* Off-screen container for Google Translate element */}
+          <div
+            id="google_translate_element"
+            style={{
+              position: "absolute",
+              left: "-9999px",
+              top: "-9999px",
+              width: "1px",
+              height: "1px",
+              overflow: "hidden",
+              opacity: 0,
+              pointerEvents: "none",
+            }}
+            aria-hidden="true"
+          />
+          <Script
+            id="google-translate-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                function googleTranslateElementInit() {
+                  if (window.google && window.google.translate) {
+                    new window.google.translate.TranslateElement({
+                      pageLanguage: 'en',
+                      includedLanguages: 'en,hi',
+                      autoDisplay: false
+                    }, 'google_translate_element');
+                  }
                 }
-              }
-            `,
-          }}
-        />
-        <Script
-          id="google-translate-script"
-          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-          strategy="afterInteractive"
-        />
-        {children}
-        <Analytics />
+              `,
+            }}
+          />
+          <Script
+            id="google-translate-script"
+            src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            strategy="afterInteractive"
+          />
+          {children}
+          <Analytics />
+        </LanguageProvider>
       </body>
     </html>
   );

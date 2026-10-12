@@ -1,18 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { SERVICES, ServiceItem } from "@/data/photographyData";
 import ServiceModal from "./ServiceModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ServicesProps {
   onSelectServiceForBooking?: (serviceTitle: string) => void;
 }
 
 export default function Services({ onSelectServiceForBooking }: ServicesProps) {
+  const { t, language } = useLanguage();
+  const [servicesList, setServicesList] = useState<ServiceItem[]>(SERVICES);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDynamicServices() {
+      try {
+        const res = await fetch("/api/admin/services");
+        const data = await res.json();
+        if (isMounted && data.success && Array.isArray(data.services) && data.services.length > 0) {
+          const mapped: ServiceItem[] = data.services.map((it: any) => ({
+            id: it.id,
+            title: it.title,
+            tagline: it.tagline || "",
+            description: it.description || "",
+            imageUrl: it.image_url,
+            duration: it.duration || "2 Hours",
+            deliveryTime: it.delivery_time || "7 business days",
+            deliverables: Array.isArray(it.deliverables) ? it.deliverables : [],
+            detailedDescription: it.detailed_description || "",
+            idealFor: it.ideal_for || "",
+          }));
+          setServicesList(mapped);
+        }
+      } catch (err) {
+        // Fallback to static services
+      }
+    }
+    loadDynamicServices();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOpenLearnMore = (service: ServiceItem) => {
     setSelectedService(service);
@@ -35,19 +69,19 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
           <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-            What We Offer
+            {t("services.badge", "What We Offer")}
           </p>
           <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-tight text-[#121212]">
-            Photography Services
+            {t("services.title", "Photography Services")}
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#554837] font-light max-w-xl mx-auto leading-relaxed">
-            Every assignment is crafted with meticulous attention to lighting, composition, and emotional resonance. Explore our dedicated specializations below.
+            {t("services.desc", "Every assignment is crafted with meticulous attention to lighting, composition, and emotional resonance. Explore our dedicated specializations below.")}
           </p>
         </div>
 
         {/* Services Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {SERVICES.map((service, index) => {
+          {servicesList.map((service, index) => {
             const isWideCard = index === 3 || index === 4;
             return (
               <div
@@ -82,7 +116,7 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
                     {/* Deliverables snippet */}
                     <div className="mt-4 pt-4 border-t border-[#F3ECE1] space-y-1.5">
                       <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans font-medium">
-                        Highlight Details
+                        {language === "hi" ? "प्रमुख विवरण" : "Highlight Details"}
                       </p>
                       <p className="text-xs text-[#2C2C2C] flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#BFAB93]" />
@@ -98,7 +132,7 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
                     onClick={() => handleOpenLearnMore(service)}
                     className="text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors py-2 flex items-center gap-1.5 group/btn cursor-pointer"
                   >
-                    <span>Learn More</span>
+                    <span>{language === "hi" ? "और जानें" : "Learn More"}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
 
@@ -106,7 +140,7 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
                     onClick={() => handleBookService(service.title)}
                     className="text-[11px] uppercase tracking-wider px-3.5 py-1.5 bg-[#121212] text-[#FAF7F2] hover:bg-[#333] transition-colors cursor-pointer"
                   >
-                    Book Now
+                    {language === "hi" ? "बुक करें" : "Book Now"}
                   </button>
                 </div>
               </div>
@@ -118,17 +152,21 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
         <div className="mt-14 p-8 sm:p-10 bg-[#FAF7F2] border border-[#E8DED0] flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <h4 className="font-serif text-xl sm:text-2xl text-[#121212]">
-              Need a bespoke commission or destination assignment?
+              {language === "hi"
+                ? "कस्टम प्रोजेक्ट या डेस्टिनेशन असाइनमेंट की आवश्यकता है?"
+                : "Need a bespoke commission or destination assignment?"}
             </h4>
             <p className="text-xs sm:text-sm text-[#554837] font-light max-w-xl">
-              From international travel assignments to custom multi-day commercial shoots, we tailor custom packages to your exact creative requirements.
+              {language === "hi"
+                ? "अंतरराष्ट्रीय यात्रा असाइनमेंट से लेकर कस्टम बहु-दिवसीय कमर्शियल शूट तक, हम आपकी सटीक रचनात्मक आवश्यकताओं के अनुसार पैकेज तैयार करते हैं।"
+                : "From international travel assignments to custom multi-day commercial shoots, we tailor custom packages to your exact creative requirements."}
             </p>
           </div>
           <button
             onClick={() => handleBookService("Custom Project")}
             className="shrink-0 px-6 py-3.5 text-xs uppercase tracking-widest bg-[#121212] text-white hover:bg-[#2C2C2C] transition-colors cursor-pointer font-medium"
           >
-            Request Custom Quote
+            {language === "hi" ? "कस्टम कोटेशन मांगें" : "Request Custom Quote"}
           </button>
         </div>
       </div>

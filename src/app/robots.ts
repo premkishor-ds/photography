@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/private/"],
+        disallow: ["/api/", "/admin/", "/admin", "/private/"],
       },
       // Explicitly encourage helpful search & AI indexing agents
       {
@@ -22,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
           "GPTBot",
         ],
         allow: "/",
-        disallow: ["/api/"],
+        disallow: ["/api/", "/admin/", "/admin"],
       },
     ],
     sitemap: `${siteConfig.baseUrl}/sitemap.xml`,

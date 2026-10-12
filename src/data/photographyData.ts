@@ -86,7 +86,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     id: "spo-1",
     title: "Velocity & Grit",
     category: "Sports Photography",
-    imageUrl: "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80",
     aspectRatio: "landscape",
     location: "National Athletic Stadium",
     year: "2026",
@@ -281,7 +281,7 @@ export const SERVICES: ServiceItem[] = [
     tagline: "High-speed, cinematic documentation of raw athletic intensity and triumph.",
     description:
       "Freeze split-second athleticism, emotion, and tournament adrenaline with pro-grade high-speed optics and dynamic angles.",
-    imageUrl: "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
     duration: "Half-Day / Match Coverage",
     deliveryTime: "24 – 48 hours expedited",
     deliverables: [

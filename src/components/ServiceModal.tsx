@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { X, Check, Clock, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
 import { ServiceItem } from "@/data/photographyData";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ServiceModalProps {
   service: ServiceItem | null;
@@ -18,6 +19,8 @@ export default function ServiceModal({
   onClose,
   onBookService,
 }: ServiceModalProps) {
+  const { language } = useLanguage();
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -41,6 +44,8 @@ export default function ServiceModal({
     onBookService(service.title);
   };
 
+  const isHindi = language === "hi";
+
   return (
     <div
       role="dialog"
@@ -57,7 +62,7 @@ export default function ServiceModal({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-20 p-2.5 bg-black/40 hover:bg-black text-white rounded-full transition-colors focus:outline-none"
-          aria-label="Close details"
+          aria-label={isHindi ? "विवरण बंद करें" : "Close details"}
         >
           <X className="w-5 h-5 stroke-[1.5]" />
         </button>
@@ -75,7 +80,7 @@ export default function ServiceModal({
             <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-black/30 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <span className="text-[11px] uppercase tracking-[0.25em] text-[#E8DED0] font-sans">
-                Service Package
+                {isHindi ? "सेवा पैकेज" : "Service Package"}
               </span>
               <h3 className="font-serif text-2xl sm:text-4xl font-normal mt-1">
                 {service.title}
@@ -93,7 +98,7 @@ export default function ServiceModal({
               <div className="bg-white p-3.5 border border-[#F3ECE1]">
                 <div className="flex items-center gap-1.5 text-xs text-[#7B6955] uppercase tracking-wider font-sans">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>Duration</span>
+                  <span>{isHindi ? "अवधि" : "Duration"}</span>
                 </div>
                 <p className="font-medium text-sm text-[#121212] mt-1">
                   {service.duration}
@@ -103,7 +108,7 @@ export default function ServiceModal({
               <div className="bg-white p-3.5 border border-[#F3ECE1]">
                 <div className="flex items-center gap-1.5 text-xs text-[#7B6955] uppercase tracking-wider font-sans">
                   <Calendar className="w-3.5 h-3.5" />
-                  <span>Turnaround</span>
+                  <span>{isHindi ? "डिलीवरी" : "Turnaround"}</span>
                 </div>
                 <p className="font-medium text-sm text-[#121212] mt-1">
                   {service.deliveryTime}
@@ -113,17 +118,19 @@ export default function ServiceModal({
               <div className="col-span-2 sm:col-span-1 bg-white p-3.5 border border-[#F3ECE1]">
                 <div className="flex items-center gap-1.5 text-xs text-[#7B6955] uppercase tracking-wider font-sans">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Rights</span>
+                  <span>{isHindi ? "अधिकार" : "Rights"}</span>
                 </div>
                 <p className="font-medium text-sm text-[#121212] mt-1">
-                  Full High-Res Rights
+                  {isHindi ? "पूर्ण हाई-रेज़ अधिकार" : "Full High-Res Rights"}
                 </p>
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <h4 className="font-serif text-lg text-[#121212] mb-2">About This Experience</h4>
+              <h4 className="font-serif text-lg text-[#121212] mb-2">
+                {isHindi ? "इस अनुभव के बारे में" : "About This Experience"}
+              </h4>
               <p className="text-sm text-[#554837] leading-relaxed font-light">
                 {service.detailedDescription}
               </p>
@@ -131,7 +138,9 @@ export default function ServiceModal({
 
             {/* Inclusions */}
             <div>
-              <h4 className="font-serif text-lg text-[#121212] mb-3">What&apos;s Included</h4>
+              <h4 className="font-serif text-lg text-[#121212] mb-3">
+                {isHindi ? "क्या शामिल है" : "What's Included"}
+              </h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {service.deliverables.map((item, idx) => (
                   <li
@@ -150,7 +159,7 @@ export default function ServiceModal({
             {/* Ideal For */}
             <div className="bg-[#F3ECE1]/70 p-4 border-l-2 border-[#121212]">
               <p className="text-xs uppercase tracking-widest text-[#7B6955] font-sans font-medium">
-                Ideal For
+                {isHindi ? "किसके लिए उपयुक्त" : "Ideal For"}
               </p>
               <p className="text-xs sm:text-sm text-[#121212] mt-1">
                 {service.idealFor}
@@ -160,7 +169,9 @@ export default function ServiceModal({
             {/* Bottom Actions */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#E8DED0]">
               <p className="text-xs text-[#7B6955] font-sans">
-                Custom requirements? Let&apos;s build a bespoke session.
+                {isHindi
+                  ? "विशेष आवश्यकताएं? आइए एक कस्टम सत्र तैयार करें।"
+                  : "Custom requirements? Let's build a bespoke session."}
               </p>
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
@@ -168,14 +179,14 @@ export default function ServiceModal({
                   onClick={onClose}
                   className="w-1/2 sm:w-auto px-5 py-3 text-xs uppercase tracking-widest border border-[#D7C7B2] text-[#554837] hover:bg-white transition-colors"
                 >
-                  Close
+                  {isHindi ? "बंद करें" : "Close"}
                 </button>
                 <button
                   type="button"
                   onClick={handleBook}
                   className="w-1/2 sm:w-auto px-6 py-3 text-xs uppercase tracking-widest bg-[#121212] text-white hover:bg-[#2C2C2C] transition-colors flex items-center justify-center gap-2 group font-medium"
                 >
-                  <span>Book This Service</span>
+                  <span>{isHindi ? "यह सेवा बुक करें" : "Book This Service"}</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

@@ -6,28 +6,31 @@ import { Camera, ArrowUp, Mail, Phone, MapPin } from "lucide-react";
 import { InstagramIcon, FacebookIcon, PinterestIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const FOOTER_NAV_LINKS = [
-  { name: "Home", href: "/" },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Services", href: "/services" },
-  { name: "Photography Gear", href: "/photography-gear" },
-  { name: "About", href: "/about" },
-  { name: "Journal & Guides", href: "/blog" },
-  { name: "FAQ", href: "/faq" },
-  { name: "Contact & Booking", href: "/contact" },
+  { name: "Home", href: "/", key: "nav.home" },
+  { name: "Portfolio", href: "/portfolio", key: "nav.portfolio" },
+  { name: "Services", href: "/services", key: "nav.services" },
+  { name: "Photography Gear", href: "/photography-gear", key: "nav.gear" },
+  { name: "About", href: "/about", key: "nav.about" },
+  { name: "Journal & Guides", href: "/blog", key: "nav.journal" },
+  { name: "FAQ", href: "/faq", key: "nav.faq" },
+  { name: "Contact & Booking", href: "/contact", key: "nav.contact" },
 ];
 
 export const FOOTER_SERVICE_LINKS = [
-  { name: "Portrait Photography", href: "/services/portrait-photography" },
-  { name: "Wedding Photography", href: "/services/wedding-photography" },
-  { name: "Event Photography", href: "/services/event-photography" },
-  { name: "Sports Photography", href: "/services/sports-photography" },
-  { name: "Commercial Photography", href: "/services/commercial-photography" },
-  { name: "Travel & Wildlife", href: "/services/travel-and-wildlife-photography" },
+  { name: "Portrait Photography", hindiName: "पोर्ट्रेट फोटोग्राफी", href: "/services/portrait-photography" },
+  { name: "Wedding Photography", hindiName: "विवाह फोटोग्राफी", href: "/services/wedding-photography" },
+  { name: "Event Photography", hindiName: "इवेंट फोटोग्राफी", href: "/services/event-photography" },
+  { name: "Sports Photography", hindiName: "खेल फोटोग्राफी", href: "/services/sports-photography" },
+  { name: "Commercial Photography", hindiName: "कमर्शियल फोटोग्राफी", href: "/services/commercial-photography" },
+  { name: "Travel & Wildlife", hindiName: "यात्रा एवं वन्यजीव फोटोग्राफी", href: "/services/travel-and-wildlife-photography" },
 ];
 
 export default function Footer() {
+  const { t, language } = useLanguage();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -48,13 +51,13 @@ export default function Footer() {
                   {siteConfig.siteName}
                 </span>
                 <span className="text-[10px] tracking-[0.3em] uppercase text-[#BFA076] font-sans">
-                  Fine Art & Editorial Studio • Jaipur, Rajasthan
+                  {t("footer.subtagline", "Fine Art & Editorial Studio • Jaipur, Rajasthan")}
                 </span>
               </div>
             </div>
 
             <p className="text-sm text-[#FAF7F2]/75 font-light leading-relaxed max-w-md font-sans">
-              Capturing moments, creating memories • क्षणों को कैद करना, यादें बनाना। Timeless visual storytelling dedicated to fine-art portraits, royal Rajasthan weddings, authentic events, high-speed sports, and commercial commissions.
+              {t("footer.tagline", "Capturing moments, creating memories. Timeless visual storytelling dedicated to fine-art portraits, royal Rajasthan weddings, authentic events, sports, and commercial commissions.")}
             </p>
 
             {/* Social Icons */}
@@ -101,7 +104,7 @@ export default function Footer() {
           {/* Quick Navigation Links */}
           <div className="lg:col-span-2 space-y-4">
             <h4 className="text-xs uppercase tracking-[0.25em] text-[#BFA076] font-sans font-medium">
-              Navigation
+              {t("footer.navTitle", "Navigation")}
             </h4>
             <ul className="space-y-2.5">
               {FOOTER_NAV_LINKS.map((link) => (
@@ -110,7 +113,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-xs sm:text-sm text-[#FAF7F2]/75 hover:text-white transition-colors tracking-wide hover:translate-x-1 inline-block"
                   >
-                    {link.name}
+                    {t(link.key, link.name)}
                   </Link>
                 </li>
               ))}
@@ -120,7 +123,7 @@ export default function Footer() {
           {/* Service Links */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs uppercase tracking-[0.25em] text-[#BFA076] font-sans font-medium">
-              Services
+              {t("footer.servicesTitle", "Services")}
             </h4>
             <ul className="space-y-2.5">
               {FOOTER_SERVICE_LINKS.map((service) => (
@@ -129,7 +132,7 @@ export default function Footer() {
                     href={service.href}
                     className="text-xs sm:text-sm text-[#FAF7F2]/75 hover:text-white transition-colors tracking-wide hover:translate-x-1 inline-block"
                   >
-                    {service.name}
+                    {language === "hi" && service.hindiName ? service.hindiName : service.name}
                   </Link>
                 </li>
               ))}
@@ -139,7 +142,7 @@ export default function Footer() {
           {/* Studio Contact Summary */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-xs uppercase tracking-[0.25em] text-[#BFA076] font-sans font-medium">
-              Studio Details
+              {t("footer.studioTitle", "Studio Details")}
             </h4>
             <div className="space-y-3 text-xs sm:text-sm text-[#FAF7F2]/75 font-sans">
               <p className="flex items-center gap-2.5">
@@ -164,11 +167,15 @@ export default function Footer() {
                 <MapPin className="w-3.5 h-3.5 text-[#BFA076] shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p>
-                    {siteConfig.business.address.streetAddress}, {siteConfig.business.address.addressLocality}, {siteConfig.business.address.addressRegion} {siteConfig.business.address.postalCode}
+                    {language === "hi" && siteConfig.business.address.hindiAddress
+                      ? siteConfig.business.address.hindiAddress
+                      : `${siteConfig.business.address.streetAddress}, ${siteConfig.business.address.addressLocality}, ${siteConfig.business.address.addressRegion} ${siteConfig.business.address.postalCode}`}
                   </p>
-                  <p className="text-[11px] text-[#FAF7F2]/60 font-sans">
-                    {siteConfig.business.address.hindiAddress}
-                  </p>
+                  {language !== "hi" && (
+                    <p className="text-[11px] text-[#FAF7F2]/60 font-sans">
+                      {siteConfig.business.address.hindiAddress}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -177,7 +184,7 @@ export default function Footer() {
 
         {/* Bottom Bar: Language Switcher, Legal Links & Copyright 2026 */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#FAF7F2]/60 font-sans">
-          <p>© 2026 {siteConfig.siteName}. All rights reserved.</p>
+          <p>© 2026 {siteConfig.siteName}. {t("footer.rights", "All rights reserved.")}</p>
 
           <div className="flex flex-wrap items-center justify-center gap-6">
             <LanguageSwitcher variant="footer" />
@@ -185,14 +192,14 @@ export default function Footer() {
               href="/privacy-policy"
               className="hover:text-white transition-colors"
             >
-              Privacy Policy
+              {t("footer.privacy", "Privacy Policy")}
             </Link>
             <span>•</span>
             <Link
               href="/terms-and-conditions"
               className="hover:text-white transition-colors"
             >
-              Terms & Conditions
+              {t("footer.terms", "Terms & Conditions")}
             </Link>
             <span>•</span>
             <button
@@ -200,7 +207,7 @@ export default function Footer() {
               className="inline-flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
               aria-label="Scroll to top of page"
             >
-              <span>Back to Top</span>
+              <span>{t("footer.backToTop", "Back to Top")}</span>
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>
