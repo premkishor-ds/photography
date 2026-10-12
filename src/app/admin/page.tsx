@@ -123,6 +123,7 @@ interface StudioSettingsData {
   governing_jurisdiction?: string;
   cancellation_policy?: string;
   default_min_booking_duration?: number;
+  favicon_url?: string;
 }
 
 interface DayScheduleRow {
@@ -144,6 +145,65 @@ interface Stats {
   dbStatus: string;
   projectRef: string;
   region: string;
+}
+
+const FAVICON_PRESETS = [
+  {
+    id: "camera",
+    name: "Studio Camera",
+    description: "Gold & Charcoal luxury camera emblem",
+  },
+  {
+    id: "aperture",
+    name: "Aperture Blades",
+    description: "Geometric lens shutter iris",
+  },
+  {
+    id: "monogram",
+    name: "Editorial Monogram",
+    description: "Signature typography royal monogram",
+  },
+];
+
+function renderFaviconPreview(faviconVal?: string) {
+  const val = faviconVal?.trim() || "camera";
+  if (val.startsWith("http")) {
+    return (
+      <img
+        src={val}
+        alt="Favicon preview"
+        className="w-4 h-4 object-contain rounded-xs"
+      />
+    );
+  }
+  if (val === "aperture") {
+    return (
+      <svg viewBox="0 0 32 32" className="w-4 h-4">
+        <rect width="32" height="32" rx="16" fill="#121212"/>
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#FAF7F2" strokeWidth="1.5"/>
+        <line x1="16" y1="7" x2="23.8" y2="20.5" stroke="#BFA076" strokeWidth="1.2"/>
+        <line x1="23.8" y1="20.5" x2="8.2" y2="20.5" stroke="#BFA076" strokeWidth="1.2"/>
+        <line x1="8.2" y1="20.5" x2="16" y2="7" stroke="#BFA076" strokeWidth="1.2"/>
+        <circle cx="16" cy="16" r="2.2" fill="#BFA076"/>
+      </svg>
+    );
+  }
+  if (val === "monogram") {
+    return (
+      <svg viewBox="0 0 32 32" className="w-4 h-4">
+        <rect width="32" height="32" rx="16" fill="#121212"/>
+        <text x="16" y="21.5" fontFamily="Georgia, serif" fontSize="16" fontWeight="bold" fill="#BFA076" textAnchor="middle">P</text>
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 32 32" className="w-4 h-4">
+      <rect width="32" height="32" rx="16" fill="#121212"/>
+      <path d="M9 13.5C9 12.67 9.67 12 10.5 12H12.2L13.1 10.7C13.3 10.4 13.6 10.2 14 10.2H18C18.4 10.2 18.7 10.4 18.9 10.7L19.8 12H21.5C22.33 12 23 12.67 23 13.5V20.5C23 21.33 22.33 22 21.5 22H10.5C9.67 22 9 21.33 9 20.5V13.5Z" fill="#FAF7F2"/>
+      <circle cx="16" cy="17" r="3.75" fill="#121212" stroke="#BFA076" strokeWidth="1.25"/>
+      <circle cx="16" cy="17" r="1.8" fill="#BFA076"/>
+    </svg>
+  );
 }
 
 export default function AdminPage() {
@@ -264,9 +324,15 @@ export default function AdminPage() {
     booking_retainer_percent: "30–50%",
     governing_jurisdiction: "Jaipur, Rajasthan, India",
     cancellation_policy: "For outdoor portrait and landscape shoots affected by severe adverse weather (heavy rain, extreme storms), sessions will be rescheduled to the earliest mutually agreed date at zero fee.",
+    favicon_url: "camera",
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsFeedback, setSettingsFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // Favicon Upload & Preset State
+  const [uploadModeFavicon, setUploadModeFavicon] = useState<"preset" | "file" | "url">("preset");
+  const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
+  const [uploadErrorFavicon, setUploadErrorFavicon] = useState<string | null>(null);
 
   // Business Hours Management State (Google Business Profile Style)
   const [isHoursExpanded, setIsHoursExpanded] = useState(true);
@@ -936,6 +1002,28 @@ export default function AdminPage() {
       setUploadErrorHero(err.message || "Upload request failed");
     } finally {
       setIsUploadingHero(false);
+    }
+  };
+
+  const handleFaviconUpload = async (file: File) => {
+    if (!file) return;
+    setIsUploadingFavicon(true);
+    setUploadErrorFavicon(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setStudioSettings((prev) => ({ ...prev, favicon_url: data.url }));
+        setUploadModeFavicon("url");
+      } else {
+        setUploadErrorFavicon(data.error || "Upload failed");
+      }
+    } catch (err: any) {
+      setUploadErrorFavicon(err.message || "Upload request failed");
+    } finally {
+      setIsUploadingFavicon(false);
     }
   };
 
@@ -3456,6 +3544,194 @@ export default function AdminPage() {
                       )}
                     </div>
                   </div>
+                </div>
+
+                {/* Browser Tab Favicon & Branding Section */}
+                <div className="pt-6 border-t border-[#F3ECE1] space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] font-medium text-xs flex items-center gap-2">
+                        <Globe className="w-3.5 h-3.5 text-[#BFA076]" />
+                        <span>Browser Tab Favicon & Branding Icon</span>
+                      </label>
+                      <p className="text-[11px] text-[#7B6955]">
+                        The icon displayed next to your studio title in visitors' browser tabs, bookmarks, and mobile home screens.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-[#FAF7F2] p-0.5 border border-[#D7C7B2] rounded-xs text-[11px] self-start sm:self-auto">
+                      <button
+                        type="button"
+                        onClick={() => setUploadModeFavicon("preset")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModeFavicon === "preset"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        <span>Presets</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUploadModeFavicon("file")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModeFavicon === "file"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <Upload className="w-3 h-3" />
+                        <span>Upload File</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUploadModeFavicon("url")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModeFavicon === "url"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Custom URL</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Live Browser Tab Simulation Mockup */}
+                  <div className="p-4 bg-[#FAF7F2] border border-[#E8DED0] rounded-xs space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-semibold flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span>Live Browser Tab Simulation</span>
+                      </p>
+                      <span className="text-[10px] text-[#7B6955] font-mono">
+                        Active: {studioSettings.favicon_url || "camera"}
+                      </span>
+                    </div>
+
+                    {/* Realistic Desktop Browser Tab Bar */}
+                    <div className="bg-[#E5DFD5] pt-2 px-3 pb-0 rounded-t-md flex items-end max-w-lg border-b border-[#D7C7B2]">
+                      <div className="bg-[#FAF7F2] px-3.5 py-2 rounded-t-md flex items-center gap-2.5 border-t border-l border-r border-[#D7C7B2] shadow-xs text-xs max-w-sm shrink-0">
+                        {/* Tab Favicon */}
+                        <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+                          {renderFaviconPreview(studioSettings.favicon_url)}
+                        </div>
+                        {/* Tab Title */}
+                        <span className="font-sans text-[11px] text-[#121212] font-medium truncate max-w-[200px]">
+                          {studioSettings.studio_name || "Your Photography"} | {studioSettings.tagline || "Capturing Moments"}
+                        </span>
+                        {/* Close Button */}
+                        <span className="text-[10px] text-[#7B6955] hover:text-[#121212] ml-2 cursor-default font-bold">×</span>
+                      </div>
+                      <span className="ml-2 text-xs text-[#7B6955] mb-2 font-bold cursor-default">+</span>
+                    </div>
+                    <p className="text-[10px] text-[#7B6955]">
+                      Updates instantly reflect in all open browser tabs upon saving.
+                    </p>
+                  </div>
+
+                  {/* Mode 1: Presets */}
+                  {uploadModeFavicon === "preset" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                      {FAVICON_PRESETS.map((preset) => {
+                        const isSelected = (studioSettings.favicon_url || "camera") === preset.id;
+                        return (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => setStudioSettings({ ...studioSettings, favicon_url: preset.id })}
+                            className={`p-3.5 border text-left transition-all cursor-pointer flex items-center gap-3.5 ${
+                              isSelected
+                                ? "border-[#121212] bg-white ring-1 ring-[#121212] shadow-xs"
+                                : "border-[#E8DED0] bg-[#FAF7F2]/60 hover:bg-white hover:border-[#D7C7B2]"
+                            }`}
+                          >
+                            <div className="w-8 h-8 rounded-full bg-[#121212] flex items-center justify-center shrink-0 border border-[#BFA076]/40 shadow-xs">
+                              {renderFaviconPreview(preset.id)}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-xs text-[#121212] truncate">{preset.name}</span>
+                                {isSelected && <Check className="w-3.5 h-3.5 text-[#BFA076] shrink-0" />}
+                              </div>
+                              <p className="text-[10px] text-[#7B6955] truncate">{preset.description}</p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Mode 2: File Upload */}
+                  {uploadModeFavicon === "file" && (
+                    <div className="space-y-2 pt-1">
+                      <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-[#D7C7B2] hover:border-[#BFA076] bg-[#FAF7F2] hover:bg-[#F3ECE1] cursor-pointer transition-colors text-center group rounded-xs">
+                        <input
+                          type="file"
+                          accept="image/png,image/svg+xml,image/x-icon,image/jpeg,image/webp"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) handleFaviconUpload(f);
+                          }}
+                        />
+                        {isUploadingFavicon ? (
+                          <div className="flex flex-col items-center gap-2 text-[#7B6955] py-2">
+                            <RefreshCw className="w-5 h-5 animate-spin text-[#BFA076]" />
+                            <span className="font-medium text-xs">Uploading favicon to Supabase Cloud Storage...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center gap-1.5">
+                            <div className="w-9 h-9 rounded-full bg-[#BFA076]/20 text-[#BFA076] flex items-center justify-center group-hover:scale-110 transition-transform">
+                              <Upload className="w-4 h-4" />
+                            </div>
+                            <p className="text-xs font-medium text-[#121212]">
+                              Click to select custom favicon (SVG, PNG, ICO, WebP)
+                            </p>
+                            <p className="text-[10px] text-[#7B6955]">
+                              Square ratio recommended (32×32, 64×64, or vector SVG) • Automatically hosted on Supabase
+                            </p>
+                          </div>
+                        )}
+                      </label>
+
+                      {uploadErrorFavicon && (
+                        <p className="text-[11px] text-red-600 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" />
+                          {uploadErrorFavicon}
+                        </p>
+                      )}
+
+                      {studioSettings.favicon_url?.startsWith("http") && (
+                        <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] rounded-xs">
+                          <span className="truncate max-w-sm font-mono">{studioSettings.favicon_url}</span>
+                          <span className="px-2 py-0.5 bg-emerald-200 text-emerald-900 text-[9px] uppercase tracking-wider font-semibold rounded-xs">
+                            Active Custom URL
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Mode 3: Custom URL */}
+                  {uploadModeFavicon === "url" && (
+                    <div className="pt-1">
+                      <input
+                        type="url"
+                        value={studioSettings.favicon_url || ""}
+                        onChange={(e) =>
+                          setStudioSettings({ ...studioSettings, favicon_url: e.target.value })
+                        }
+                        placeholder="https://.../favicon.png or https://.../logo.svg"
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                      />
+                      <p className="text-[10px] text-[#7B6955] mt-1">
+                        Paste a direct link to any public PNG or SVG image.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 

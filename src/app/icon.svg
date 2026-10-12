@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="16" fill="#121212"/>
+  <rect width="30" height="30" x="1" y="1" rx="15" fill="none" stroke="#BFA076" stroke-width="0.75" stroke-opacity="0.6"/>
+  <!-- Camera Body -->
+  <path d="M9 13.5C9 12.67 9.67 12 10.5 12H12.2L13.1 10.7C13.3 10.4 13.6 10.2 14 10.2H18C18.4 10.2 18.7 10.4 18.9 10.7L19.8 12H21.5C22.33 12 23 12.67 23 13.5V20.5C23 21.33 22.33 22 21.5 22H10.5C9.67 22 9 21.33 9 20.5V13.5Z" fill="#FAF7F2"/>
+  <!-- Lens Outer Ring -->
+  <circle cx="16" cy="17" r="3.75" fill="#121212" stroke="#BFA076" stroke-width="1.25"/>
+  <!-- Lens Inner Core -->
+  <circle cx="16" cy="17" r="1.8" fill="#BFA076"/>
+  <circle cx="15.3" cy="16.3" r="0.6" fill="#FFFFFF" fill-opacity="0.8"/>
+  <!-- Small Flash/LED dot -->
+  <circle cx="20.5" cy="13.7" r="0.6" fill="#BFA076"/>
+</svg>

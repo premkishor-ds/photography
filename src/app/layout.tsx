@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     default: `${siteConfig.siteName} | ${siteConfig.brandTagline}`,
     template: `%s | ${siteConfig.siteName}`,
   },
+  icons: {
+    icon: "/api/favicon",
+    shortcut: "/api/favicon",
+    apple: "/api/favicon",
+  },
   description: siteConfig.brandSubtitle,
   keywords: [
     "photography",

@@ -55,7 +55,7 @@ export async function PUT(req: NextRequest) {
       privacy_policy_custom: body.privacy_policy_custom ?? "",
       booking_retainer_percent: body.booking_retainer_percent ?? "30–50%",
       governing_jurisdiction: body.governing_jurisdiction ?? "Jaipur, Rajasthan, India",
-      cancellation_policy: body.cancellation_policy ?? "",
+      favicon_url: body.favicon_url !== undefined ? body.favicon_url : "camera",
       default_min_booking_duration: body.default_min_booking_duration ? Math.max(60, Number(body.default_min_booking_duration)) : 60,
       updated_at: new Date().toISOString(),
     };

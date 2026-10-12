@@ -29,6 +29,7 @@ export interface StudioSettings {
   pinterest_url: string;
   five_hundred_px_url: string;
   youtube_url: string;
+  favicon_url?: string;
 }
 
 const defaultSettings: StudioSettings = {
@@ -36,6 +37,7 @@ const defaultSettings: StudioSettings = {
   tagline: siteConfig.brandTagline || "Capturing Moments, Creating Memories",
   subtagline: siteConfig.brandSubtitle || "Professional photography for life's most meaningful moments.",
   hero_image_url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85",
+  favicon_url: "camera",
   email: siteConfig.business.email || "contact@yourphotography.com",
   phone: siteConfig.business.phone || "+91 98290 12345",
   whatsapp_number: siteConfig.business.whatsappNumber || "919829012345",
@@ -95,6 +97,32 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  // Dynamically synchronize the browser tab favicon with Studio Settings in real-time
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const faviconHref = settings.favicon_url?.trim()
+      ? settings.favicon_url.startsWith("http")
+        ? settings.favicon_url
+        : `/api/favicon?v=${encodeURIComponent(settings.favicon_url)}`
+      : "/api/favicon";
+
+    let iconLink = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+    if (!iconLink) {
+      iconLink = document.createElement("link");
+      iconLink.rel = "icon";
+      document.head.appendChild(iconLink);
+    }
+    iconLink.href = faviconHref;
+
+    let appleLink = document.querySelector<HTMLLinkElement>("link[rel='apple-touch-icon']");
+    if (!appleLink) {
+      appleLink = document.createElement("link");
+      appleLink.rel = "apple-touch-icon";
+      document.head.appendChild(appleLink);
+    }
+    appleLink.href = faviconHref;
+  }, [settings.favicon_url]);
 
   return (
     <StudioContext.Provider
