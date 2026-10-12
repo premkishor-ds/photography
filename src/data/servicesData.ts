@@ -263,7 +263,7 @@ export const SERVICES_DATA: ServiceDetail[] = [
     heroDescription:
       "Freezing split-second human triumph, speed, and tournament emotion with pro-grade telephoto precision across Sawai Mansingh Stadium, polo grounds, and athletic arenas.",
     imageUrl:
-      "https://images.unsplash.com/photo-1531415074868-036b107e775a?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "High-speed cricket batsman action during intense competitive match under stadium lights",
     duration: "Half-Day / Match / Tournament",
     deliveryTime: "24 – 48 hours expedited",

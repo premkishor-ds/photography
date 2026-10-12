@@ -60,7 +60,7 @@ export const PORTFOLIO_CATEGORIES_META: PortfolioCategoryMeta[] = [
     description:
       "High-speed action photographs freezing split-second athletic intensity, cricket tournaments, polo chukkers, and championship triumph.",
     heroImage:
-      "https://images.unsplash.com/photo-1531415074868-036b107e775a?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1600&q=80",
     heroAlt: "High-speed cricket batsman action during intense competitive match under stadium lights",
   },
   {
@@ -227,7 +227,7 @@ export const ALL_PORTFOLIO_ITEMS: DetailedPortfolioItem[] = [
     category: "Sports Photography",
     categorySlug: "sports",
     imageUrl:
-      "https://images.unsplash.com/photo-1531415074868-036b107e775a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Cricket batsman playing an exquisite cover drive under floodlights at Sawai Mansingh Stadium",
     location: "Sawai Mansingh Stadium, Jaipur",
     year: "2026",

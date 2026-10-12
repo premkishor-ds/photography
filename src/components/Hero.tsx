@@ -28,7 +28,7 @@ export default function Hero() {
           src={settings.hero_image_url || "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85"}
           alt="Majestic Hawa Mahal in Jaipur Rajasthan during golden sunrise light"
           fill
-          priority
+          loading="eager"
           sizes="100vw"
           className="object-cover object-center filter brightness-[0.78] contrast-[1.05] transition-transform duration-1000 scale-100 hover:scale-102"
           unoptimized

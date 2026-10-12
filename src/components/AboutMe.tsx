@@ -46,7 +46,7 @@ export default function AboutMe() {
                 fill
                 sizes="(max-width: 1024px) 90vw, 40vw"
                 className="object-cover object-center filter contrast-[1.03]"
-                priority
+                loading="lazy"
                 unoptimized
               />
 

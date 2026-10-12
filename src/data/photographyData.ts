@@ -91,7 +91,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     id: "spo-1",
     title: "The Decisive Cover Drive",
     category: "Sports Photography",
-    imageUrl: "https://images.unsplash.com/photo-1531415074868-036b107e775a?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
     aspectRatio: "landscape",
     location: "Sawai Mansingh Stadium, Jaipur",
     year: "2026",

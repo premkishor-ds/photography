@@ -38,7 +38,7 @@ export default function AboutPageContent() {
               src={portraitUrl}
               alt={`${photographerName}, ${photographerRole}`}
               fill
-              priority
+              loading="eager"
               sizes="(max-width: 1024px) 90vw, 40vw"
               className="object-cover object-center"
               unoptimized

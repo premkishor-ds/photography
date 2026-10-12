@@ -227,84 +227,36 @@ const LanguageContext = createContext<LanguageContextType>({
   t: (key: string, defaultText?: string) => defaultText || key,
 });
 
-function clearGoogleTranslateCookies() {
-  if (typeof document === "undefined" || typeof window === "undefined") return;
-  const hostname = window.location.hostname;
-  const domainParts = hostname.split(".");
-  const domains = ["", hostname, `.${hostname}`];
-  if (domainParts.length > 1) {
-    domains.push(`.${domainParts.slice(-2).join(".")}`);
-  }
-
-  const paths = ["/", window.location.pathname];
-  domains.forEach((dom) => {
-    paths.forEach((p) => {
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${p}; ${dom ? `domain=${dom};` : ""}`;
-    });
-  });
-}
-
-function setGoogleTranslateCookie(lang: Language) {
-  if (typeof document === "undefined" || typeof window === "undefined") return;
-  const cookieVal = lang === "hi" ? "/en/hi" : "/en/en";
-  const hostname = window.location.hostname;
-  const domainParts = hostname.split(".");
-
-  document.cookie = `googtrans=${cookieVal}; path=/;`;
-  document.cookie = `googtrans=${cookieVal}; path=/; domain=${hostname};`;
-  if (domainParts.length > 1) {
-    document.cookie = `googtrans=${cookieVal}; path=/; domain=.${domainParts.slice(-2).join(".")};`;
-  }
+function clearLegacyCookies() {
+  if (typeof document === "undefined") return;
+  try {
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  } catch {}
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   // STRICT DEFAULT: Always start as English ("en")
   const [language, setLanguageState] = useState<Language>("en");
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Check user preference in localStorage
-    const saved = localStorage.getItem("site_lang");
-    if (saved === "hi") {
-      setLanguageState("hi");
-      setGoogleTranslateCookie("hi");
-    } else {
-      // Default to English strictly
-      setLanguageState("en");
-      localStorage.setItem("site_lang", "en");
-      clearGoogleTranslateCookies();
-    }
-    setIsInitialized(true);
+    try {
+      const saved = localStorage.getItem("site_lang");
+      if (saved === "hi") {
+        setLanguageState("hi");
+      } else {
+        setLanguageState("en");
+      }
+      clearLegacyCookies();
+    } catch {}
   }, []);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("site_lang", lang);
-
-      if (lang === "hi") {
-        setGoogleTranslateCookie("hi");
-        // Trigger Google Translate combo if available
-        const select = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-        if (select) {
-          select.value = "hi";
-          select.dispatchEvent(new Event("change"));
-        } else {
-          // If select isn't ready, reload with cookie to activate Google Translate
-          window.location.reload();
-        }
-      } else {
-        // Switching to English
-        clearGoogleTranslateCookies();
-        const select = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-        if (select) {
-          select.value = "en";
-          select.dispatchEvent(new Event("change"));
-        }
-        // Always clean reload to ensure all Google Translate DOM modifications revert to pristine English
-        window.location.reload();
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("site_lang", lang);
       }
-    }
+    } catch {}
   };
 
   const t = (key: string, defaultText?: string): string => {

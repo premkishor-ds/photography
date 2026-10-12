@@ -129,7 +129,7 @@ export default function PortfolioGallery() {
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading={index < 4 ? "eager" : "lazy"}
+                    loading="lazy"
                   />
 
                   {/* Gradient Overlay */}

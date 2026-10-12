@@ -4,7 +4,7 @@
  * llms.txt, JSON-LD schemas, and the Contact API on http://localhost:3000.
  */
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.TEST_URL || "http://localhost:3002";
 
 async function runAudit() {
   console.log("==================================================");
