@@ -171,7 +171,7 @@ export const SERVICES_DATA: ServiceDetail[] = [
       {
         question: "Do you travel for destination weddings?",
         answer:
-          "Yes, we regularly document weddings across the United States, Europe, and worldwide destinations. Travel logistics and accommodations are coordinated transparently as part of your custom quote.",
+          "Yes, while based in Jaipur, we regularly document royal destination weddings across Rajasthan (Udaipur, Jodhpur, Jaisalmer), Goa, Kerala, Delhi NCR, and worldwide destinations. Travel logistics and accommodations are coordinated transparently as part of your custom quote.",
       },
       {
         question: "Is a second photographer included in wedding coverage?",

@@ -15,17 +15,17 @@ import {
 import { siteConfig } from "@/config/siteConfig";
 
 export const metadata = constructMetadata({
-  title: "New York Photography Studio",
+  title: "New York Destination Photography & Commissions",
   description:
-    "Professional photography based in Soho, New York. Specializing in Manhattan and Brooklyn portraits, documentary weddings, galas, and athletic campaigns.",
+    `On-location photography commissions across Manhattan and Brooklyn by Jaipur-based lead photographer ${siteConfig.photographer.name}. Destination weddings, portraits, and galas.`,
   path: "/locations/new-york",
 });
 
 export default function NewYorkLocationPage() {
   const webPageSchema = generateWebPageSchema(
     "/locations/new-york",
-    "New York Photography Services & Soho Studio",
-    "On-location and studio photography across New York City, Brooklyn, and Manhattan."
+    "New York Destination Photography & Commissions",
+    "On-location destination sessions across New York City, Brooklyn, and Manhattan coordinated by our flagship Jaipur studio."
   );
 
   const businessSchema = generatePhotographyBusinessSchema();
@@ -49,13 +49,13 @@ export default function NewYorkLocationPage() {
           <section className="py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             <div className="lg:col-span-7 space-y-6">
               <span className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium">
-                Verified Studio Base
+                Destination Commissions • अंतरराष्ट्रीय कवरेज
               </span>
               <h1 className="font-serif text-4xl sm:text-6xl font-light tracking-tight text-[#121212]">
-                New York Photography Services & Studio
+                New York Destination Photography & Commissions
               </h1>
               <p className="text-base sm:text-lg text-[#554837] font-light leading-relaxed">
-                Operating from our natural daylight studio in Soho, we create editorial portraits, candid wedding narratives, and commercial imagery across all five boroughs.
+                Operating from our flagship studio in Jaipur, Rajasthan, we travel globally for luxury destination weddings, editorial portraits, and commercial brand campaigns across New York City.
               </p>
 
               {/* Studio Details Card */}
@@ -64,13 +64,13 @@ export default function NewYorkLocationPage() {
                   <MapPin className="w-4 h-4 text-[#BFA076] shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs uppercase tracking-wider text-[#7B6955] font-sans font-medium">
-                      Studio Address
+                      Flagship Studio Headquarters
                     </p>
                     <p className="text-sm font-medium text-[#121212] mt-0.5">
                       {siteConfig.business.address.streetAddress}
                     </p>
                     <p className="text-xs text-[#554837]">
-                      {siteConfig.business.address.addressLocality}, {siteConfig.business.address.addressRegion} {siteConfig.business.address.postalCode}
+                      {siteConfig.business.address.addressLocality}, {siteConfig.business.address.addressRegion} {siteConfig.business.address.postalCode}, India • On-Location NYC Sessions by Appointment
                     </p>
                   </div>
                 </div>
@@ -96,13 +96,13 @@ export default function NewYorkLocationPage() {
                   href="/contact"
                   className="w-full sm:w-auto px-8 py-4 bg-[#121212] text-white text-xs uppercase tracking-[0.2em] font-medium hover:bg-[#2C2C2C] transition-colors text-center"
                 >
-                  Book a New York Session
+                  Book Destination Session
                 </Link>
                 <Link
                   href="/portfolio"
                   className="w-full sm:w-auto px-8 py-4 border border-[#121212] text-[#121212] text-xs uppercase tracking-[0.2em] font-medium hover:bg-[#121212] hover:text-white transition-colors text-center"
                 >
-                  View NYC Portfolio
+                  View Portfolio
                 </Link>
               </div>
             </div>
@@ -189,24 +189,24 @@ export default function NewYorkLocationPage() {
 
             <div className="bg-white p-8 border border-[#E8DED0] space-y-4 text-center">
               <h3 className="font-serif text-xl text-[#121212]">
-                Reserve Your New York Session
+                Reserve Your Destination Session
               </h3>
               <p className="text-xs text-[#554837] leading-relaxed">
-                Contact our studio team to confirm local calendar availability or schedule an in-person consultation in Soho.
+                Contact our Jaipur studio team to confirm upcoming travel dates, portfolio commissions, and destination availability.
               </p>
               <Link
                 href="/contact"
                 className="inline-block px-8 py-3.5 bg-[#121212] text-white text-xs uppercase tracking-widest font-medium hover:bg-[#2C2C2C] transition-colors"
               >
-                Inquire With NYC Studio
+                Inquire With Studio Team
               </Link>
             </div>
           </section>
 
           {/* Booking CTA */}
           <BookingCtaBanner
-            title="Capturing New York Stories"
-            subtitle="Let's create timeless photographs against the most captivating architectural backdrop in the world."
+            title="Planning an International Commission?"
+            subtitle="Connect with our studio team with your dates and overseas itinerary. We coordinate travel logistics seamlessly."
           />
         </div>
       </main>

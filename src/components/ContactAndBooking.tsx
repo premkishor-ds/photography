@@ -394,7 +394,7 @@ export default function ContactAndBooking({
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder={language === "hi" ? "उदा. राहुल शर्मा" : "e.g. Eleanor Vance"}
+                      placeholder={language === "hi" ? "उदा. राहुल शर्मा" : "e.g. Rahul Sharma"}
                       aria-invalid={errors.name ? true : false}
                       aria-describedby={errors.name ? "name-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
@@ -425,7 +425,7 @@ export default function ContactAndBooking({
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="eleanor@example.com"
+                      placeholder="rahul.sharma@gmail.com"
                       aria-invalid={errors.email ? true : false}
                       aria-describedby={errors.email ? "email-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
