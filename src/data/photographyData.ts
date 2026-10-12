@@ -332,10 +332,11 @@ export const CONTACT_DETAILS = {
   whatsappDisplay: siteConfig.business.whatsappDisplay,
   address: `${siteConfig.business.address.streetAddress}, ${siteConfig.business.address.addressLocality}, ${siteConfig.business.address.addressRegion} ${siteConfig.business.address.postalCode}`,
   hindiAddress: siteConfig.business.address.hindiAddress,
-  workingHours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
-  instagramHandle: "@yourphotography",
+  workingHours: siteConfig.business.hoursSummary || "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
+  instagramHandle: process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE || "@yourphotography",
   instagramUrl: siteConfig.socialProfiles.instagram,
   pinterestUrl: siteConfig.socialProfiles.pinterest,
   fiveHundredPxUrl: siteConfig.socialProfiles.fiveHundredPx,
   facebookUrl: siteConfig.socialProfiles.facebook,
+  youtubeUrl: siteConfig.socialProfiles.youtube,
 };

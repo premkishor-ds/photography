@@ -2,64 +2,85 @@
  * Centralized Website & Business Configuration
  *
  * All canonical URLs, business identifiers, contact points, and
- * metadata defaults are defined here to eliminate hardcoded domains
- * and ensure single-source-of-truth accuracy across SEO, schema, and UI.
+ * metadata defaults are defined here. Every key is dynamically configurable
+ * via NEXT_PUBLIC_* environment variables or runtime database settings.
  */
 
 export const siteConfig = {
   // Domain & Environment
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://yourphotography.com",
-  siteName: "Your Photography",
-  defaultLocale: "en-US",
+  siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Your Photography",
+  defaultLocale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en-US",
 
   // Brand & Visual Identity
-  brandTagline: "Capturing Moments, Creating Memories",
-  brandTaglineHindi: "क्षणों को कैद करना, यादें बनाना",
+  brandTagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || "Capturing Moments, Creating Memories",
+  brandTaglineHindi: process.env.NEXT_PUBLIC_BRAND_TAGLINE_HINDI || "क्षणों को कैद करना, यादें बनाना",
   brandSubtitle:
+    process.env.NEXT_PUBLIC_BRAND_SUBTITLE ||
     "Professional fine-art, portrait, royal wedding, sports, and commercial photography across Jaipur, Rajasthan, and India.",
-  logoUrl: "/logo.png",
+  logoUrl: process.env.NEXT_PUBLIC_LOGO_URL || "/logo.png",
   defaultOgImage:
+    process.env.NEXT_PUBLIC_HERO_IMAGE_URL ||
+    process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE ||
     "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&h=630&q=85",
 
   // Business Entity Details (LocalBusiness / PhotographyBusiness Schema)
   business: {
-    legalName: "Your Photography Studio",
-    tradingName: "Your Photography",
-    foundingYear: "2014",
-    priceRange: "₹₹₹",
-    currenciesAccepted: "INR",
-    currencySymbol: "₹",
-    paymentAccepted: "UPI (Google Pay, PhonePe, Paytm), Net Banking, Credit/Debit Card, Cash",
+    legalName:
+      process.env.NEXT_PUBLIC_BUSINESS_LEGAL_NAME ||
+      (process.env.NEXT_PUBLIC_SITE_NAME
+        ? `${process.env.NEXT_PUBLIC_SITE_NAME} Studio`
+        : "Your Photography Studio"),
+    tradingName:
+      process.env.NEXT_PUBLIC_BUSINESS_TRADING_NAME ||
+      process.env.NEXT_PUBLIC_SITE_NAME ||
+      "Your Photography",
+    foundingYear: process.env.NEXT_PUBLIC_FOUNDING_YEAR || "2014",
+    priceRange: process.env.NEXT_PUBLIC_PRICE_RANGE || "₹₹₹",
+    currenciesAccepted: process.env.NEXT_PUBLIC_CURRENCY || "INR",
+    currencySymbol: process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || "₹",
+    paymentAccepted:
+      process.env.NEXT_PUBLIC_PAYMENT_ACCEPTED ||
+      "UPI (Google Pay, PhonePe, Paytm), Net Banking, Credit/Debit Card, Cash",
 
     // Contact Information
-    email: "hello@yourphotography.com",
-    phone: "+91 98290 12345",
-    phoneRaw: "+919829012345",
-    whatsappNumber: "919829012345",
-    whatsappDisplay: "+91 98290 12345",
+    email: process.env.NEXT_PUBLIC_STUDIO_EMAIL || "hello@yourphotography.com",
+    phone: process.env.NEXT_PUBLIC_STUDIO_PHONE || "+91 98290 12345",
+    phoneRaw: (process.env.NEXT_PUBLIC_STUDIO_PHONE || "+91 98290 12345").replace(/[^0-9+]/g, ""),
+    whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919829012345",
+    whatsappDisplay:
+      process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY ||
+      process.env.NEXT_PUBLIC_STUDIO_PHONE ||
+      "+91 98290 12345",
 
     // Physical Location (Jaipur, Rajasthan, India)
     address: {
-      roomNo: "Second Floor, Room No. 215",
-      plusCode: "RV2J+5PQ",
-      streetAddress: "Second Floor, Room No. 215, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura",
-      addressLocality: "Jaipur",
-      addressRegion: "Rajasthan",
-      postalCode: "302017",
-      addressCountry: "IN",
-      hindiAddress: "कमरा नं. 215, द्वितीय तल, कैरोलन का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
+      roomNo: process.env.NEXT_PUBLIC_ADDRESS_ROOM_NO || "Second Floor, Room No. 215",
+      plusCode: process.env.NEXT_PUBLIC_ADDRESS_PLUS_CODE || "RV2J+5PQ",
+      streetAddress:
+        process.env.NEXT_PUBLIC_STUDIO_ADDRESS ||
+        "Second Floor, Room No. 215, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura",
+      addressLocality: process.env.NEXT_PUBLIC_ADDRESS_CITY || "Jaipur",
+      addressRegion: process.env.NEXT_PUBLIC_ADDRESS_REGION || "Rajasthan",
+      postalCode: process.env.NEXT_PUBLIC_ADDRESS_PINCODE || "302017",
+      addressCountry: process.env.NEXT_PUBLIC_ADDRESS_COUNTRY || "IN",
+      hindiAddress:
+        process.env.NEXT_PUBLIC_STUDIO_HINDI_ADDRESS ||
+        "कमरा नं. 215, द्वितीय तल, कैरोलन का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
     },
     geo: {
-      latitude: 26.8285,
-      longitude: 75.8654,
+      latitude: Number(process.env.NEXT_PUBLIC_GEO_LATITUDE) || 26.8285,
+      longitude: Number(process.env.NEXT_PUBLIC_GEO_LONGITUDE) || 75.8654,
     },
     // Service Areas (Verified coverage)
-    serviceAreas: [
-      "Jaipur & Pink City Heritage Districts",
-      "Jagatpura, Malviya Nagar, Tonk Road & C-Scheme, Jaipur",
-      "Rajasthan Destination Weddings (Udaipur, Jodhpur, Jaisalmer, Pushkar)",
-      "Delhi NCR & Pan-India Commissions",
-    ],
+    serviceAreas: process.env.NEXT_PUBLIC_SERVICE_AREAS
+      ? process.env.NEXT_PUBLIC_SERVICE_AREAS.split(",").map((s) => s.trim())
+      : [
+          "Jaipur & Pink City Heritage Districts",
+          "Jagatpura, Malviya Nagar, Tonk Road & C-Scheme, Jaipur",
+          "Rajasthan Destination Weddings (Udaipur, Jodhpur, Jaisalmer, Pushkar)",
+          "Delhi NCR & Pan-India Commissions",
+        ],
     // Studio Operating Hours
     openingHours: [
       {
@@ -71,25 +92,34 @@ export const siteConfig = {
           "Friday",
           "Saturday",
         ],
-        opens: "09:30",
-        closes: "19:00",
+        opens: process.env.NEXT_PUBLIC_STUDIO_HOURS_OPEN || "09:30",
+        closes: process.env.NEXT_PUBLIC_STUDIO_HOURS_CLOSE || "19:00",
       },
     ],
+    hoursSummary:
+      process.env.NEXT_PUBLIC_WORKING_HOURS_SUMMARY ||
+      "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
   },
 
   // Photographer Lead Identity (Person Schema)
   photographer: {
-    name: "Kishor Prem",
-    role: "Principal Photographer & Creative Director",
+    name: process.env.NEXT_PUBLIC_PHOTOGRAPHER_NAME || "Kishor Prem",
+    role:
+      process.env.NEXT_PUBLIC_PHOTOGRAPHER_ROLE ||
+      "Principal Photographer & Creative Director",
     biography:
+      process.env.NEXT_PUBLIC_PHOTOGRAPHER_BIO ||
       "Trained in classical fine-art and documentary photography with over 12 years of experience documenting royal palace weddings in Rajasthan, high-speed sports, editorial portraits, and cultural heritage across India.",
     portraitUrl:
+      process.env.NEXT_PUBLIC_PHOTOGRAPHER_PORTRAIT ||
       "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=1000&q=80",
-    experienceYears: "12+",
-    awardsNote: "Published in international design and lifestyle editorials.",
+    experienceYears: process.env.NEXT_PUBLIC_EXPERIENCE_YEARS || "12+",
+    awardsNote:
+      process.env.NEXT_PUBLIC_AWARDS_NOTE ||
+      "Published in international design and lifestyle editorials.",
   },
 
-  // Social Profile URLs (Verified placeholders for sameAs schema & UI links)
+  // Social Profile URLs (Configurable via env or dynamic admin)
   socialProfiles: {
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/yourphotography",
     pinterest: process.env.NEXT_PUBLIC_PINTEREST_URL || "https://pinterest.com/yourphotography",
@@ -103,13 +133,83 @@ export const siteConfig = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
     bing: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
-    yandex: "",
+    yandex: process.env.NEXT_PUBLIC_YANDEX_SITE_VERIFICATION || "",
   },
 
   // Analytics Placeholders (Only loaded when valid ID provided in environment)
   analytics: {
     googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID || "",
   },
-} as const;
+};
 
 export type SiteConfig = typeof siteConfig;
+
+export type StudioSettingsInput = Partial<{
+  studio_name: string;
+  tagline: string;
+  subtagline: string;
+  email: string;
+  phone: string;
+  whatsapp_number: string;
+  address: string;
+  hindi_address: string;
+  working_hours: string;
+  hero_image_url: string;
+  photographer_name: string;
+  photographer_role: string;
+  photographer_portrait_url: string;
+  photographer_bio_1: string;
+  photographer_bio_2: string;
+  stats_experience: string;
+  instagram_url: string;
+  facebook_url: string;
+  pinterest_url: string;
+  five_hundred_px_url: string;
+  youtube_url: string;
+}>;
+
+/**
+ * Utility to merge dynamic Supabase studio settings into siteConfig at runtime
+ */
+export function getMergedSiteConfig(settings?: StudioSettingsInput) {
+  if (!settings) return siteConfig;
+  return {
+    ...siteConfig,
+    siteName: settings.studio_name || siteConfig.siteName,
+    brandTagline: settings.tagline || siteConfig.brandTagline,
+    brandSubtitle: settings.subtagline || siteConfig.brandSubtitle,
+    defaultOgImage: settings.hero_image_url || siteConfig.defaultOgImage,
+    business: {
+      ...siteConfig.business,
+      tradingName: settings.studio_name || siteConfig.business.tradingName,
+      legalName: settings.studio_name ? `${settings.studio_name} Studio` : siteConfig.business.legalName,
+      email: settings.email || siteConfig.business.email,
+      phone: settings.phone || siteConfig.business.phone,
+      phoneRaw: (settings.phone || siteConfig.business.phone).replace(/[^0-9+]/g, ""),
+      whatsappNumber: settings.whatsapp_number || siteConfig.business.whatsappNumber,
+      whatsappDisplay: settings.phone || siteConfig.business.whatsappDisplay,
+      address: {
+        ...siteConfig.business.address,
+        streetAddress: settings.address || siteConfig.business.address.streetAddress,
+        hindiAddress: settings.hindi_address || siteConfig.business.address.hindiAddress,
+      },
+      hoursSummary: settings.working_hours || siteConfig.business.hoursSummary,
+    },
+    photographer: {
+      ...siteConfig.photographer,
+      name: settings.photographer_name || siteConfig.photographer.name,
+      role: settings.photographer_role || siteConfig.photographer.role,
+      portraitUrl: settings.photographer_portrait_url || siteConfig.photographer.portraitUrl,
+      biography: settings.photographer_bio_1 || siteConfig.photographer.biography,
+      experienceYears: settings.stats_experience || siteConfig.photographer.experienceYears,
+    },
+    socialProfiles: {
+      ...siteConfig.socialProfiles,
+      instagram: settings.instagram_url || siteConfig.socialProfiles.instagram,
+      facebook: settings.facebook_url || siteConfig.socialProfiles.facebook,
+      pinterest: settings.pinterest_url || siteConfig.socialProfiles.pinterest,
+      fiveHundredPx: settings.five_hundred_px_url || siteConfig.socialProfiles.fiveHundredPx,
+      youtube: settings.youtube_url || siteConfig.socialProfiles.youtube,
+    },
+  };
+}
