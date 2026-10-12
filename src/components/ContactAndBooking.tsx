@@ -62,6 +62,27 @@ export default function ContactAndBooking({
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [availableServices, setAvailableServices] = useState<Array<{ id: string; title: string }>>(SERVICES);
+
+  // Dynamically load services from database
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDynamicServices() {
+      try {
+        const res = await fetch("/api/admin/services");
+        const data = await res.json();
+        if (isMounted && data.success && Array.isArray(data.services) && data.services.length > 0) {
+          setAvailableServices(data.services.map((s: any) => ({ id: s.id, title: s.title })));
+        }
+      } catch (err) {
+        // Fallback to SERVICES
+      }
+    }
+    loadDynamicServices();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Update selected service if parent triggers it or from URL param
   useEffect(() => {
@@ -498,7 +519,7 @@ export default function ContactAndBooking({
                       }`}
                     >
                       <option value="">{t("contact.form.selectService", "Select a service category")}</option>
-                      {SERVICES.map((s) => (
+                      {availableServices.map((s) => (
                         <option key={s.id} value={s.title}>
                           {s.title}
                         </option>

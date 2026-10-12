@@ -61,6 +61,11 @@ export const PORTFOLIO_CATEGORIES = [
   "Travel Photography",
 ] as const;
 
+/**
+ * INITIAL SEED & OFFLINE BUILD FALLBACK
+ * Active portfolio items are loaded dynamically from Supabase at runtime (/api/admin/portfolio)
+ * and can be added, updated, or deleted live from the /admin portal.
+ */
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     id: "port-1",
@@ -184,6 +189,11 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   },
 ];
 
+/**
+ * INITIAL SEED & OFFLINE BUILD FALLBACK
+ * Active services and pricing are loaded dynamically from Supabase at runtime (/api/admin/services)
+ * and can be added, updated, or deleted live from the /admin portal ("Services & Pricing Management").
+ */
 export const SERVICES: ServiceItem[] = [
   {
     id: "portrait-service",
