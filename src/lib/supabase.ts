@@ -150,3 +150,52 @@ export async function insertInquiry(inquiryData: {
     return { success: false, error: err?.message || "Unknown error" };
   }
 }
+
+export interface StudioSettingsRecord {
+  id: string;
+  studio_name: string;
+  email: string;
+  phone: string;
+  whatsapp_number: string;
+  address: string;
+  hindi_address: string;
+  working_hours: string;
+  tagline: string;
+  subtagline: string;
+  hero_image_url: string;
+  photographer_name: string;
+  photographer_role: string;
+  photographer_bio_1: string;
+  photographer_bio_2: string;
+  photographer_quote: string;
+  photographer_portrait_url: string;
+  stats_experience: string;
+  stats_sessions: string;
+  stats_weddings: string;
+  stats_features: string;
+  instagram_url?: string;
+  facebook_url?: string;
+  pinterest_url?: string;
+  five_hundred_px_url?: string;
+  youtube_url?: string;
+  updated_at?: string;
+}
+
+export async function fetchStudioSettings(): Promise<StudioSettingsRecord | null> {
+  try {
+    const { data, error } = await supabase
+      .from("studio_settings")
+      .select("*")
+      .eq("id", "default")
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+    return data;
+  } catch (err) {
+    console.error("Failed to fetch dynamic studio settings:", err);
+    return null;
+  }
+}
+

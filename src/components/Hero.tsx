@@ -4,9 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { ArrowDown, Camera, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useStudioSettings } from "@/context/StudioContext";
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { settings } = useStudioSettings();
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const el = document.getElementById(id);
@@ -23,12 +25,13 @@ export default function Hero() {
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85"
+          src={settings.hero_image_url || "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85"}
           alt="Majestic Hawa Mahal in Jaipur Rajasthan during golden sunrise light"
           fill
           priority
           sizes="100vw"
           className="object-cover object-center filter brightness-[0.78] contrast-[1.05] transition-transform duration-1000 scale-100 hover:scale-102"
+          unoptimized
         />
         {/* Editorial Gradients & Warm Tint Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/95 via-black/40 to-black/50" />
@@ -47,15 +50,28 @@ export default function Hero() {
 
         {/* Main Heading */}
         <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[1.08] text-[#FAF7F2] max-w-4xl mx-auto drop-shadow-sm">
-          {t("hero.title1", "Capturing Moments,")} <br className="hidden sm:inline" />
-          <span className="italic font-normal text-[#F3ECE1]">
-            {t("hero.title2", "Creating Memories")}
-          </span>
+          {language === "hi" ? (
+            <>
+              {t("hero.title1", "Capturing Moments,")} <br className="hidden sm:inline" />
+              <span className="italic font-normal text-[#F3ECE1]">
+                {t("hero.title2", "Creating Memories")}
+              </span>
+            </>
+          ) : settings.tagline ? (
+            <span>{settings.tagline}</span>
+          ) : (
+            <>
+              {t("hero.title1", "Capturing Moments,")} <br className="hidden sm:inline" />
+              <span className="italic font-normal text-[#F3ECE1]">
+                {t("hero.title2", "Creating Memories")}
+              </span>
+            </>
+          )}
         </h1>
 
         {/* Short Description */}
         <p className="mt-6 text-base sm:text-xl md:text-2xl text-[#E8DED0]/90 font-light max-w-2xl mx-auto font-sans tracking-wide leading-relaxed">
-          {t("hero.desc", "Professional photography for life's most meaningful moments.")}
+          {language === "hi" ? t("hero.desc") : (settings.subtagline || t("hero.desc", "Professional photography for life's most meaningful moments."))}
         </p>
 
         {/* Action Buttons */}
@@ -79,25 +95,33 @@ export default function Hero() {
         {/* Trust Points / Highlights */}
         <div className="mt-16 pt-8 border-t border-white/15 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto text-left">
           <div className="border-l border-white/20 pl-4">
-            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">{t("hero.stat.years", "10+ Years")}</p>
+            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">
+              {settings.stats_experience || t("hero.stat.years", "12+ Years")}
+            </p>
             <p className="text-[11px] tracking-widest uppercase text-[#FAF7F2]/70 font-sans mt-0.5">
               {t("hero.stat.yearsLabel", "Experience")}
             </p>
           </div>
           <div className="border-l border-white/20 pl-4">
-            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">{t("hero.stat.sessions", "600+ Sessions")}</p>
+            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">
+              {settings.stats_sessions ? `${settings.stats_sessions} Sessions` : t("hero.stat.sessions", "600+ Sessions")}
+            </p>
             <p className="text-[11px] tracking-widest uppercase text-[#FAF7F2]/70 font-sans mt-0.5">
               {t("hero.stat.sessionsLabel", "Completed")}
             </p>
           </div>
           <div className="border-l border-white/20 pl-4">
-            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">{t("hero.stat.worldwide", "Pan-India")}</p>
+            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">
+              {settings.stats_weddings ? `${settings.stats_weddings} Weddings` : t("hero.stat.worldwide", "Pan-India")}
+            </p>
             <p className="text-[11px] tracking-widest uppercase text-[#FAF7F2]/70 font-sans mt-0.5">
-              {t("hero.stat.worldwideLabel", "Available")}
+              {t("hero.stat.worldwideLabel", "Documented")}
             </p>
           </div>
           <div className="border-l border-white/20 pl-4">
-            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">{t("hero.stat.curated", "100% Curated")}</p>
+            <p className="text-xl sm:text-2xl font-serif text-[#FAF7F2]">
+              {settings.stats_features ? `${settings.stats_features} Features` : t("hero.stat.curated", "100% Curated")}
+            </p>
             <p className="text-[11px] tracking-widest uppercase text-[#FAF7F2]/70 font-sans mt-0.5">
               {t("hero.stat.curatedLabel", "Artistic Vision")}
             </p>

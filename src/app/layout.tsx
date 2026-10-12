@@ -5,6 +5,7 @@ import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import Analytics from "@/components/Analytics";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { StudioProvider } from "@/context/StudioContext";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
@@ -122,8 +123,10 @@ export default function RootLayout({
             src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
             strategy="afterInteractive"
           />
-          {children}
-          <Analytics />
+          <StudioProvider>
+            {children}
+            <Analytics />
+          </StudioProvider>
         </LanguageProvider>
       </body>
     </html>

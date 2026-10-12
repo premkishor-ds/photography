@@ -5,9 +5,11 @@ import Image from "next/image";
 import { ArrowRight, Award, Camera, Heart, Sparkles } from "lucide-react";
 import { PHOTOGRAPHER_INFO } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
+import { useStudioSettings } from "@/context/StudioContext";
 
 export default function AboutMe() {
   const { t } = useLanguage();
+  const { settings } = useStudioSettings();
 
   const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -17,6 +19,20 @@ export default function AboutMe() {
     }
   };
 
+  const photographerName = settings.photographer_name || PHOTOGRAPHER_INFO.name;
+  const photographerRole = settings.photographer_role || PHOTOGRAPHER_INFO.role;
+  const portraitUrl = settings.photographer_portrait_url || PHOTOGRAPHER_INFO.portraitUrl;
+  const quote = settings.photographer_quote || PHOTOGRAPHER_INFO.quote;
+  const bio1 = settings.photographer_bio_1 || PHOTOGRAPHER_INFO.bioParagraph1;
+  const bio2 = settings.photographer_bio_2 || PHOTOGRAPHER_INFO.bioParagraph2;
+
+  const dynamicStats = [
+    { label: "Years of Craft", value: settings.stats_experience || "12+" },
+    { label: "Sessions Completed", value: settings.stats_sessions || "650+" },
+    { label: "Weddings Documented", value: settings.stats_weddings || "180+" },
+    { label: "Editorial Features", value: settings.stats_features || "24+" },
+  ];
+
   return (
     <section id="about" className="py-24 sm:py-32 bg-[#FAF7F2] text-[#121212]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
@@ -25,22 +41,23 @@ export default function AboutMe() {
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-[3/4] w-full max-w-md mx-auto lg:max-w-none bg-[#E8DED0] shadow-xl overflow-hidden border border-[#E8DED0]">
               <Image
-                src={PHOTOGRAPHER_INFO.portraitUrl}
-                alt={PHOTOGRAPHER_INFO.name}
+                src={portraitUrl}
+                alt={photographerName}
                 fill
                 sizes="(max-width: 1024px) 90vw, 40vw"
                 className="object-cover object-center filter contrast-[1.03]"
                 priority
+                unoptimized
               />
 
               {/* Subtle Film Stamp Overlay */}
               <div className="absolute bottom-4 left-4 right-4 bg-[#FAF7F2]/90 backdrop-blur-sm p-4 border border-[#E8DED0] flex items-center justify-between">
                 <div>
                   <p className="font-serif text-sm font-medium text-[#121212]">
-                    {PHOTOGRAPHER_INFO.name}
+                    {photographerName}
                   </p>
                   <p className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans">
-                    {PHOTOGRAPHER_INFO.role}
+                    {photographerRole}
                   </p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-[#121212] text-white flex items-center justify-center">
@@ -66,18 +83,18 @@ export default function AboutMe() {
 
             {/* Quote */}
             <blockquote className="font-serif text-xl sm:text-2xl italic text-[#554837] border-l-2 border-[#121212] pl-6 py-1 leading-relaxed">
-              {PHOTOGRAPHER_INFO.quote}
+              {quote}
             </blockquote>
 
             {/* Paragraphs */}
             <div className="space-y-4 text-sm sm:text-base text-[#554837] font-light leading-relaxed">
-              <p>{PHOTOGRAPHER_INFO.bioParagraph1}</p>
-              <p>{PHOTOGRAPHER_INFO.bioParagraph2}</p>
+              <p>{bio1}</p>
+              <p>{bio2}</p>
             </div>
 
             {/* Experience & Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-[#E8DED0]">
-              {PHOTOGRAPHER_INFO.stats.map((stat, idx) => (
+              {dynamicStats.map((stat, idx) => (
                 <div key={idx} className="bg-white/70 p-4 border border-[#F3ECE1]">
                   <p className="font-serif text-2xl sm:text-3xl text-[#121212] font-normal">
                     {stat.value}

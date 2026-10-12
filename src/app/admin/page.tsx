@@ -29,6 +29,14 @@ import {
   Upload,
   FileUp,
   Image as ImageIcon,
+  User,
+  Building,
+  Sliders,
+  Globe,
+  Share2,
+  FileText,
+  Award,
+  Info,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 
@@ -65,6 +73,36 @@ interface ServiceItem {
   duration?: string;
   delivery_time?: string;
   starting_price_inr?: number;
+  deliverables?: string[];
+  ideal_for?: string;
+}
+
+interface StudioSettingsData {
+  studio_name: string;
+  tagline: string;
+  subtagline: string;
+  hero_image_url: string;
+  email: string;
+  phone: string;
+  whatsapp_number: string;
+  address: string;
+  hindi_address: string;
+  working_hours: string;
+  photographer_name: string;
+  photographer_role: string;
+  photographer_bio_1: string;
+  photographer_bio_2: string;
+  photographer_quote: string;
+  photographer_portrait_url: string;
+  stats_experience: string;
+  stats_sessions: string;
+  stats_weddings: string;
+  stats_features: string;
+  instagram_url: string;
+  facebook_url: string;
+  pinterest_url: string;
+  five_hundred_px_url: string;
+  youtube_url: string;
 }
 
 interface Stats {
@@ -83,7 +121,9 @@ export default function AdminPage() {
   const [passkeyInput, setPasskeyInput] = useState("");
   const [authError, setAuthError] = useState("");
 
-  const [activeTab, setActiveTab] = useState<"inquiries" | "portfolio" | "services" | "db">("inquiries");
+  const [activeTab, setActiveTab] = useState<
+    "inquiries" | "portfolio" | "services" | "studio" | "photographer" | "db"
+  >("inquiries");
   const [isLoading, setIsLoading] = useState(false);
 
   // Stats
@@ -109,7 +149,7 @@ export default function AdminPage() {
     description: "",
   });
 
-  // Image Upload states
+  // Image Upload states for Portfolio
   const [uploadModeNew, setUploadModeNew] = useState<"file" | "url">("file");
   const [isUploadingNew, setIsUploadingNew] = useState(false);
   const [uploadErrorNew, setUploadErrorNew] = useState<string | null>(null);
@@ -121,6 +161,70 @@ export default function AdminPage() {
   // Services
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [editingService, setEditingService] = useState<ServiceItem | null>(null);
+  const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
+  const [isSavingService, setIsSavingService] = useState(false);
+  const [serviceFeedback, setServiceFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [newService, setNewService] = useState({
+    title: "",
+    tagline: "",
+    description: "",
+    starting_price_inr: 25000,
+    duration: "2-3 Hours",
+    delivery_time: "7-10 Business Days",
+    image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    deliverablesText: "High-resolution edited digital photographs\nOnline private gallery delivery with download access\nFull personal printing rights and social sharing permissions",
+    ideal_for: "",
+  });
+  const [uploadModeServiceNew, setUploadModeServiceNew] = useState<"file" | "url">("file");
+  const [isUploadingServiceNew, setIsUploadingServiceNew] = useState(false);
+  const [uploadErrorServiceNew, setUploadErrorServiceNew] = useState<string | null>(null);
+
+  const [uploadModeServiceEdit, setUploadModeServiceEdit] = useState<"file" | "url">("file");
+  const [isUploadingServiceEdit, setIsUploadingServiceEdit] = useState(false);
+  const [uploadErrorServiceEdit, setUploadErrorServiceEdit] = useState<string | null>(null);
+
+  // Studio Settings
+  const [studioSettings, setStudioSettings] = useState<StudioSettingsData>({
+    studio_name: "Your Photography",
+    tagline: "Capturing Moments, Creating Memories",
+    subtagline: "Fine Art & Editorial Studio • Jaipur, Rajasthan",
+    hero_image_url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85",
+    email: "contact@yourphotography.com",
+    phone: "+91 98765 43210",
+    whatsapp_number: "919876543210",
+    address: "Room 215, 2nd Floor, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura, Jaipur, Rajasthan 302017",
+    hindi_address: "कमरा नं. 215, द्वितीय तल, RV2J+5PQ, करोलां का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
+    working_hours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
+    photographer_name: "Kishor Prem",
+    photographer_role: "Principal Photographer & Visual Artist",
+    photographer_bio_1:
+      "For over twelve years, I have dedicated my life to the delicate art of seeing. Photography, to me, is not merely capturing what is before the lens, but feeling the heartbeat of a fleeting moment and preserving it before it disappears into memory.",
+    photographer_bio_2:
+      "Trained in classical fine-art, documentary, and dynamic action photography, my style blends soft, warm natural light with subtle editorial composition. I look for the unscripted pauses: the quiet touch of hands before vows, the fleeting glint in an eye, or the explosive energy of an athlete in mid-air.",
+    photographer_quote: "“Light reveals what exists; emotion reveals what truly matters.”",
+    photographer_portrait_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=80",
+    stats_experience: "12+ Years",
+    stats_sessions: "650+",
+    stats_weddings: "180+",
+    stats_features: "24+",
+    instagram_url: "https://instagram.com/yourphotography",
+    facebook_url: "https://facebook.com/yourphotography",
+    pinterest_url: "https://pinterest.com/yourphotography",
+    five_hundred_px_url: "https://500px.com/yourphotography",
+    youtube_url: "https://youtube.com/@yourphotography",
+  });
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsFeedback, setSettingsFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // Hero Image Upload
+  const [uploadModeHero, setUploadModeHero] = useState<"file" | "url">("file");
+  const [isUploadingHero, setIsUploadingHero] = useState(false);
+  const [uploadErrorHero, setUploadErrorHero] = useState<string | null>(null);
+
+  // Portrait Image Upload
+  const [uploadModePortrait, setUploadModePortrait] = useState<"file" | "url">("file");
+  const [isUploadingPortrait, setIsUploadingPortrait] = useState(false);
+  const [uploadErrorPortrait, setUploadErrorPortrait] = useState<string | null>(null);
 
   // Check existing session
   useEffect(() => {
@@ -153,7 +257,13 @@ export default function AdminPage() {
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      await Promise.all([fetchStats(), fetchInquiries(), fetchPortfolio(), fetchServices()]);
+      await Promise.all([
+        fetchStats(),
+        fetchInquiries(),
+        fetchPortfolio(),
+        fetchServices(),
+        fetchStudioSettings(),
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -379,11 +489,206 @@ export default function AdminPage() {
     }
   };
 
+  // Studio Settings actions
+  const fetchStudioSettings = async () => {
+    try {
+      const res = await fetch("/api/admin/settings");
+      const data = await res.json();
+      if (data.success && data.settings) {
+        setStudioSettings((prev) => ({
+          ...prev,
+          ...data.settings,
+        }));
+      }
+    } catch (err) {
+      console.error("Studio settings load failed:", err);
+    }
+  };
+
+  const handleSaveStudioSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsFeedback(null);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(studioSettings),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSettingsFeedback({
+          type: "success",
+          message: "All studio & photographer details saved to Supabase! Changes are live across the website.",
+        });
+        setTimeout(() => setSettingsFeedback(null), 5000);
+      } else {
+        setSettingsFeedback({
+          type: "error",
+          message: `Failed to save: ${data.error || "Unknown error"}`,
+        });
+      }
+    } catch (err: any) {
+      setSettingsFeedback({
+        type: "error",
+        message: `Network error: ${err.message}`,
+      });
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  const handleHeroUpload = async (file: File) => {
+    if (!file) return;
+    setIsUploadingHero(true);
+    setUploadErrorHero(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setStudioSettings((prev) => ({ ...prev, hero_image_url: data.url }));
+      } else {
+        setUploadErrorHero(data.error || "Upload failed");
+      }
+    } catch (err: any) {
+      setUploadErrorHero(err.message || "Upload request failed");
+    } finally {
+      setIsUploadingHero(false);
+    }
+  };
+
+  const handlePortraitUpload = async (file: File) => {
+    if (!file) return;
+    setIsUploadingPortrait(true);
+    setUploadErrorPortrait(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setStudioSettings((prev) => ({ ...prev, photographer_portrait_url: data.url }));
+      } else {
+        setUploadErrorPortrait(data.error || "Upload failed");
+      }
+    } catch (err: any) {
+      setUploadErrorPortrait(err.message || "Upload request failed");
+    } finally {
+      setIsUploadingPortrait(false);
+    }
+  };
+
+  const handleServiceNewUpload = async (file: File) => {
+    if (!file) return;
+    setIsUploadingServiceNew(true);
+    setUploadErrorServiceNew(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setNewService((prev) => ({ ...prev, image_url: data.url }));
+      } else {
+        setUploadErrorServiceNew(data.error || "Upload failed");
+      }
+    } catch (err: any) {
+      setUploadErrorServiceNew(err.message || "Upload request failed");
+    } finally {
+      setIsUploadingServiceNew(false);
+    }
+  };
+
+  const handleServiceEditUpload = async (file: File) => {
+    if (!file || !editingService) return;
+    setIsUploadingServiceEdit(true);
+    setUploadErrorServiceEdit(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setEditingService((prev) => (prev ? { ...prev, image_url: data.url } : null));
+      } else {
+        setUploadErrorServiceEdit(data.error || "Upload failed");
+      }
+    } catch (err: any) {
+      setUploadErrorServiceEdit(err.message || "Upload request failed");
+    } finally {
+      setIsUploadingServiceEdit(false);
+    }
+  };
+
   // Service actions
-  const handleSaveService = async (e: React.FormEvent) => {
+  const handleCreateService = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newService.title) return;
+    setIsSavingService(true);
+    try {
+      const deliverablesArr = newService.deliverablesText
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const res = await fetch("/api/admin/services", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newService.title,
+          tagline: newService.tagline,
+          description: newService.description,
+          starting_price_inr: newService.starting_price_inr,
+          duration: newService.duration,
+          delivery_time: newService.delivery_time,
+          image_url: newService.image_url,
+          deliverables: deliverablesArr,
+          ideal_for: newService.ideal_for,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsAddServiceOpen(false);
+        setNewService({
+          title: "",
+          tagline: "",
+          description: "",
+          starting_price_inr: 25000,
+          duration: "2-3 Hours",
+          delivery_time: "7-10 Business Days",
+          image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+          deliverablesText: "High-resolution edited digital photographs\nOnline private gallery delivery with download access\nFull personal printing rights and social sharing permissions",
+          ideal_for: "",
+        });
+        fetchServices();
+        fetchStats();
+        setServiceFeedback({
+          type: "success",
+          message: `Service "${data.service?.title || "New Service"}" added successfully!`,
+        });
+        setTimeout(() => setServiceFeedback(null), 4000);
+      } else {
+        setServiceFeedback({
+          type: "error",
+          message: `Failed to create service: ${data.error || "Unknown error"}`,
+        });
+      }
+    } catch (err: any) {
+      setServiceFeedback({
+        type: "error",
+        message: `Error creating service: ${err.message}`,
+      });
+    } finally {
+      setIsSavingService(false);
+    }
+  };
+
+  const handleUpdateService = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingService) return;
-
+    setIsSavingService(true);
     try {
       const res = await fetch("/api/admin/services", {
         method: "PUT",
@@ -393,12 +698,47 @@ export default function AdminPage() {
       const data = await res.json();
       if (data.success) {
         setServices((prev) =>
-          prev.map((s) => (s.id === editingService.id ? editingService : s))
+          prev.map((s) => (s.id === editingService.id ? (data.service || editingService) : s))
         );
+        const savedTitle = editingService.title;
         setEditingService(null);
+        setServiceFeedback({
+          type: "success",
+          message: `Service "${savedTitle}" updated successfully!`,
+        });
+        setTimeout(() => setServiceFeedback(null), 4000);
+      } else {
+        setServiceFeedback({
+          type: "error",
+          message: `Failed to update service: ${data.error || "Unknown error"}`,
+        });
+      }
+    } catch (err: any) {
+      setServiceFeedback({
+        type: "error",
+        message: `Error updating service: ${err.message}`,
+      });
+    } finally {
+      setIsSavingService(false);
+    }
+  };
+
+  const handleDeleteService = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this service?")) return;
+    try {
+      const res = await fetch(`/api/admin/services?id=${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setServices((prev) => prev.filter((s) => s.id !== id));
+        fetchStats();
+        setServiceFeedback({
+          type: "success",
+          message: "Service deleted successfully.",
+        });
+        setTimeout(() => setServiceFeedback(null), 4000);
       }
     } catch (err) {
-      console.error("Update service failed:", err);
+      console.error("Delete service failed:", err);
     }
   };
 
@@ -607,6 +947,30 @@ export default function AdminPage() {
             >
               <IndianRupee className="w-3.5 h-3.5" />
               <span>Services & Pricing</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("studio")}
+              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+                activeTab === "studio"
+                  ? "border-[#121212] text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+              }`}
+            >
+              <Building className="w-3.5 h-3.5" />
+              <span>Studio & Contact</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("photographer")}
+              className={`px-4 py-2.5 text-xs uppercase tracking-widest transition-all cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+                activeTab === "photographer"
+                  ? "border-[#121212] text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212]"
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Photographer Profile</span>
             </button>
 
             <button
@@ -1487,135 +1851,1477 @@ export default function AdminPage() {
         {/* TAB 3: Services & Pricing */}
         {activeTab === "services" && (
           <div className="space-y-6">
-            <div>
-              <h3 className="font-serif text-2xl text-[#121212]">
-                Photography Services & INR Pricing
-              </h3>
-              <p className="text-xs text-[#7B6955]">
-                Adjust starting rates, turnaround times, and service specifications stored in Supabase.
-              </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-serif text-2xl text-[#121212]">
+                  Photography Services & Pricing
+                </h3>
+                <p className="text-xs text-[#7B6955]">
+                  Manage services, starting prices in Indian Rupees (₹), deliverables, and session photography details.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsAddServiceOpen(true)}
+                className="px-4 py-2.5 bg-[#121212] text-white hover:bg-[#2C2C2C] uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center gap-2 self-start sm:self-auto"
+              >
+                <Plus className="w-4 h-4 text-[#BFA076]" />
+                <span>Add New Service</span>
+              </button>
             </div>
 
+            {serviceFeedback && (
+              <div
+                className={`p-4 border text-xs sm:text-sm flex items-center justify-between rounded-xs ${
+                  serviceFeedback.type === "success"
+                    ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                    : "bg-red-50 border-red-300 text-red-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{serviceFeedback.message}</span>
+                </div>
+                <button
+                  onClick={() => setServiceFeedback(null)}
+                  className="text-xs font-bold px-2 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((svc) => (
                 <div
                   key={svc.id}
-                  className="bg-white border border-[#E8DED0] p-6 shadow-xs flex flex-col justify-between space-y-4"
+                  className="bg-white border border-[#E8DED0] overflow-hidden flex flex-col justify-between shadow-xs hover:border-[#BFA076] transition-all group"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-serif text-xl text-[#121212]">{svc.title}</h4>
-                      <span className="px-2.5 py-1 text-xs font-semibold bg-[#BFA076]/15 text-[#7B6955] border border-[#BFA076]/30">
-                        ₹{(svc.starting_price_inr || 25000).toLocaleString("en-IN")}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-[#554837] leading-relaxed line-clamp-3">
-                      {svc.description}
-                    </p>
-
-                    <div className="text-[11px] text-[#7B6955] space-y-1 pt-2 border-t border-[#F3ECE1]">
-                      <p>
-                        <strong>Duration:</strong> {svc.duration}
-                      </p>
-                      <p>
-                        <strong>Delivery:</strong> {svc.delivery_time}
-                      </p>
+                  {/* Service Cover Thumbnail */}
+                  <div className="relative aspect-[16/10] w-full bg-[#121212] overflow-hidden">
+                    <Image
+                      src={svc.image_url}
+                      alt={svc.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      unoptimized
+                    />
+                    <div className="absolute top-2 right-2 px-2.5 py-1 text-xs font-semibold bg-[#121212]/85 text-[#BFA076] border border-[#BFA076]/40 backdrop-blur-xs">
+                      ₹{(svc.starting_price_inr || 25000).toLocaleString("en-IN")}
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => setEditingService(svc)}
-                    className="w-full py-2 border border-[#121212] text-[#121212] hover:bg-[#121212] hover:text-white text-xs uppercase tracking-widest transition-colors cursor-pointer font-medium flex items-center justify-center gap-1.5"
-                  >
-                    <Edit2 className="w-3.5 h-3.5" />
-                    <span>Edit Pricing & Details</span>
-                  </button>
+                  <div className="p-5 space-y-4 flex-1 flex flex-col justify-between">
+                    <div className="space-y-2">
+                      <h4 className="font-serif text-xl text-[#121212]">{svc.title}</h4>
+                      {svc.tagline && (
+                        <p className="text-[11px] uppercase tracking-wider text-[#BFA076] font-medium font-sans">
+                          {svc.tagline}
+                        </p>
+                      )}
+                      <p className="text-xs text-[#554837] leading-relaxed line-clamp-2">
+                        {svc.description}
+                      </p>
+
+                      <div className="text-[11px] text-[#7B6955] space-y-1 pt-2 border-t border-[#F3ECE1]">
+                        <p>
+                          <strong>Duration:</strong> {svc.duration || "2 Hours"}
+                        </p>
+                        <p>
+                          <strong>Delivery:</strong> {svc.delivery_time || "7 business days"}
+                        </p>
+                      </div>
+
+                      {/* Deliverables snippet */}
+                      {svc.deliverables && svc.deliverables.length > 0 && (
+                        <div className="pt-2">
+                          <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-semibold mb-1">
+                            Included Deliverables:
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {svc.deliverables.slice(0, 2).map((d, i) => (
+                              <span
+                                key={i}
+                                className="px-1.5 py-0.5 bg-[#FAF7F2] border border-[#E8DED0] text-[10px] text-[#554837] truncate max-w-full"
+                              >
+                                ✓ {d}
+                              </span>
+                            ))}
+                            {svc.deliverables.length > 2 && (
+                              <span className="text-[10px] text-[#7B6955] self-center">
+                                +{svc.deliverables.length - 2} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-4 border-t border-[#F3ECE1] flex items-center gap-2">
+                      <button
+                        onClick={() => setEditingService(svc)}
+                        className="flex-1 py-2 bg-[#FAF7F2] hover:bg-[#121212] hover:text-white border border-[#D7C7B2] text-[#121212] text-xs uppercase tracking-wider transition-colors cursor-pointer font-medium flex items-center justify-center gap-1.5"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                        <span>Edit Service</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteService(svc.id)}
+                        className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 border border-[#D7C7B2] transition-colors cursor-pointer"
+                        title="Delete service"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Edit Service Modal */}
-            {editingService && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-                <div className="bg-white border border-[#E8DED0] max-w-md w-full p-6 space-y-4 shadow-xl">
+            {/* ADD SERVICE MODAL */}
+            {isAddServiceOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+                <div className="bg-white border border-[#E8DED0] max-w-xl w-full p-6 sm:p-8 space-y-5 shadow-2xl my-8">
                   <div className="flex items-center justify-between border-b border-[#F3ECE1] pb-3">
-                    <h4 className="font-serif text-xl text-[#121212]">
-                      Edit {editingService.title}
+                    <h4 className="font-serif text-2xl text-[#121212] flex items-center gap-2">
+                      <Plus className="w-5 h-5 text-[#BFA076]" />
+                      <span>Add New Photography Service</span>
                     </h4>
                     <button
-                      onClick={() => setEditingService(null)}
-                      className="text-xs text-[#7B6955] hover:text-[#121212]"
+                      onClick={() => setIsAddServiceOpen(false)}
+                      className="text-xs text-[#7B6955] hover:text-[#121212] px-2 py-1 font-bold"
                     >
                       ✕
                     </button>
                   </div>
 
-                  <form onSubmit={handleSaveService} className="space-y-4 text-xs">
-                    <div>
-                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1">
-                        Starting Price (INR ₹)
-                      </label>
-                      <input
-                        type="number"
-                        value={editingService.starting_price_inr || 25000}
-                        onChange={(e) =>
-                          setEditingService({
-                            ...editingService,
-                            starting_price_inr: Number(e.target.value),
-                          })
-                        }
-                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212]"
-                      />
+                  <form onSubmit={handleCreateService} className="space-y-4 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Service Title *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={newService.title}
+                          onChange={(e) =>
+                            setNewService({ ...newService, title: e.target.value })
+                          }
+                          placeholder="e.g. Royal Wedding Collection"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Starting Price (INR ₹) *
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          value={newService.starting_price_inr}
+                          onChange={(e) =>
+                            setNewService({
+                              ...newService,
+                              starting_price_inr: Number(e.target.value),
+                            })
+                          }
+                          placeholder="e.g. 75000"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
                     </div>
 
                     <div>
-                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1">
-                        Session Duration
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Tagline / Subtitle
                       </label>
                       <input
                         type="text"
-                        value={editingService.duration || ""}
+                        value={newService.tagline}
                         onChange={(e) =>
-                          setEditingService({ ...editingService, duration: e.target.value })
+                          setNewService({ ...newService, tagline: e.target.value })
                         }
-                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212]"
+                        placeholder="e.g. Majestic Palace & Destination Weddings Across Rajasthan"
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                       />
                     </div>
 
                     <div>
-                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1">
-                        Turnaround Delivery Time
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Service Overview & Description *
                       </label>
-                      <input
-                        type="text"
-                        value={editingService.delivery_time || ""}
+                      <textarea
+                        rows={3}
+                        required
+                        value={newService.description}
                         onChange={(e) =>
-                          setEditingService({ ...editingService, delivery_time: e.target.value })
+                          setNewService({ ...newService, description: e.target.value })
                         }
-                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212]"
+                        placeholder="Detailed description of what the client experiences..."
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] resize-none focus:outline-none focus:border-[#BFA076]"
                       />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Typical Duration
+                        </label>
+                        <input
+                          type="text"
+                          value={newService.duration}
+                          onChange={(e) =>
+                            setNewService({ ...newService, duration: e.target.value })
+                          }
+                          placeholder="e.g. 2-3 Days or 3 Hours"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Turnaround Delivery Time
+                        </label>
+                        <input
+                          type="text"
+                          value={newService.delivery_time}
+                          onChange={(e) =>
+                            setNewService({ ...newService, delivery_time: e.target.value })
+                          }
+                          placeholder="e.g. 2-3 Weeks"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Image Asset Picker */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="block uppercase tracking-wider text-[#7B6955] font-medium">
+                          Cover Photograph Asset *
+                        </label>
+                        <div className="flex items-center gap-1 bg-[#FAF7F2] p-0.5 border border-[#D7C7B2] rounded-xs text-[11px]">
+                          <button
+                            type="button"
+                            onClick={() => setUploadModeServiceNew("file")}
+                            className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                              uploadModeServiceNew === "file"
+                                ? "bg-[#121212] text-white font-medium"
+                                : "text-[#7B6955] hover:text-[#121212]"
+                            }`}
+                          >
+                            <Upload className="w-3 h-3" />
+                            <span>Upload File</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setUploadModeServiceNew("url")}
+                            className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                              uploadModeServiceNew === "url"
+                                ? "bg-[#121212] text-white font-medium"
+                                : "text-[#7B6955] hover:text-[#121212]"
+                            }`}
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            <span>Paste URL</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {uploadModeServiceNew === "file" ? (
+                        <div className="space-y-2">
+                          <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-[#D7C7B2] hover:border-[#BFA076] bg-[#FAF7F2] hover:bg-[#F3ECE1] cursor-pointer transition-colors text-center group rounded-xs">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handleServiceNewUpload(f);
+                              }}
+                            />
+                            {isUploadingServiceNew ? (
+                              <div className="flex flex-col items-center gap-2 text-[#7B6955] py-2">
+                                <RefreshCw className="w-5 h-5 animate-spin text-[#BFA076]" />
+                                <span className="font-medium text-xs">Uploading cover to Supabase Storage...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1.5">
+                                <FileUp className="w-5 h-5 text-[#BFA076]" />
+                                <p className="text-xs font-medium text-[#121212]">
+                                  Click to upload service cover image
+                                </p>
+                              </div>
+                            )}
+                          </label>
+
+                          {uploadErrorServiceNew && (
+                            <p className="text-[11px] text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3 shrink-0" />
+                              {uploadErrorServiceNew}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="url"
+                          required
+                          value={newService.image_url}
+                          onChange={(e) =>
+                            setNewService({ ...newService, image_url: e.target.value })
+                          }
+                          placeholder="https://..."
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Deliverables (One per line)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={newService.deliverablesText}
+                        onChange={(e) =>
+                          setNewService({ ...newService, deliverablesText: e.target.value })
+                        }
+                        placeholder="50+ Edited high-resolution images&#10;Private cloud gallery&#10;Full personal print rights"
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] font-mono resize-none focus:outline-none focus:border-[#BFA076]"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#F3ECE1]">
                       <button
                         type="button"
-                        onClick={() => setEditingService(null)}
-                        className="px-4 py-2 border border-[#D7C7B2] text-[#554837] hover:bg-gray-100 uppercase tracking-widest text-xs"
+                        onClick={() => setIsAddServiceOpen(false)}
+                        className="px-4 py-2 border border-[#D7C7B2] text-[#554837] hover:bg-gray-100 uppercase tracking-widest text-xs cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="px-5 py-2 bg-[#121212] text-white hover:bg-[#2C2C2C] uppercase tracking-widest text-xs font-medium"
+                        disabled={isSavingService}
+                        className="px-6 py-2.5 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center gap-2"
                       >
-                        Save Changes
+                        {isSavingService ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <span>Creating Service...</span>
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#BFA076]" />
+                            <span>Create Service</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </form>
                 </div>
               </div>
             )}
+
+            {/* EDIT SERVICE MODAL */}
+            {editingService && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+                <div className="bg-white border border-[#E8DED0] max-w-xl w-full p-6 sm:p-8 space-y-5 shadow-2xl my-8">
+                  <div className="flex items-center justify-between border-b border-[#F3ECE1] pb-3">
+                    <h4 className="font-serif text-2xl text-[#121212] flex items-center gap-2">
+                      <Edit2 className="w-5 h-5 text-[#BFA076]" />
+                      <span>Edit {editingService.title}</span>
+                    </h4>
+                    <button
+                      onClick={() => setEditingService(null)}
+                      className="text-xs text-[#7B6955] hover:text-[#121212] px-2 py-1 font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleUpdateService} className="space-y-4 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Service Title *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={editingService.title}
+                          onChange={(e) =>
+                            setEditingService({ ...editingService, title: e.target.value })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Starting Price (INR ₹) *
+                        </label>
+                        <input
+                          type="number"
+                          required
+                          value={editingService.starting_price_inr || 25000}
+                          onChange={(e) =>
+                            setEditingService({
+                              ...editingService,
+                              starting_price_inr: Number(e.target.value),
+                            })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Tagline / Subtitle
+                      </label>
+                      <input
+                        type="text"
+                        value={editingService.tagline || ""}
+                        onChange={(e) =>
+                          setEditingService({ ...editingService, tagline: e.target.value })
+                        }
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Description *
+                      </label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={editingService.description || ""}
+                        onChange={(e) =>
+                          setEditingService({ ...editingService, description: e.target.value })
+                        }
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] resize-none focus:outline-none focus:border-[#BFA076]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Duration
+                        </label>
+                        <input
+                          type="text"
+                          value={editingService.duration || ""}
+                          onChange={(e) =>
+                            setEditingService({ ...editingService, duration: e.target.value })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Turnaround Delivery Time
+                        </label>
+                        <input
+                          type="text"
+                          value={editingService.delivery_time || ""}
+                          onChange={(e) =>
+                            setEditingService({ ...editingService, delivery_time: e.target.value })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Image Asset Picker */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="block uppercase tracking-wider text-[#7B6955] font-medium">
+                          Service Cover Image *
+                        </label>
+                        <div className="flex items-center gap-1 bg-[#FAF7F2] p-0.5 border border-[#D7C7B2] rounded-xs text-[11px]">
+                          <button
+                            type="button"
+                            onClick={() => setUploadModeServiceEdit("file")}
+                            className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                              uploadModeServiceEdit === "file"
+                                ? "bg-[#121212] text-white font-medium"
+                                : "text-[#7B6955] hover:text-[#121212]"
+                            }`}
+                          >
+                            <Upload className="w-3 h-3" />
+                            <span>Upload File</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setUploadModeServiceEdit("url")}
+                            className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                              uploadModeServiceEdit === "url"
+                                ? "bg-[#121212] text-white font-medium"
+                                : "text-[#7B6955] hover:text-[#121212]"
+                            }`}
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            <span>Paste URL</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {uploadModeServiceEdit === "file" ? (
+                        <div className="space-y-2">
+                          <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-[#D7C7B2] hover:border-[#BFA076] bg-[#FAF7F2] hover:bg-[#F3ECE1] cursor-pointer transition-colors text-center group rounded-xs">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handleServiceEditUpload(f);
+                              }}
+                            />
+                            {isUploadingServiceEdit ? (
+                              <div className="flex flex-col items-center gap-2 text-[#7B6955] py-2">
+                                <RefreshCw className="w-5 h-5 animate-spin text-[#BFA076]" />
+                                <span className="font-medium text-xs">Uploading cover to Supabase Storage...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1.5">
+                                <FileUp className="w-5 h-5 text-[#BFA076]" />
+                                <p className="text-xs font-medium text-[#121212]">
+                                  Click to upload new service cover image
+                                </p>
+                              </div>
+                            )}
+                          </label>
+
+                          {uploadErrorServiceEdit && (
+                            <p className="text-[11px] text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3 shrink-0" />
+                              {uploadErrorServiceEdit}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="url"
+                          required
+                          value={editingService.image_url}
+                          onChange={(e) =>
+                            setEditingService({ ...editingService, image_url: e.target.value })
+                          }
+                          placeholder="https://..."
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Deliverables (One per line)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={(editingService.deliverables || []).join("\n")}
+                        onChange={(e) =>
+                          setEditingService({
+                            ...editingService,
+                            deliverables: e.target.value
+                              .split("\n")
+                              .map((s) => s.trim())
+                              .filter(Boolean),
+                          })
+                        }
+                        className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] font-mono resize-none focus:outline-none focus:border-[#BFA076]"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-[#F3ECE1]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const id = editingService.id;
+                          setEditingService(null);
+                          handleDeleteService(id);
+                        }}
+                        className="px-3 py-2 text-red-600 hover:text-red-800 uppercase tracking-wider text-xs flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete Service</span>
+                      </button>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditingService(null)}
+                          className="px-4 py-2 border border-[#D7C7B2] text-[#554837] hover:bg-gray-100 uppercase tracking-widest text-xs cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSavingService}
+                          className="px-6 py-2 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center gap-2"
+                        >
+                          {isSavingService ? (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                              <span>Saving...</span>
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#BFA076]" />
+                              <span>Save Changes</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 4: Studio & Contact Settings */}
+        {activeTab === "studio" && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-serif text-2xl text-[#121212]">
+                  Studio & Brand Settings
+                </h3>
+                <p className="text-xs text-[#7B6955]">
+                  Manage studio name, taglines, hero background image, contact info, working hours, and social profiles.
+                </p>
+              </div>
+
+              <button
+                onClick={handleSaveStudioSettings}
+                disabled={isSavingSettings}
+                className="px-6 py-2.5 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center justify-center gap-2 self-start sm:self-auto"
+              >
+                {isSavingSettings ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#BFA076]" />
+                    <span>Save Studio Settings</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {settingsFeedback && (
+              <div
+                className={`p-4 border text-xs sm:text-sm flex items-center justify-between rounded-xs ${
+                  settingsFeedback.type === "success"
+                    ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                    : "bg-red-50 border-red-300 text-red-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{settingsFeedback.message}</span>
+                </div>
+                <button
+                  onClick={() => setSettingsFeedback(null)}
+                  className="text-xs font-bold px-2 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveStudioSettings} className="space-y-8">
+              {/* Card 1: Brand & Hero Identity */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#BFA076]" />
+                    <span>Brand & Hero Identity</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Public business name, main headlines displayed on the homepage hero, and background imagery.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Studio / Brand Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.studio_name}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, studio_name: e.target.value })
+                      }
+                      placeholder="e.g. Your Photography"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Primary Tagline (Hero H1) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.tagline}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, tagline: e.target.value })
+                      }
+                      placeholder="e.g. Capturing Moments, Creating Memories"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Subtagline / Editorial Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.subtagline}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, subtagline: e.target.value })
+                      }
+                      placeholder="e.g. Fine Art & Editorial Studio • Jaipur, Rajasthan"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+
+                {/* Hero Background Image Picker with Upload */}
+                <div className="space-y-3 pt-2 border-t border-[#F3ECE1]">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] font-medium text-xs">
+                        Hero Background Image
+                      </label>
+                      <p className="text-[11px] text-[#7B6955]">
+                        High-resolution photo displayed across the hero banner on the homepage.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-[#FAF7F2] p-0.5 border border-[#D7C7B2] rounded-xs text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => setUploadModeHero("file")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModeHero === "file"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <Upload className="w-3 h-3" />
+                        <span>Upload File</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUploadModeHero("url")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModeHero === "url"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Paste URL</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center">
+                    <div className="relative aspect-[16/9] w-full bg-[#121212] rounded-xs overflow-hidden border border-[#D7C7B2]">
+                      {studioSettings.hero_image_url ? (
+                        <Image
+                          src={studioSettings.hero_image_url}
+                          alt="Hero banner preview"
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-xs text-[#FAF7F2]/60">
+                          No hero image set
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="sm:col-span-3">
+                      {uploadModeHero === "file" ? (
+                        <div className="space-y-2">
+                          <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-[#D7C7B2] hover:border-[#BFA076] bg-[#FAF7F2] hover:bg-[#F3ECE1] cursor-pointer transition-colors text-center group rounded-xs">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handleHeroUpload(f);
+                              }}
+                            />
+                            {isUploadingHero ? (
+                              <div className="flex flex-col items-center gap-2 text-[#7B6955] py-2">
+                                <RefreshCw className="w-5 h-5 animate-spin text-[#BFA076]" />
+                                <span className="font-medium text-xs">Uploading Hero banner to Supabase Cloud...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1.5">
+                                <FileUp className="w-5 h-5 text-[#BFA076]" />
+                                <p className="text-xs font-medium text-[#121212]">
+                                  Click to upload new hero banner image
+                                </p>
+                                <p className="text-[10px] text-[#7B6955]">
+                                  Recommended: 2000×1200 or larger landscape JPG/WebP
+                                </p>
+                              </div>
+                            )}
+                          </label>
+
+                          {uploadErrorHero && (
+                            <p className="text-[11px] text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3 shrink-0" />
+                              {uploadErrorHero}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="url"
+                          value={studioSettings.hero_image_url}
+                          onChange={(e) =>
+                            setStudioSettings({ ...studioSettings, hero_image_url: e.target.value })
+                          }
+                          placeholder="https://..."
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Contact Numbers & WhatsApp */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#BFA076]" />
+                    <span>Direct Communication & WhatsApp</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Phone number for direct calls, email for inquiries, and WhatsApp business number for 1-click chat.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Studio Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={studioSettings.email}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, email: e.target.value })
+                      }
+                      placeholder="contact@yourphotography.com"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Studio Phone Number *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.phone}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, phone: e.target.value })
+                      }
+                      placeholder="+91 98765 43210"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      WhatsApp Number (With Country Code) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.whatsapp_number}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, whatsapp_number: e.target.value })
+                      }
+                      placeholder="919876543210"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                    <p className="text-[10px] text-[#7B6955] mt-1 font-sans">
+                      Used for wa.me links (digits only, e.g. 919876543210)
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Studio Physical Address & Operating Hours */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-[#BFA076]" />
+                    <span>Physical Studio Location & Hours</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Official addresses in English and Hindi for local SEO in Jaipur, Rajasthan, and operational hours.
+                  </p>
+                </div>
+
+                <div className="space-y-4 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Full Address (English) *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={studioSettings.address}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, address: e.target.value })
+                      }
+                      placeholder="Room 215, 2nd Floor, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura, Jaipur, Rajasthan 302017"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Full Address (Hindi / हिंदी पता) *
+                    </label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={studioSettings.hindi_address}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, hindi_address: e.target.value })
+                      }
+                      placeholder="कमरा नं. 215, द्वितीय तल, RV2J+5PQ, करोलां का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Operating / Studio Working Hours
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.working_hours}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, working_hours: e.target.value })
+                      }
+                      placeholder="Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 4: Social Media Profiles */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <Share2 className="w-4 h-4 text-[#BFA076]" />
+                    <span>Social Media Channels</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Links embedded across the header, footer, and schema structured data.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Instagram Profile URL
+                    </label>
+                    <input
+                      type="url"
+                      value={studioSettings.instagram_url}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, instagram_url: e.target.value })
+                      }
+                      placeholder="https://instagram.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Facebook Page URL
+                    </label>
+                    <input
+                      type="url"
+                      value={studioSettings.facebook_url}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, facebook_url: e.target.value })
+                      }
+                      placeholder="https://facebook.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Pinterest Board URL
+                    </label>
+                    <input
+                      type="url"
+                      value={studioSettings.pinterest_url}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, pinterest_url: e.target.value })
+                      }
+                      placeholder="https://pinterest.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      500px Portfolio URL
+                    </label>
+                    <input
+                      type="url"
+                      value={studioSettings.five_hundred_px_url}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, five_hundred_px_url: e.target.value })
+                      }
+                      placeholder="https://500px.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      YouTube Channel URL
+                    </label>
+                    <input
+                      type="url"
+                      value={studioSettings.youtube_url}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, youtube_url: e.target.value })
+                      }
+                      placeholder="https://youtube.com/..."
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Action Bar */}
+              <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#E8DED0]">
+                <button
+                  type="submit"
+                  disabled={isSavingSettings}
+                  className="px-8 py-3 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {isSavingSettings ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Saving to Supabase...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-[#BFA076]" />
+                      <span>Save All Studio Settings</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 5: Photographer Profile & About Me */}
+        {activeTab === "photographer" && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-serif text-2xl text-[#121212]">
+                  Photographer Profile & Biography
+                </h3>
+                <p className="text-xs text-[#7B6955]">
+                  Update your artist biography, quotes, portrait photograph, and experience milestones.
+                </p>
+              </div>
+
+              <button
+                onClick={handleSaveStudioSettings}
+                disabled={isSavingSettings}
+                className="px-6 py-2.5 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center justify-center gap-2 self-start sm:self-auto"
+              >
+                {isSavingSettings ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#BFA076]" />
+                    <span>Save Photographer Profile</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {settingsFeedback && (
+              <div
+                className={`p-4 border text-xs sm:text-sm flex items-center justify-between rounded-xs ${
+                  settingsFeedback.type === "success"
+                    ? "bg-emerald-50 border-emerald-300 text-emerald-900"
+                    : "bg-red-50 border-red-300 text-red-900"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{settingsFeedback.message}</span>
+                </div>
+                <button
+                  onClick={() => setSettingsFeedback(null)}
+                  className="text-xs font-bold px-2 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveStudioSettings} className="space-y-8">
+              {/* Card 1: Artist Identity & Quote */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <User className="w-4 h-4 text-[#BFA076]" />
+                    <span>Artist Identity & Signature Quote</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Artist credentials featured across the &quot;Meet the Photographer&quot; section.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Photographer Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.photographer_name}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, photographer_name: e.target.value })
+                      }
+                      placeholder="e.g. Kishor Prem"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Professional Role / Title *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={studioSettings.photographer_role}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, photographer_role: e.target.value })
+                      }
+                      placeholder="e.g. Principal Photographer & Visual Artist"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Artist Quote / Guiding Philosophy
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.photographer_quote}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, photographer_quote: e.target.value })
+                      }
+                      placeholder="“Light reveals what exists; emotion reveals what truly matters.”"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+
+                {/* Portrait Photo Picker with Upload */}
+                <div className="space-y-3 pt-2 border-t border-[#F3ECE1]">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] font-medium text-xs">
+                        Photographer Portrait Photo
+                      </label>
+                      <p className="text-[11px] text-[#7B6955]">
+                        The featured vertical portrait shown in the &quot;About Me&quot; biography module.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-[#FAF7F2] p-0.5 border border-[#D7C7B2] rounded-xs text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => setUploadModePortrait("file")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModePortrait === "file"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <Upload className="w-3 h-3" />
+                        <span>Upload File</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUploadModePortrait("url")}
+                        className={`px-2.5 py-1 transition-all cursor-pointer flex items-center gap-1.5 ${
+                          uploadModePortrait === "url"
+                            ? "bg-[#121212] text-white font-medium"
+                            : "text-[#7B6955] hover:text-[#121212]"
+                        }`}
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Paste URL</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center">
+                    <div className="relative aspect-[3/4] w-36 bg-[#121212] rounded-xs overflow-hidden border border-[#D7C7B2]">
+                      {studioSettings.photographer_portrait_url ? (
+                        <Image
+                          src={studioSettings.photographer_portrait_url}
+                          alt="Photographer Portrait Preview"
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-xs text-[#FAF7F2]/60">
+                          No portrait
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="sm:col-span-3">
+                      {uploadModePortrait === "file" ? (
+                        <div className="space-y-2">
+                          <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-[#D7C7B2] hover:border-[#BFA076] bg-[#FAF7F2] hover:bg-[#F3ECE1] cursor-pointer transition-colors text-center group rounded-xs">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handlePortraitUpload(f);
+                              }}
+                            />
+                            {isUploadingPortrait ? (
+                              <div className="flex flex-col items-center gap-2 text-[#7B6955] py-2">
+                                <RefreshCw className="w-5 h-5 animate-spin text-[#BFA076]" />
+                                <span className="font-medium text-xs">Uploading portrait to Supabase Storage...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1.5">
+                                <FileUp className="w-5 h-5 text-[#BFA076]" />
+                                <p className="text-xs font-medium text-[#121212]">
+                                  Click to upload portrait photo
+                                </p>
+                                <p className="text-[10px] text-[#7B6955]">
+                                  Recommended: 3:4 aspect ratio portrait, high resolution
+                                </p>
+                              </div>
+                            )}
+                          </label>
+
+                          {uploadErrorPortrait && (
+                            <p className="text-[11px] text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3 shrink-0" />
+                              {uploadErrorPortrait}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="url"
+                          value={studioSettings.photographer_portrait_url}
+                          onChange={(e) =>
+                            setStudioSettings({ ...studioSettings, photographer_portrait_url: e.target.value })
+                          }
+                          placeholder="https://..."
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Biography Paragraphs */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-[#BFA076]" />
+                    <span>Biography Content</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Tell your story, artistic journey, and photographic methodology.
+                  </p>
+                </div>
+
+                <div className="space-y-4 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Biography Paragraph 1 *
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={studioSettings.photographer_bio_1}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, photographer_bio_1: e.target.value })
+                      }
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Biography Paragraph 2 *
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={studioSettings.photographer_bio_2}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, photographer_bio_2: e.target.value })
+                      }
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Experience & Trust Stats */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3">
+                  <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                    <Award className="w-4 h-4 text-[#BFA076]" />
+                    <span>Experience & Trust Statistics</span>
+                  </h4>
+                  <p className="text-xs text-[#7B6955]">
+                    Key proof metrics displayed on both the hero trust bar and the about section.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Years of Craft
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.stats_experience}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, stats_experience: e.target.value })
+                      }
+                      placeholder="12+ Years"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Sessions Completed
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.stats_sessions}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, stats_sessions: e.target.value })
+                      }
+                      placeholder="650+"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Weddings Documented
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.stats_weddings}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, stats_weddings: e.target.value })
+                      }
+                      placeholder="180+"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Editorial Features / Awards
+                    </label>
+                    <input
+                      type="text"
+                      value={studioSettings.stats_features}
+                      onChange={(e) =>
+                        setStudioSettings({ ...studioSettings, stats_features: e.target.value })
+                      }
+                      placeholder="24+"
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Action Bar */}
+              <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#E8DED0]">
+                <button
+                  type="submit"
+                  disabled={isSavingSettings}
+                  className="px-8 py-3 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 uppercase tracking-widest text-xs font-medium cursor-pointer transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  {isSavingSettings ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Saving to Supabase...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-[#BFA076]" />
+                      <span>Save Photographer Profile</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         )}
 

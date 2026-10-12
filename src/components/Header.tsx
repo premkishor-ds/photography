@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Camera, Menu, X, ArrowRight } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLanguage } from "@/context/LanguageContext";
+import { useStudioSettings } from "@/context/StudioContext";
 
 export const PRIMARY_NAV_LINKS = [
   { key: "nav.home", name: "Home", href: "/" },
@@ -20,6 +21,7 @@ export const PRIMARY_NAV_LINKS = [
 
 export default function Header() {
   const { t } = useLanguage();
+  const { settings } = useStudioSettings();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -56,7 +58,7 @@ export default function Header() {
           href="/"
           onClick={() => handleLinkClick("/")}
           className="group flex items-center gap-3 transition-opacity duration-200"
-          aria-label="Your Photography - Home"
+          aria-label={`${settings.studio_name || "Your Photography"} - Home`}
         >
           <div
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-300 ${
@@ -73,7 +75,7 @@ export default function Header() {
                 isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
               }`}
             >
-              Your Photography
+              {settings.studio_name || "Your Photography"}
             </span>
             <span
               className={`text-[9px] tracking-[0.3em] uppercase -mt-1 font-sans transition-colors duration-300 ${

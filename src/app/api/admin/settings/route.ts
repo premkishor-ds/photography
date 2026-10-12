@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  try {
+    const { data, error } = await supabase
+      .from("studio_settings")
+      .select("*")
+      .eq("id", "default")
+      .single();
+
+    if (error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, settings: data });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    const updates = {
+      studio_name: body.studio_name,
+      email: body.email,
+      phone: body.phone,
+      whatsapp_number: body.whatsapp_number,
+      address: body.address,
+      hindi_address: body.hindi_address,
+      working_hours: body.working_hours,
+      tagline: body.tagline,
+      subtagline: body.subtagline,
+      hero_image_url: body.hero_image_url,
+      photographer_name: body.photographer_name,
+      photographer_role: body.photographer_role,
+      photographer_bio_1: body.photographer_bio_1,
+      photographer_bio_2: body.photographer_bio_2,
+      photographer_quote: body.photographer_quote,
+      photographer_portrait_url: body.photographer_portrait_url,
+      stats_experience: body.stats_experience,
+      stats_sessions: body.stats_sessions,
+      stats_weddings: body.stats_weddings,
+      stats_features: body.stats_features,
+      instagram_url: body.instagram_url,
+      facebook_url: body.facebook_url,
+      pinterest_url: body.pinterest_url,
+      five_hundred_px_url: body.five_hundred_px_url,
+      youtube_url: body.youtube_url,
+      updated_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from("studio_settings")
+      .update(updates)
+      .eq("id", "default")
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, settings: data });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}

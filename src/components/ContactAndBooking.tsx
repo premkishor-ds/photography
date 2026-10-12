@@ -16,6 +16,7 @@ import {
 import { WhatsAppIcon } from "@/components/Icons";
 import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
+import { useStudioSettings } from "@/context/StudioContext";
 
 interface ContactAndBookingProps {
   preselectedService?: string;
@@ -45,6 +46,7 @@ export default function ContactAndBooking({
   headingLevel = "h2",
 }: ContactAndBookingProps) {
   const { t, language } = useLanguage();
+  const { settings } = useStudioSettings();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -175,12 +177,19 @@ export default function ContactAndBooking({
     setIsSubmitted(false);
   };
 
+  const studioEmail = settings.email || CONTACT_DETAILS.email;
+  const studioPhone = settings.phone || CONTACT_DETAILS.phone;
+  const studioWhatsapp = settings.whatsapp_number || CONTACT_DETAILS.whatsappNumber;
+  const studioAddress = settings.address || CONTACT_DETAILS.address;
+  const studioHindiAddress = settings.hindi_address || CONTACT_DETAILS.hindiAddress;
+  const studioWorkingHours = settings.working_hours || CONTACT_DETAILS.workingHours;
+
   const whatsappMessage = encodeURIComponent(
-    `Hello! I'd like to inquire about booking a photography session with Your Photography.${
+    `Hello! I'd like to inquire about booking a photography session with ${settings.studio_name || "Your Photography"}.${
       formData.service ? ` Service: ${formData.service}` : ""
     }`
   );
-  const whatsappUrl = `https://wa.me/${CONTACT_DETAILS.whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${studioWhatsapp.replace(/[^0-9]/g, "")}?text=${whatsappMessage}`;
 
   return (
     <section id="contact" className="py-24 sm:py-32 bg-[#FAF7F2] text-[#121212] border-t border-[#E8DED0]">
@@ -226,10 +235,10 @@ export default function ContactAndBooking({
                       {t("contact.email", "Email Address")}
                     </p>
                     <a
-                      href={`mailto:${CONTACT_DETAILS.email}`}
+                      href={`mailto:${studioEmail}`}
                       className="text-sm font-medium text-[#121212] hover:underline"
                     >
-                      {CONTACT_DETAILS.email}
+                      {studioEmail}
                     </a>
                   </div>
                 </div>
@@ -243,10 +252,10 @@ export default function ContactAndBooking({
                       {t("contact.phone", "Phone Number")}
                     </p>
                     <a
-                      href={`tel:${CONTACT_DETAILS.phone.replace(/[^0-9+]/g, "")}`}
+                      href={`tel:${studioPhone.replace(/[^0-9+]/g, "")}`}
                       className="text-sm font-medium text-[#121212] hover:underline"
                     >
-                      {CONTACT_DETAILS.phone}
+                      {studioPhone}
                     </a>
                   </div>
                 </div>
@@ -260,13 +269,13 @@ export default function ContactAndBooking({
                       {t("contact.location", "Studio Location")}
                     </p>
                     <p className="text-xs sm:text-sm text-[#121212] font-medium">
-                      {language === "hi" && CONTACT_DETAILS.hindiAddress
-                        ? CONTACT_DETAILS.hindiAddress
-                        : CONTACT_DETAILS.address}
+                      {language === "hi" && studioHindiAddress
+                        ? studioHindiAddress
+                        : studioAddress}
                     </p>
-                    {language !== "hi" && CONTACT_DETAILS.hindiAddress && (
+                    {language !== "hi" && studioHindiAddress && (
                       <p className="text-xs text-[#7B6955] font-sans mt-1">
-                        {CONTACT_DETAILS.hindiAddress}
+                        {studioHindiAddress}
                       </p>
                     )}
                   </div>
@@ -281,7 +290,7 @@ export default function ContactAndBooking({
                       {t("contact.hours", "Studio Hours")}
                     </p>
                     <p className="text-xs sm:text-sm text-[#121212]">
-                      {CONTACT_DETAILS.workingHours}
+                      {studioWorkingHours}
                     </p>
                   </div>
                 </div>
