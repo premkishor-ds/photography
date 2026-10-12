@@ -47,6 +47,7 @@ import { WhatsAppIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import AdminBlogManager from "@/components/admin/AdminBlogManager";
 import AdminFaqManager from "@/components/admin/AdminFaqManager";
+import AdminGearManager from "@/components/admin/AdminGearManager";
 import GoogleStaticMap from "@/components/GoogleStaticMap";
 
 interface Inquiry {
@@ -218,7 +219,7 @@ export default function AdminPage() {
   const [authError, setAuthError] = useState("");
 
   const [activeTab, setActiveTab] = useState<
-    "inquiries" | "portfolio" | "services" | "studio" | "photographer" | "blog" | "faq" | "db"
+    "inquiries" | "portfolio" | "services" | "gear" | "studio" | "photographer" | "blog" | "faq" | "db"
   >("inquiries");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -1434,6 +1435,18 @@ export default function AdminPage() {
             >
               <IndianRupee className="w-3.5 h-3.5" />
               <span>Services & Pricing</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("gear")}
+              className={`px-3.5 sm:px-4 py-3 text-xs uppercase tracking-widest whitespace-nowrap shrink-0 transition-colors cursor-pointer border-b-2 font-medium flex items-center gap-2 ${
+                activeTab === "gear"
+                  ? "border-[#121212] text-[#121212]"
+                  : "border-transparent text-[#7B6955] hover:text-[#121212] hover:border-[#D7C7B2]"
+              }`}
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>Gear Inventory</span>
             </button>
 
             <button
@@ -4975,6 +4988,9 @@ export default function AdminPage() {
             </form>
           </div>
         )}
+
+        {/* TAB: Gear Manager */}
+        {activeTab === "gear" && <AdminGearManager />}
 
         {/* TAB: Blog Manager */}
         {activeTab === "blog" && <AdminBlogManager />}

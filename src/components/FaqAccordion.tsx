@@ -59,7 +59,7 @@ export default function FaqAccordion({
               role="region"
               aria-labelledby={headerId}
               className={`overflow-hidden transition-all duration-300 ${
-                isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
               }`}
             >
               <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-sm text-[#554837] leading-relaxed font-sans border-t border-[#F3ECE1] pt-4">

@@ -89,7 +89,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden lg:flex items-center gap-3.5 xl:gap-5 2xl:gap-6 shrink-0"
+          className="hidden xl:flex items-center gap-3.5 xl:gap-5 2xl:gap-6 shrink-0"
           aria-label="Main Navigation"
         >
           {PRIMARY_NAV_LINKS.map((link) => {
@@ -127,8 +127,8 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Desktop CTA & Language Switcher */}
-        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 shrink-0">
+        {/* Right Action Bar: CTA, Language Switcher & Menu Toggle */}
+        <div className="flex items-center gap-2 xl:gap-3 shrink-0">
           <LanguageSwitcher
             variant="header"
             isScrolled={isScrolled}
@@ -136,7 +136,7 @@ export default function Header() {
           />
           <Link
             href="/contact"
-            className={`h-9 px-4 xl:px-5 text-[11px] xl:text-xs uppercase tracking-[0.18em] font-medium transition-all duration-300 rounded-none border flex items-center gap-2 shrink-0 whitespace-nowrap group ${
+            className={`hidden sm:flex h-9 px-3.5 xl:px-5 text-[11px] xl:text-xs uppercase tracking-[0.16em] xl:tracking-[0.18em] font-medium transition-all duration-300 rounded-none border items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap group ${
               isScrolled || !isHomepage
                 ? "bg-[#121212] text-[#FAF7F2] border-[#121212] hover:bg-transparent hover:text-[#121212]"
                 : "bg-white text-[#121212] border-white hover:bg-transparent hover:text-white hover:border-white shadow-sm"
@@ -145,34 +145,34 @@ export default function Header() {
             <span>{t("nav.book", "Book a Session")}</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-        </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`lg:hidden p-2 transition-colors duration-200 focus:outline-none`}
-          aria-expanded={mobileMenuOpen}
-          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {mobileMenuOpen ? (
-            <X
-              className={`w-6 h-6 ${
-                isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
-              }`}
-            />
-          ) : (
-            <Menu
-              className={`w-6 h-6 ${
-                isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
-              }`}
-            />
-          )}
-        </button>
+          {/* Mobile/Tablet Menu Toggle (Visible on < xl / when zoomed in) */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="xl:hidden p-2 transition-colors duration-200 focus:outline-none cursor-pointer"
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? (
+              <X
+                className={`w-6 h-6 ${
+                  isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
+                }`}
+              />
+            ) : (
+              <Menu
+                className={`w-6 h-6 ${
+                  isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
+                }`}
+              />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer Menu */}
       <div
-        className={`lg:hidden fixed inset-x-0 top-full bg-[#FAF7F2] border-b border-[#E8DED0] shadow-xl transition-all duration-300 overflow-hidden ${
+        className={`xl:hidden fixed inset-x-0 top-full bg-[#FAF7F2] border-b border-[#E8DED0] shadow-xl transition-all duration-300 overflow-hidden ${
           mobileMenuOpen ? "max-h-[550px] opacity-100 py-6" : "max-h-0 opacity-0 py-0"
         }`}
       >

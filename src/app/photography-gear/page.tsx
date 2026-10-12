@@ -14,12 +14,12 @@ import {
   GEAR_COMPARISONS,
   GearCategory,
 } from "@/data/gearData";
-import { ArrowRight, SlidersHorizontal, Scale } from "lucide-react";
+import { ArrowRight, SlidersHorizontal, Scale, ShieldCheck } from "lucide-react";
 
 export const metadata = constructMetadata({
-  title: "My Photography Gear | Cameras, Lenses & Audio",
+  title: "My Photography Gear | Cameras, Lenses & Audio Equipment",
   description:
-    "Discover the cameras, lenses, audio equipment, and photography accessories I use for capturing portraits, wildlife, sports, landscapes, and travel moments.",
+    "Explore the cameras, lenses, audio equipment, and accessories I use for wildlife, sports, portraits, travel, and video creation.",
   path: "/photography-gear",
 });
 
@@ -27,7 +27,7 @@ export default function PhotographyGearHubPage() {
   const webPageSchema = generateWebPageSchema(
     "/photography-gear",
     "My Photography Gear",
-    "Discover the cameras, lenses, audio equipment, and photography accessories used for capturing portraits, wildlife, sports, landscapes, and travel moments."
+    "Explore the cameras, lenses, audio equipment, and accessories I use for wildlife, sports, portraits, travel, and video creation."
   );
 
   const breadcrumbsSchema = generateBreadcrumbSchema([
@@ -50,19 +50,19 @@ export default function PhotographyGearHubPage() {
             ]}
           />
 
-          {/* Hero Section */}
+          {/* Hero Section with Exact Requested Title & Introduction */}
           <div className="max-w-3xl mb-12 sm:mb-16">
             <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-              Equipment & Optics
+              Equipment & Optics Inventory
             </p>
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#121212]">
               My Photography Gear
             </h1>
-            <p className="mt-5 text-base sm:text-lg text-[#554837] font-light leading-relaxed">
-              Discover the cameras, lenses, audio equipment, and photography accessories I use for capturing portraits, wildlife, sports, landscapes, and travel moments.
+            <p className="mt-5 text-base sm:text-xl text-[#3E3427] font-light leading-relaxed">
+              Explore the cameras, lenses, audio equipment, and accessories I use for wildlife, sports, portraits, travel, and video creation.
             </p>
-            <p className="mt-3 text-xs sm:text-sm text-[#7B6955] font-light">
-              We only highlight equipment based on genuine utility and craftsmanship. Every observation distinguishes verified hands-on field experience from manufacturer specifications.
+            <p className="mt-3 text-xs sm:text-sm text-[#7B6955] font-light leading-relaxed">
+              Every equipment record clearly distinguishes verified manufacturer specifications from personal field applications. Unknown or unverified technical parameters are intentionally preserved as unconfirmed without fabrication.
             </p>
           </div>
 
@@ -93,17 +93,17 @@ export default function PhotographyGearHubPage() {
             </a>
           </div>
 
-          {/* Categorized Equipment Showcase */}
+          {/* Categorized Equipment Showcase (5 Organized Categories) */}
           <div className="space-y-24">
-            {GEAR_CATEGORIES.map((cat) => {
-              const categoryItems = GEAR_ITEMS.filter((item) => item.category === cat.id);
+            {GEAR_CATEGORIES.map((cat, idx) => {
+              const categoryItems = GEAR_ITEMS.filter((item) => item.category === cat.id && item.published);
               if (categoryItems.length === 0) return null;
 
               return (
                 <section key={cat.id} id={cat.id} className="scroll-mt-32">
                   <div className="max-w-2xl mb-8">
                     <span className="text-[11px] uppercase tracking-[0.25em] text-[#7B6955] font-sans font-medium">
-                      Category
+                      Category 0{idx + 1}
                     </span>
                     <h2 className="font-serif text-2xl sm:text-4xl font-light text-[#121212] mt-1">
                       {cat.label}
@@ -129,11 +129,11 @@ export default function PhotographyGearHubPage() {
               <span className="text-[11px] uppercase tracking-[0.25em] text-[#7B6955] font-sans font-medium flex items-center gap-1.5">
                 <Scale className="w-3.5 h-3.5 text-[#BFA076]" /> Side-by-Side Analysis
               </span>
-              <h2 className="font-serif text-2xl sm:text-4xl font-light text-[#121212] mt-1">
+              <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#121212] mt-1">
                 Equipment Comparisons
               </h2>
               <p className="text-xs sm:text-sm text-[#554837] font-light mt-2 leading-relaxed">
-                Detailed head-to-head technical breakdowns exploring optical specifications, ergonomic trade-offs, and practical field recommendations without bias.
+                Objective technical comparisons exploring real-world trade-offs, weight profiles, and optics decisions in the field.
               </p>
             </div>
 
@@ -141,81 +141,44 @@ export default function PhotographyGearHubPage() {
               {GEAR_COMPARISONS.map((comp) => (
                 <article
                   key={comp.slug}
-                  className="bg-white border border-[#E8DED0] p-7 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow"
+                  className="bg-white border border-[#E8DED0] p-6 sm:p-8 flex flex-col justify-between hover:border-[#BFAB93] transition-colors group"
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs text-[#7B6955]">
-                      <span className="uppercase tracking-wider font-sans font-medium">
-                        Head-to-Head Comparison
-                      </span>
-                      <span>{comp.specComparison.length} Specs Analyzed</span>
-                    </div>
-
-                    <h3 className="font-serif text-2xl text-[#121212] font-normal leading-snug">
-                      <Link
-                        href={`/photography-gear/comparisons/${comp.slug}`}
-                        className="hover:text-[#7B6955] transition-colors"
-                      >
+                    <span className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans font-medium">
+                      Technical Face-Off
+                    </span>
+                    <h3 className="font-serif text-xl sm:text-2xl text-[#121212] group-hover:text-[#7B6955] transition-colors leading-snug">
+                      <Link href={`/photography-gear/comparisons/${comp.slug}`}>
                         {comp.title}
                       </Link>
                     </h3>
-
-                    <p className="text-xs sm:text-sm text-[#554837] font-light leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#554837] leading-relaxed font-light">
                       {comp.description}
                     </p>
-
-                    {/* Quick Highlight Points */}
-                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#F3ECE1] text-xs">
-                      <div className="p-3 bg-[#FAF7F2]">
-                        <p className="font-medium text-[#121212] truncate">{comp.itemA.name}</p>
-                        <p className="text-[11px] text-[#7B6955] font-light mt-1">{comp.itemA.highlight}</p>
-                      </div>
-                      <div className="p-3 bg-[#FAF7F2]">
-                        <p className="font-medium text-[#121212] truncate">{comp.itemB.name}</p>
-                        <p className="text-[11px] text-[#7B6955] font-light mt-1">{comp.itemB.highlight}</p>
-                      </div>
+                    <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-2 text-xs text-[#2C2C2C] font-mono">
+                      <span className="px-2.5 py-1 bg-[#FAF7F2] border border-[#E8DED0]">
+                        {comp.itemA.name}
+                      </span>
+                      <span className="text-[#9E8870] font-sans">vs.</span>
+                      <span className="px-2.5 py-1 bg-[#FAF7F2] border border-[#E8DED0]">
+                        {comp.itemB.name}
+                      </span>
                     </div>
                   </div>
 
                   <div className="pt-6 mt-6 border-t border-[#F3ECE1]">
                     <Link
                       href={`/photography-gear/comparisons/${comp.slug}`}
-                      className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors group/comp"
+                      className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors group/link"
                     >
-                      <span>Read Full Comparison & Trade-Offs</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover/comp:translate-x-1 transition-transform" />
+                      <span>Read Field Comparison</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-link-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </article>
               ))}
             </div>
           </section>
-
-          {/* Portfolio & Field Connection Callout */}
-          <div className="mt-24 p-8 sm:p-12 bg-[#F4EFE6] border border-[#E8DED0] flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="space-y-2 text-center md:text-left max-w-xl">
-              <h3 className="font-serif text-2xl sm:text-3xl text-[#121212]">
-                See This Gear in Action
-              </h3>
-              <p className="text-xs sm:text-sm text-[#554837] font-light leading-relaxed">
-                Explore our portfolio collections to see full-resolution photographs captured with these exact camera bodies and telephoto lenses across wildlife, track sports, and studio portraits.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3 shrink-0">
-              <Link
-                href="/portfolio/sports"
-                className="px-5 py-3 text-xs uppercase tracking-widest bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] transition-colors"
-              >
-                Sports Gallery
-              </Link>
-              <Link
-                href="/portfolio/nature-wildlife"
-                className="px-5 py-3 text-xs uppercase tracking-widest border border-[#121212] text-[#121212] hover:bg-[#121212] hover:text-[#FAF7F2] transition-colors"
-              >
-                Wildlife Gallery
-              </Link>
-            </div>
-          </div>
         </div>
       </main>
 

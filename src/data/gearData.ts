@@ -5,36 +5,60 @@ export type GearCategory =
   | "lenses"
   | "action-cameras"
   | "audio"
-  | "accessories";
+  | "tripods-and-support";
+
+export interface GearSpecification {
+  label: string;
+  value: string | null;
+}
+
+export interface RelatedPortfolioLink {
+  label: string;
+  url: string;
+}
 
 export interface GearItem {
   id: string;
   slug: string;
+  aliases?: string[];
   name: string;
   manufacturer: string;
   category: GearCategory;
   categoryLabel: string;
-  tagline: string;
+  modelNumber: string | null;
+  description: string;
+  primaryUses: string[];
+  compatibility: string;
   imageUrl: string;
   imageAlt: string;
-  overview: string;
-  personalUsage: string;
-  isPersonallyVerified: boolean;
-  specs: { label: string; value: string }[];
-  pros: string[];
-  cons: string[];
-  bestFor: string[];
-  situationsWhereUseful: string[];
-  imageOrAudioQuality: string;
+  specifications: GearSpecification[];
+  reviewUrl: string | null;
+  relatedPortfolioUrls: RelatedPortfolioLink[];
+  ownershipStatus: string;
+  published: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+
+  // Compatibility / optional fields for rich review template
+  tagline?: string;
+  overview?: string;
+  personalUsage?: string;
+  isPersonallyVerified?: boolean;
+  specs?: { label: string; value: string }[];
+  pros?: string[];
+  cons?: string[];
+  bestFor?: string[];
+  situationsWhereUseful?: string[];
+  imageOrAudioQuality?: string;
   autofocusAndPerformance?: string;
-  portabilityAndHandling: string;
-  limitations: string;
-  whoShouldBuy: string;
-  alternatives: { name: string; slug?: string; note: string }[];
-  relatedPortfolioCategory: string;
-  relatedPortfolioSlug: string;
+  portabilityAndHandling?: string;
+  limitations?: string;
+  whoShouldBuy?: string;
+  alternatives?: { name: string; slug?: string; note: string }[];
+  relatedPortfolioCategory?: string;
+  relatedPortfolioSlug?: string;
   relatedTutorialSlug?: string;
-  faqs: { question: string; answer: string }[];
+  faqs?: { question: string; answer: string }[];
   retailerLinks?: {
     retailer: string;
     url: string;
@@ -86,103 +110,138 @@ export const GEAR_CATEGORIES: { id: GearCategory; label: string; description: st
   {
     id: "camera-bodies",
     label: "Camera Bodies",
-    description: "Full-frame mirrorless sensors delivering dynamic range, fast burst rates, and reliable low-light performance.",
+    description: "Full-frame and APS-C mirrorless sensors delivering dynamic range, fast burst rates, and reliable image capture.",
   },
   {
     id: "lenses",
     label: "Camera Lenses",
-    description: "Prime and telephoto glass selected for edge-to-edge optical resolution, bokeh character, and autofocus tracking.",
+    description: "Prime and telephoto optics selected for edge-to-edge optical resolution, natural perspective, and long-range reach.",
   },
   {
     id: "action-cameras",
     label: "Action Cameras",
-    description: "Rugged, stabilized POV camera bodies for challenging weather, remote expeditions, and behind-the-scenes recording.",
+    description: "Rugged, stabilized POV camera systems for high-impact travel videos, motorcycle footage, and first-person perspectives.",
   },
   {
     id: "audio",
     label: "Audio Equipment",
-    description: "Wireless dual-channel microphone transmitters and directional recording kits for client interviews and documentary footage.",
+    description: "Ultra-compact wireless microphone systems engineered for crisp vocal dialogue, client interviews, and video BTS.",
   },
   {
-    id: "accessories",
-    label: "Camera Accessories",
-    description: "Essential optical filters, carbon fiber supports, rugged field backpacks, and power management tools.",
+    id: "tripods-and-support",
+    label: "Tripods and Support Equipment",
+    description: "Heavy-duty stability platforms with interchangeable video and ball head configurations for smooth tracking and studio framing.",
   },
 ];
 
 export const GEAR_ITEMS: GearItem[] = [
-  // 1. Camera Bodies
+  // =========================================================================
+  // 1. CAMERA BODIES
+  // =========================================================================
+
+  // 1.1 Sony A7 V
   {
-    id: "gear-sony-a7v",
-    slug: "sony-a7v",
-    name: "Sony A7V",
+    id: "gear-sony-a7-v",
+    slug: "sony-a7-v",
+    aliases: ["sony-a7v"],
+    name: "Sony A7 V",
     manufacturer: "Sony",
     category: "camera-bodies",
-    categoryLabel: "Camera Bodies",
+    categoryLabel: "Full-frame mirrorless camera",
+    modelNumber: "ILCE-7M5 (Tentative / Unverified)",
+    description:
+      "Next-generation full-frame hybrid mirrorless camera body combining advanced subject recognition autofocus, wide dynamic exposure latitude, and high-speed continuous shooting across diverse lighting environments.",
+    primaryUses: [
+      "Wildlife Photography",
+      "Sports Photography",
+      "Portrait Photography",
+      "Travel Photography",
+    ],
+    compatibility:
+      "Sony E-mount full-frame lenses (native), Sony E-mount APS-C lenses (auto crop mode), Dual CFexpress Type A / SD UHS-II hybrid memory slots.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony A7 V full-frame mirrorless camera body",
+    specifications: [
+      { label: "Sensor Format", value: "35mm Full-Frame BSI CMOS Sensor" },
+      { label: "Autofocus Engine", value: "AI-Powered Real-Time Recognition (Human, Animal, Bird, Vehicle)" },
+      { label: "Image Stabilization", value: "5-Axis In-Body Optical SteadyShot" },
+      { label: "Card Slots", value: "Dual CFexpress Type A / SD UHS-II Hybrid" },
+      { label: "Continuous Burst", value: "Up to 10+ fps with full continuous AF/AE tracking" },
+      { label: "Video Recording", value: "4K 60p 10-bit 4:2:2 internal capture" },
+      { label: "Weight", value: "Approx. 658g (with battery and memory card)" },
+    ],
+    reviewUrl: "/photography-gear/sony-a7-v",
+    relatedPortfolioUrls: [
+      { label: "Portraits", url: "/portfolio/portraits" },
+      { label: "Sports & Action", url: "/portfolio/sports" },
+    ],
+    ownershipStatus: "Active Primary Body",
+    published: true,
+
+    // Rich Template Extensions
     tagline: "Next-generation full-frame hybrid mirrorless camera body.",
-    imageUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Sony professional mirrorless camera body with high-resolution lens mount",
     overview:
-      "The Sony A7V is engineered as a modern hybrid powerhouse, combining advanced AI subject recognition autofocus, wide dynamic range, and dual-layer heat dissipation for continuous high-speed shooting across studio portraits and demanding outdoor sports.",
+      "The Sony A7 V is engineered as a modern hybrid powerhouse, combining predictive subject recognition autofocus, wide exposure latitude, and rugged weather sealing for wildlife, sports, portraits, and travel photography.",
     personalUsage:
-      "Serves as our primary camera body for editorial portrait assignments, indoor gala documentation, and fast-paced track and athletics events where real-time eye tracking is critical.",
+      "Serves as our primary camera body for editorial portraits, indoor wedding documentation, and fast-paced athletics where real-time eye tracking is essential.",
     isPersonallyVerified: true,
     specs: [
       { label: "Sensor Format", value: "35mm Full-Frame BSI CMOS" },
-      { label: "Autofocus Engine", value: "AI-Powered Real-Time Recognition (Human, Animal, Vehicle)" },
+      { label: "Autofocus Engine", value: "AI-Powered Real-Time Recognition" },
       { label: "Image Stabilization", value: "5-Axis In-Body Optical SteadyShot" },
       { label: "Card Slots", value: "Dual CFexpress Type A / SD UHS-II Hybrid" },
-      { label: "Burst Rate", value: "Up to 10+ fps with full continuous AF/AE tracking" },
-      { label: "Video Capabilities", value: "4K 60p 10-bit 4:2:2 internal recording" },
-      { label: "Weight", value: "Approx. 658g (with battery and memory card)" },
+      { label: "Continuous Burst", value: "Up to 10+ fps continuous tracking" },
+      { label: "Video Recording", value: "4K 60p 10-bit 4:2:2 internal" },
+      { label: "Weight", value: "Approx. 658g" },
     ],
     pros: [
       "Industry-leading subject acquisition and predictive autofocus tracking",
       "Exceptional highlight recovery and low-noise performance at high ISOs",
       "Dual hybrid card slots provide vital instant in-camera redundancy",
-      "Deep grip ergonomics and responsive tactile dial controls",
+      "Ergonomic grip and tactile dial layout for all-day field assignments",
     ],
     cons: [
       "CFexpress Type A media cards carry premium pricing",
       "Menu system offers immense customization but requires deliberate setup",
-      "Noticeable battery drain during sustained high-framerate electronic shutter bursts",
+      "Sustained high-framerate bursts generate large volume RAW files",
     ],
     bestFor: [
-      "Editorial and commercial portraiture requiring rich color tonality",
+      "Wildlife, birds, and rapid animal action",
       "Indoor weddings and events in low-light ambient illumination",
       "Sports and athletics demanding rapid eye and motion tracking",
+      "Editorial and commercial portraiture requiring rich color tonality",
     ],
     situationsWhereUseful: [
-      "Studio portrait sessions with complex multi-light strobe setups",
-      "Fast-moving basketball, soccer, and track athletics from the sidelines",
-      "Dimly lit wedding reception halls requiring ISO 6400+ capture",
+      "Studio portrait sessions with complex strobe configurations",
+      "Field sports with rapid directional changes across stadium courts",
+      "Remote travel expeditions where moisture and dust resistance matter",
     ],
     imageOrAudioQuality:
-      "Delivers wide exposure latitude and clean shadow retrieval. Skin tones render with natural warmth and subtle tonal gradations when color-graded.",
+      "Delivers wide exposure latitude and clean shadow retrieval. Skin tones render with natural warmth and subtle tonal gradations.",
     autofocusAndPerformance:
       "The dedicated AI processing unit locks onto eyes and silhouettes instantly, even when subjects turn away or wear helmets, caps, or sunglasses.",
     portabilityAndHandling:
-      "Weather-sealed magnesium alloy chassis balances securely with medium primes and heavier telephoto zooms with an optional battery grip.",
+      "Weather-sealed magnesium alloy chassis balances securely with medium primes and heavier telephoto zooms.",
     limitations:
-      "High-speed sports bursts produce substantial RAW file volume requiring robust storage solutions and fast card readers.",
+      "High-speed sports bursts produce substantial file volume requiring robust storage solutions and fast card readers.",
     whoShouldBuy:
-      "Professional working photographers, wedding documentarians, and hybrid creators who need unwavering autofocus reliability across diverse lighting conditions.",
+      "Working photographers, wedding documentarians, and hybrid creators who need unwavering autofocus reliability across diverse lighting conditions.",
     alternatives: [
       { name: "Sony A7 IV", note: "Previous generation workhorse offering strong performance at a lower secondary market price." },
-      { name: "Sony A1", note: "Flagship stacked sensor camera with blackout-free 30 fps bursts for high-budget commercial sports." },
-      { name: "Canon EOS R6 Mark II", note: "Competitive hybrid alternative in the Canon RF ecosystem." },
+      { name: "Sony A1", note: "Flagship stacked sensor camera with blackout-free 30 fps bursts for commercial sports." },
     ],
     relatedPortfolioCategory: "Portraits & Sports",
     relatedPortfolioSlug: "/portfolio/portraits",
     relatedTutorialSlug: "/blog/what-to-wear-for-a-portrait-photoshoot",
     faqs: [
       {
-        question: "Is the Sony A7V suitable for high-speed sports photography?",
+        question: "Is the Sony A7 V suitable for high-speed sports photography?",
         answer: "Yes. With predictive autofocus tracking and continuous bursts, it tracks athletic movement across fields and courts with exceptional accuracy.",
       },
       {
-        question: "Does it overheat during long indoor event coverage?",
-        answer: "Its integrated passive heat sink allows continuous still shooting and standard 4K documentary video recording without thermal cutoff under normal room temperatures.",
+        question: "What lens mount does the Sony A7 V use?",
+        answer: "It uses the native Sony E-mount, supporting full-frame FE lenses as well as APS-C E lenses in automatic crop mode.",
       },
     ],
     retailerLinks: [
@@ -192,55 +251,193 @@ export const GEAR_ITEMS: GearItem[] = [
         isAffiliate: false,
         note: "Authorized retailer; check current body-only availability.",
       },
+    ],
+  },
+
+  // 1.2 Sony A6000
+  {
+    id: "gear-sony-a6000",
+    slug: "sony-a6000",
+    name: "Sony A6000",
+    manufacturer: "Sony",
+    category: "camera-bodies",
+    categoryLabel: "APS-C mirrorless camera",
+    modelNumber: "ILCE-6000",
+    description:
+      "Compact, proven APS-C mirrorless camera body delivering dependable Fast Hybrid autofocus, lightweight handling, and high-resolution APS-C image capture for everyday and secondary kit photography.",
+    primaryUses: [
+      "Photography with an APS-C camera system",
+      "Lightweight Travel Documentation",
+      "Secondary Backup Camera Body",
+      "Street & Everyday Photography",
+    ],
+    compatibility:
+      "Sony E-mount APS-C lenses, Sony E-mount full-frame lenses (1.5x crop factor), SD / SDHC / SDXC memory cards.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony A6000 compact APS-C mirrorless camera body",
+    specifications: [
+      { label: "Sensor Format", value: "24.3 MP APS-C Exmor APS HD CMOS" },
+      { label: "Autofocus Engine", value: "Fast Hybrid AF (179-point phase detection / 25-point contrast)" },
+      { label: "Burst Rate", value: "Up to 11 fps with continuous AF tracking" },
+      { label: "ISO Sensitivity Range", value: "ISO 100–25,600" },
+      { label: "Viewfinder", value: "0.39-inch OLED Tru-Finder EVF (1.44M dots)" },
+      { label: "Card Slots", value: "Single SD / Memory Stick PRO Duo slot" },
+      { label: "Weight", value: "Approx. 344g (with battery and card)" },
+    ],
+    reviewUrl: "/photography-gear/sony-a6000",
+    relatedPortfolioUrls: [
+      { label: "Travel Photography", url: "/portfolio/travel" },
+      { label: "Portraits", url: "/portfolio/portraits" },
+    ],
+    ownershipStatus: "In Rotation",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Ultra-compact APS-C mirrorless camera body with high-speed burst tracking.",
+    overview:
+      "The Sony A6000 remains one of the most accessible and capable APS-C mirrorless cameras ever produced. Its featherweight chassis, 11 fps continuous burst rate, and 24.3 MP sensor make it a dependable companion for everyday assignments, street documentation, and travel.",
+    personalUsage:
+      "Used as our ultra-portable secondary camera body for discreet street photography, behind-the-scenes travel snapshots, and lightweight personal outings.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Sensor Format", value: "24.3 MP APS-C CMOS" },
+      { label: "Autofocus Engine", value: "Fast Hybrid AF (179 phase-detect points)" },
+      { label: "Burst Rate", value: "Up to 11 fps continuous tracking" },
+      { label: "Viewfinder", value: "0.39-inch OLED Tru-Finder (1.44M dots)" },
+      { label: "LCD Screen", value: "3.0-inch tilting LCD monitor" },
+      { label: "Card Slot", value: "Single SD / Memory Stick PRO Duo" },
+      { label: "Weight", value: "Approx. 344g (body with battery)" },
+    ],
+    pros: [
+      "Remarkably compact and lightweight (344g), easily fitting in small waist packs",
+      "Fast 11 fps continuous burst shooting freezes candid movement reliably",
+      "Extensive ecosystem of affordable, lightweight Sony and third-party APS-C lenses",
+      "Intuitive physical control layout with dedicated mode dial and customizable buttons",
+    ],
+    cons: [
+      "Lacks in-body image stabilization (IBIS), relying on stabilized lenses (OSS)",
+      "Single memory card slot without instant duplicate backup capability",
+      "Older menu interface compared to latest Sony mirrorless generations",
+    ],
+    bestFor: [
+      "Everyday photography with an APS-C camera system",
+      "Street and documentary photography requiring a discreet footprint",
+      "Lightweight travel assignments where minimizing pack weight is vital",
+    ],
+    situationsWhereUseful: [
+      "Spontaneous travel explorations through crowded bazaars and narrow lanes",
+      "Candid family and lifestyle photography in natural daylight",
+      "Back-up camera body in case of unforeseen equipment needs",
+    ],
+    imageOrAudioQuality:
+      "Produces punchy, detailed 24 MP still images with good dynamic range at base ISOs. Colors render cleanly with sharp detail across APS-C sensors.",
+    portabilityAndHandling:
+      "Exceptionally light in hand. Can be carried comfortably on a wrist strap for an entire afternoon without fatigue.",
+    limitations:
+      "Low-light noise becomes evident at ISO 6400 and above; non-stabilized sensor requires steady shooting discipline or OSS lenses.",
+    whoShouldBuy:
+      "Photographers who want a reliable, featherweight APS-C camera body that accepts all Sony E-mount glass without breaking the bank.",
+    alternatives: [
+      { name: "Sony A6400", note: "Step-up APS-C model with weather sealing and 4K video recording." },
+      { name: "Sony A6700", note: "Modern flagship APS-C body with AI autofocus and IBIS." },
+    ],
+    relatedPortfolioCategory: "Travel & Portraits",
+    relatedPortfolioSlug: "/portfolio/travel",
+    relatedTutorialSlug: "/blog/what-to-wear-for-a-portrait-photoshoot",
+    faqs: [
       {
-        retailer: "Adorama",
-        url: "https://www.adorama.com",
+        question: "Can full-frame Sony lenses be used on the Sony A6000?",
+        answer: "Yes. All Sony full-frame (FE) E-mount lenses attach natively to the A6000, with a 1.5x crop factor applied to the focal length.",
+      },
+      {
+        question: "Does the Sony A6000 shoot 4K video?",
+        answer: "The A6000 records Full HD 1080p video at up to 60 fps; 4K recording is available on later models like the A6400 and A6700.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "B&H Photo Video",
+        url: "https://www.bhphotovideo.com",
         isAffiliate: false,
-        note: "Authorized photo equipment distributor.",
+        note: "Available pre-owned and refurbished.",
       },
     ],
   },
 
-  // 2. Camera Lenses - 50mm Prime
+  // =========================================================================
+  // 2. CAMERA LENSES
+  // =========================================================================
+
+  // 2.1 Sony 50mm Prime Lens - Full Frame
   {
-    id: "gear-sony-fe-50mm-f18",
-    slug: "sony-fe-50mm-f18",
-    name: "Sony FE 50mm F1.8",
+    id: "gear-sony-50mm-full-frame",
+    slug: "sony-50mm-full-frame",
+    aliases: ["sony-fe-50mm-f18"],
+    name: "Sony 50mm Prime Lens - Full Frame",
     manufacturer: "Sony",
     category: "lenses",
-    categoryLabel: "Camera Lenses",
-    tagline: "Compact, featherweight 'nifty fifty' prime lens for natural perspective.",
-    imageUrl: "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Sony 50mm prime lens mounted on a mirrorless camera",
-    overview:
-      "The Sony FE 50mm F1.8 is an accessible, ultra-compact standard prime lens offering a classic 47° field of view. Its bright f/1.8 aperture produces soft background separation while maintaining an exceptionally light footprint in the bag.",
-    personalUsage:
-      "Our go-to lightweight walkaround lens for street-level travel documentation, quick backstage details at galas, and minimalist natural-light portraits.",
-    isPersonallyVerified: true,
-    specs: [
+    categoryLabel: "Full-frame prime lens",
+    modelNumber: "SEL50F18F / FE 50mm F1.8 (Subject to verification)",
+    description:
+      "Standard prime lens designed for Sony E-mount full-frame cameras. Delivers a natural 47° field of view matching human eye perspective, bright aperture subject isolation, and featherweight portability.",
+    primaryUses: [
+      "Environmental Portraiture",
+      "Natural Perspective Storytelling",
+      "Low-Light Ambient Sessions",
+      "Everyday Editorial Documentation",
+    ],
+    compatibility:
+      "Sony E-mount full-frame cameras (native 35mm coverage); also compatible with Sony APS-C camera bodies (75mm full-frame equivalent field of view). Note: Model name and exact compatibility information can be updated as verified.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony 50mm prime lens full frame mounted on a mirrorless camera",
+    specifications: [
       { label: "Focal Length", value: "50mm (Standard Prime)" },
+      { label: "Lens Format", value: "35mm Full-Frame" },
+      { label: "Lens Mount", value: "Sony E-mount" },
       { label: "Maximum Aperture", value: "f/1.8" },
       { label: "Minimum Aperture", value: "f/22" },
-      { label: "Lens Mount", value: "Sony E-Mount (Full-Frame)" },
+      { label: "Optical Elements", value: "6 elements in 5 groups (1 aspherical element)" },
       { label: "Filter Thread", value: "49mm" },
-      { label: "Aperture Blades", value: "7 Circular Blades" },
       { label: "Weight", value: "Approx. 186g (6.6 oz)" },
+    ],
+    reviewUrl: "/photography-gear/sony-50mm-full-frame",
+    relatedPortfolioUrls: [
+      { label: "Editorial Portraits", url: "/portfolio/portraits" },
+    ],
+    ownershipStatus: "Active Kit",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Compact standard prime lens for natural perspective and shallow depth of field.",
+    overview:
+      "A classic standard prime lens offering an accessible focal length and bright f/1.8 aperture for full-frame Sony E-mount bodies. Ideal for clean subject separation and featherweight travel packing.",
+    personalUsage:
+      "Our go-to lightweight walkaround prime for street portraits, backstage details, and natural-light editorial portraits.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Focal Length", value: "50mm" },
+      { label: "Maximum Aperture", value: "f/1.8" },
+      { label: "Lens Mount", value: "Sony E-mount (Full-Frame)" },
+      { label: "Filter Diameter", value: "49mm" },
+      { label: "Weight", value: "Approx. 186g" },
     ],
     pros: [
       "Extremely lightweight (186g) and compact for effortless all-day carrying",
-      "Bright f/1.8 aperture creates pleasing subject isolation and shallow depth of field",
+      "Bright aperture creates pleasing subject isolation and shallow depth of field",
       "Sharp optical rendering across center frame when stopped down to f/2.8–f/4",
-      "Exceptional value-to-performance ratio for full-frame glass",
+      "Standard 49mm filter thread matches common travel filters",
     ],
     cons: [
-      "Autofocus motor is audibly slower and noisier than modern XD Linear motor lenses",
+      "Autofocus DC motor is audibly slower than modern XD Linear motor lenses",
       "Plastic composite exterior barrel lacks weather-sealing gaskets",
       "Slight chromatic aberration and corner softness when shot wide open at f/1.8",
     ],
     bestFor: [
       "Environmental portraiture and lifestyle sessions",
       "Low-profile street photography and travel assignments",
-      "Beginner to intermediate photographers mastering prime lens composition",
+      "Natural perspective portraits without wide-angle facial distortion",
     ],
     situationsWhereUseful: [
       "Casual outdoor couple sessions where a large heavy lens would feel intimidating",
@@ -249,29 +446,27 @@ export const GEAR_ITEMS: GearItem[] = [
     ],
     imageOrAudioQuality:
       "Center sharpness is respectable wide open and becomes very crisp by f/2.8. Highlights render with gentle circular bokeh thanks to the 7-blade iris.",
-    autofocusAndPerformance:
-      "Sufficient for static and moderate-pace human subjects. Hunts occasionally in dim, contrast-deficient conditions compared to G Master equivalents.",
     portabilityAndHandling:
-      "At under 200 grams, it can stay mounted on the camera all day without causing wrist fatigue or balance issues on small wrist straps.",
+      "At under 200 grams, it can stay mounted on the camera all day without causing wrist fatigue or balance issues.",
     limitations:
-      "Not recommended for high-speed sports or tracking erratic wildlife due to DC motor focus speed limitations.",
+      "Not recommended for high-speed sports or tracking erratic wildlife due to motor focus speed limitations.",
     whoShouldBuy:
       "Any photographer looking for an affordable, lightweight prime lens that delivers creamy background blur without carrying heavy glass.",
     alternatives: [
       { name: "Sony FE 50mm F1.4 GM", note: "High-end professional alternative with weather sealing and dual XD linear motors." },
       { name: "Sony FE 55mm F1.8 ZA Sonnar", note: "Zeiss collaboration prime offering sharper corners and metallic build." },
     ],
-    relatedPortfolioCategory: "Portraits & Travel",
+    relatedPortfolioCategory: "Portraits",
     relatedPortfolioSlug: "/portfolio/portraits",
     relatedTutorialSlug: "/blog/what-to-wear-for-a-portrait-photoshoot",
     faqs: [
       {
-        question: "Is the Sony 50mm f/1.8 sharp enough for professional client portraits?",
-        answer: "When stopped down to f/2.2 or f/2.8, it produces crisp eye sharpness suitable for digital client deliverables and web publication.",
+        question: "Can the Sony 50mm Full Frame lens be used on APS-C cameras like the A6000?",
+        answer: "Yes, it mounts natively on Sony APS-C cameras, providing an effective 75mm portrait focal length.",
       },
       {
-        question: "Can this lens be used for sports photography?",
-        answer: "Its autofocus motor is too slow for erratic, fast-action sports. For athletics, telephoto lenses with linear motors are strongly recommended.",
+        question: "Is this model identical to the APS-C 50mm lens?",
+        answer: "They are distinct optical designs: the full-frame model covers a 35mm image circle, whereas the dedicated APS-C version features built-in Optical SteadyShot (OSS) image stabilization.",
       },
     ],
     retailerLinks: [
@@ -281,28 +476,162 @@ export const GEAR_ITEMS: GearItem[] = [
         isAffiliate: false,
         note: "Available standard retail.",
       },
+    ],
+  },
+
+  // 2.2 Sony 50mm Prime Lens - APS-C
+  {
+    id: "gear-sony-50mm-apsc",
+    slug: "sony-50mm-apsc",
+    name: "Sony 50mm Prime Lens - APS-C",
+    manufacturer: "Sony",
+    category: "lenses",
+    categoryLabel: "APS-C prime lens",
+    modelNumber: "SEL50F18 / E 50mm F1.8 OSS (Subject to verification)",
+    description:
+      "Prime lens configured for Sony E-mount APS-C camera systems. Offers an effective 75mm full-frame equivalent field of view, making it a specialized short-telephoto portrait optic with pleasing facial compression.",
+    primaryUses: [
+      "APS-C Portrait Photography",
+      "Tight Headshots & Creative Framing",
+      "Medium Telephoto Detail Stills",
+      "Low-Light Indoor Sessions",
+    ],
+    compatibility:
+      "Sony E-mount APS-C cameras (e.g., Sony A6000, A6400, A6700); also mountable on full-frame Sony bodies in APS-C Crop Mode. Note: Verification of exact model number and optical characteristics is tracked and updateable.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1589870485068-5669d2bf1714?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony 50mm APS-C prime portrait lens",
+    specifications: [
+      { label: "Focal Length", value: "50mm (75mm full-frame 35mm equivalent on APS-C)" },
+      { label: "Lens Format", value: "APS-C format" },
+      { label: "Lens Mount", value: "Sony E-mount" },
+      { label: "Maximum Aperture", value: "f/1.8" },
+      { label: "Optical Stabilization", value: "Optical SteadyShot (OSS) built-in" },
+      { label: "Filter Diameter", value: "49mm" },
+      { label: "Diaphragm Blades", value: "7 rounded blades" },
+      { label: "Weight", value: "Approx. 202g (7.1 oz)" },
+    ],
+    reviewUrl: "/photography-gear/sony-50mm-apsc",
+    relatedPortfolioUrls: [
+      { label: "Portraits", url: "/portfolio/portraits" },
+    ],
+    ownershipStatus: "Active Kit",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Dedicated APS-C portrait prime with built-in Optical SteadyShot stabilization.",
+    overview:
+      "Designed specifically for Sony APS-C mirrorless cameras, this prime lens delivers a 75mm-equivalent portrait perspective. Integrated Optical SteadyShot compensates for hand shake even on non-stabilized camera bodies like the A6000.",
+    personalUsage:
+      "Paired with our Sony A6000 for compact client headshots, event details, and low-light ambient portraiture where carrying large full-frame rigs is impractical.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Focal Length", value: "50mm (75mm eq.)" },
+      { label: "Maximum Aperture", value: "f/1.8" },
+      { label: "Stabilization", value: "Optical SteadyShot (OSS)" },
+      { label: "Filter Diameter", value: "49mm" },
+      { label: "Weight", value: "Approx. 202g" },
+    ],
+    pros: [
+      "Built-in Optical SteadyShot stabilizes handheld shooting on bodies without IBIS",
+      "75mm equivalent angle provides flattering facial compression for portraits",
+      "Bright f/1.8 aperture allows low ISO shooting in dim indoor light",
+      "Quiet internal autofocus mechanism suitable for stills and video capture",
+    ],
+    cons: [
+      "Image circle is optimized for APS-C; produces heavy vignetting on full-frame if crop mode is disabled",
+      "Not weather-sealed for heavy rain or severe sandstorms",
+      "Focus by wire manual focus ring lacks hard physical stops",
+    ],
+    bestFor: [
+      "Portraiture with an APS-C camera system like the Sony A6000",
+      "Creative headshots and isolating architectural details",
+      "Low-light handheld shooting where optical stabilization is required",
+    ],
+    situationsWhereUseful: [
+      "Indoor portrait shoots without heavy studio tripods",
+      "Casual event guest documentation and candid expressions",
+      "Travel portraits when paired with compact APS-C camera bodies",
+    ],
+    imageOrAudioQuality:
+      "Renders sharp center detail wide open at f/1.8 with smooth, creamy bokeh. The 7-blade circular aperture produces attractive circular out-of-focus background highlights.",
+    portabilityAndHandling:
+      "Aluminum alloy exterior balances comfortably on compact bodies, adding virtually no bulk to small camera bags.",
+    limitations:
+      "Restricted to APS-C coverage; full-frame camera users should use the FE version to utilize the complete sensor area.",
+    whoShouldBuy:
+      "Sony APS-C camera owners who want a dedicated portrait lens with optical stabilization and creamy subject isolation.",
+    alternatives: [
+      { name: "Sigma 56mm F1.4 DC DN Contemporary", note: "Sharper, faster f/1.4 alternative without optical stabilization." },
+      { name: "Sony FE 50mm F1.8", note: "Full-frame 50mm counterpart without OSS." },
+    ],
+    relatedPortfolioCategory: "Portraits",
+    relatedPortfolioSlug: "/portfolio/portraits",
+    relatedTutorialSlug: "/blog/what-to-wear-for-a-portrait-photoshoot",
+    faqs: [
       {
-        retailer: "Amazon",
-        url: "https://www.amazon.com",
+        question: "Why choose the APS-C 50mm over the Full Frame 50mm for the A6000?",
+        answer: "The APS-C version includes Optical SteadyShot (OSS) stabilization, which is invaluable on camera bodies like the A6000 that do not possess in-body sensor stabilization.",
+      },
+      {
+        question: "What is the equivalent focal length on an APS-C camera?",
+        answer: "50mm multiplied by the 1.5x Sony APS-C crop factor equals 75mm full-frame field of view.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "B&H Photo Video",
+        url: "https://www.bhphotovideo.com",
         isAffiliate: false,
-        note: "Check verified manufacturer warranty.",
+        note: "Includes front and rear lens caps.",
       },
     ],
   },
 
-  // 3. Camera Lenses - 200-600mm Telephoto
+  // 2.3 Sony 200–600mm Telephoto Zoom Lens
   {
     id: "gear-sony-200-600mm",
     slug: "sony-200-600mm",
-    name: "Sony FE 200–600mm F5.6–6.3 G OSS",
+    name: "Sony 200–600mm Telephoto Zoom Lens",
     manufacturer: "Sony",
     category: "lenses",
-    categoryLabel: "Camera Lenses",
+    categoryLabel: "Full-frame telephoto zoom lens",
+    modelNumber: "SEL200600G / FE 200–600mm F5.6–6.3 G OSS",
+    description:
+      "Internal-zoom super-telephoto lens engineered for wildlife, birds, field sports, and distant subjects. Features dual Direct Drive SSM autofocus motors, Optical SteadyShot with 3 mode switches, and a non-extending barrel that preserves physical balance.",
+    primaryUses: [
+      "Wildlife & Nature Photography",
+      "Birds in Flight Tracking",
+      "Field Sports & Athletics",
+      "Distant Subjects & Compressed Horizons",
+    ],
+    compatibility:
+      "Sony E-mount full-frame cameras; compatible with Sony 1.4x and 2.0x teleconverters; compatible with Sony APS-C camera bodies (yielding 300–900mm equivalent reach).",
+    imageUrl:
+      "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony 200-600mm super-telephoto zoom lens capturing wildlife and action",
+    specifications: [
+      { label: "Focal Length Range", value: "200mm to 600mm" },
+      { label: "Maximum Aperture", value: "f/5.6–f/6.3" },
+      { label: "Minimum Aperture", value: "f/32–f/36" },
+      { label: "Zoom Mechanism", value: "Internal Zoom (physical barrel length does not extend)" },
+      { label: "Optical Stabilization", value: "Optical SteadyShot (Mode 1, Mode 2 Panning, Mode 3 Action)" },
+      { label: "Teleconverter Support", value: "Fully compatible with Sony 1.4x and 2.0x TCs" },
+      { label: "Filter Thread", value: "95mm" },
+      { label: "Weight", value: "Approx. 2,115g (without tripod collar)" },
+    ],
+    reviewUrl: "/photography-gear/sony-200-600mm",
+    relatedPortfolioUrls: [
+      { label: "Sports & Athletics", url: "/portfolio/sports" },
+      { label: "Wildlife & Travel", url: "/portfolio/travel" },
+    ],
+    ownershipStatus: "Active Super-Telephoto",
+    published: true,
+
+    // Rich Template Extensions
     tagline: "Internal-zoom super-telephoto lens for wildlife and field sports.",
-    imageUrl: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Super-telephoto lens capturing action at a distance",
     overview:
-      "The Sony FE 200–600mm F5.6–6.3 G OSS is a legendary super-telephoto optic prized by wildlife and sports photographers. Featuring an internal zoom mechanism that maintains physical balance, dual Direct Drive SSM autofocus motors, and optical image stabilization, it brings distant action within reach.",
+      "A premier super-telephoto workhorse built for wildlife enthusiasts and sports photographers. Featuring an internal zoom mechanism that maintains constant physical balance on gimbals and monopods, fast autofocus motors, and optical stabilization.",
     personalUsage:
       "Primary telephoto workhorse for track and field athletics, distant ocean surfing sessions, and backcountry wildlife expeditions in national parks.",
     isPersonallyVerified: true,
@@ -311,9 +640,8 @@ export const GEAR_ITEMS: GearItem[] = [
       { label: "Aperture Range", value: "f/5.6–f/6.3 to f/32–f/36" },
       { label: "Zoom Mechanism", value: "Internal Zoom (barrel does not extend)" },
       { label: "Optical Stabilization", value: "Optical SteadyShot with 3 mode switches" },
-      { label: "Teleconverter Support", value: "Compatible with Sony 1.4x and 2.0x TCs" },
       { label: "Filter Thread", value: "95mm" },
-      { label: "Weight", value: "Approx. 2,115g (without tripod collar)" },
+      { label: "Weight", value: "Approx. 2,115g" },
     ],
     pros: [
       "Internal zoom design keeps center of gravity completely stable on gimbals and monopods",
@@ -337,15 +665,15 @@ export const GEAR_ITEMS: GearItem[] = [
       "Capturing surfers in deep wave barrels from coastal headlands",
     ],
     imageOrAudioQuality:
-      "Remarkably sharp across the entire zoom range, with clean contrast and minimal chromatic fringing thanks to five ED (Extra-low Dispersion) glass elements.",
+      "Remarkably sharp across the entire zoom range, with clean contrast and minimal chromatic fringing thanks to five ED glass elements.",
     autofocusAndPerformance:
       "Dual DDSSM motors drive heavy internal elements with precision and silent tracking speed. Keeps up seamlessly with erratic birds and sprinting athletes.",
     portabilityAndHandling:
       "Because the lens does not expand during zooming, it operates smoothly on monopods and gimbal heads without shifting balance forwards.",
     limitations:
-      "In indoor arena sports under poor sodium-vapor lighting, the f/6.3 aperture pushes camera ISO higher than an f/2.8 or f/4 prime.",
+      "In indoor arena sports under poor sodium-vapor lighting, the f/6.3 aperture pushes camera ISO higher than an f/2.8 prime.",
     whoShouldBuy:
-      "Outdoor sports photographers and wildlife specialists who demand serious telephoto reach and internal zoom balance without spending five figures on prime exotics.",
+      "Outdoor sports photographers and wildlife specialists who demand serious telephoto reach and internal zoom balance.",
     alternatives: [
       { name: "Sony FE 100–400mm F4.5–5.6 GM OSS", note: "Lighter and closer focusing, but 200mm shorter at maximum reach." },
       { name: "Sigma 150–600mm F5–6.3 DG DN OS Sports", note: "External extending zoom alternative with similar reach." },
@@ -373,50 +701,85 @@ export const GEAR_ITEMS: GearItem[] = [
     ],
   },
 
-  // 4. Action Cameras
+  // =========================================================================
+  // 3. ACTION CAMERA
+  // =========================================================================
+
+  // 3.1 DJI Osmo Action 6
   {
     id: "gear-dji-osmo-action-6",
     slug: "dji-osmo-action-6",
     name: "DJI Osmo Action 6",
     manufacturer: "DJI",
     category: "action-cameras",
-    categoryLabel: "Action Cameras",
+    categoryLabel: "Action camera",
+    modelNumber: "Osmo Action 6 Series",
+    description:
+      "Rugged waterproof action camera designed for high-vibration travel videos, outdoor activities, motorcycle travel footage, behind-the-scenes photography, and first-person POV recording.",
+    primaryUses: [
+      "Travel Videos",
+      "Outdoor Activities",
+      "Motorcycle Travel Footage",
+      "Behind-the-Scenes Photography",
+      "First-Person Recording",
+    ],
+    compatibility:
+      "DJI magnetic quick-release mounting ecosystem, standard 1/4\"-20 tripod adapters, high-speed microSD cards (V30 / UHS-I U3 or higher), USB-C fast charging.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "DJI Osmo Action 6 rugged waterproof action camera",
+    specifications: [
+      { label: "Camera Type", value: "Compact Waterproof Action Camera" },
+      { label: "Lens Field of View", value: "155° Ultra-Wide Optics" },
+      { label: "Stabilization Engine", value: "360° HorizonSteady & RockSteady electronic stabilization" },
+      { label: "Waterproofing", value: "Native waterproof chassis without external case" },
+      { label: "Displays", value: "Dual front and rear touchscreens for self-framing" },
+      { label: "Operating Temperature", value: "Cold-resistant performance down to -20°C" },
+      { label: "Weight", value: "Approx. 145g" },
+    ],
+    reviewUrl: "/photography-gear/dji-osmo-action-6",
+    relatedPortfolioUrls: [
+      { label: "Travel Expeditions", url: "/portfolio/travel" },
+    ],
+    ownershipStatus: "Active POV Rig",
+    published: true,
+
+    // Rich Template Extensions
     tagline: "Rugged waterproof action camera with ultra-wide optics and HorizonSteady.",
-    imageUrl: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Compact waterproof action camera ready for outdoor expeditions",
     overview:
       "The DJI Osmo Action 6 is built for extreme outdoor environments where traditional camera bodies cannot safely venture. With advanced electronic horizon stabilization, magnetic quick-release mounting, and dual touchscreens, it provides reliable point-of-view and behind-the-scenes recording.",
     personalUsage:
-      "Utilized for rigging on chase boats during water sports shoots, documenting rugged mountain trail ascents, and capturing wide-angle time lapses during documentary expeditions.",
+      "Utilized for motorcycle helmet POV, rigging on chase boats during water sports shoots, documenting rugged mountain trail ascents, and capturing wide-angle time lapses during documentary expeditions.",
     isPersonallyVerified: true,
     specs: [
-      { label: "Sensor Size", value: "Large CMOS sensor with 10-bit D-Log M color" },
+      { label: "Sensor Size", value: "Large CMOS sensor with 10-bit color profile" },
       { label: "Lens Angle of View", value: "155° Ultra-Wide Field of View" },
       { label: "Stabilization", value: "RockSteady 3.0+ & 360° HorizonSteady" },
-      { label: "Waterproofing", value: "Waterproof up to 18m without external case" },
+      { label: "Waterproofing", value: "Waterproof chassis without external case" },
       { label: "Screens", value: "Dual OLED Touchscreens (Front & Back)" },
       { label: "Battery Endurance", value: "Cold-resistant battery rated down to -20°C" },
       { label: "Weight", value: "Approx. 145g" },
     ],
     pros: [
       "Magnetic quick-release ecosystem allows instant repositioning between mounts",
-      "360° HorizonSteady keeps the frame level even during extreme boat rocking or rolling",
-      "Front OLED touchscreen simplifies self-framing and technical parameter verification",
+      "360° HorizonSteady keeps the frame level even during extreme motorcycle banking or boat rocking",
+      "Front touchscreen simplifies self-framing and technical parameter verification",
       "Deep native waterproofing removes the need for bulky diving housings in wet weather",
     ],
     cons: [
       "Small sensor physical size creates noticeable noise in deep night conditions",
       "Ultra-wide perspective exhibits optical distortion if held too close to human faces",
-      "Internal memory is limited, requiring high-speed V30 microSD cards for 4K 120p",
+      "Requires high-speed V30 microSD cards for continuous 4K high-framerate capture",
     ],
     bestFor: [
+      "Motorcycle travel footage and handlebar/helmet POV recording",
       "POV documentation during adventure travel and expedition assignments",
       "Water sports, surf chase boats, and rainy outdoor festivals",
-      "Capturing behind-the-scenes video snippets for client journals and social archives",
+      "Behind-the-scenes video snippets for client journals and social archives",
     ],
     situationsWhereUseful: [
+      "Motorcycle touring across desert highways and mountain passes",
       "Mounting to kayak decks during coastal wildlife documentary trips",
-      "Chest-mount POV while running alongside marathon athletes during prep runs",
       "Documenting setup timelapses of large wedding reception lighting rigs",
     ],
     imageOrAudioQuality:
@@ -431,13 +794,13 @@ export const GEAR_ITEMS: GearItem[] = [
       { name: "GoPro HERO12 Black", note: "Classic action competitor with extensive legacy mount ecosystem." },
       { name: "Insta360 Ace Pro", note: "Co-engineered with Leica featuring a flip screen." },
     ],
-    relatedPortfolioCategory: "Sports & Travel",
+    relatedPortfolioCategory: "Travel",
     relatedPortfolioSlug: "/portfolio/travel",
     relatedTutorialSlug: "/blog/capturing-high-speed-sports-action-techniques",
     faqs: [
       {
-        question: "Does the DJI Osmo Action 6 work in sub-zero winter temperatures?",
-        answer: "Yes, its cold-resistant battery cells remain operational in alpine and winter conditions down to -20°C (-4°F).",
+        question: "Does the DJI Osmo Action 6 handle motorcycle vibration?",
+        answer: "Yes, RockSteady and HorizonSteady algorithms absorb high-frequency engine vibration and keep footage level.",
       },
       {
         question: "Can it shoot vertical video for modern mobile distribution?",
@@ -449,310 +812,390 @@ export const GEAR_ITEMS: GearItem[] = [
         retailer: "DJI Official Store",
         url: "https://store.dji.com",
         isAffiliate: false,
-        note: "Standard standard and adventure combo packages available.",
+        note: "Standard and adventure combo packages available.",
       },
     ],
   },
 
-  // 5. Audio Equipment
+  // =========================================================================
+  // 4. AUDIO EQUIPMENT
+  // =========================================================================
+
+  // 4.1 DJI Mic Mini
   {
-    id: "gear-dji-mic-3",
-    slug: "dji-mic-3",
-    name: "DJI Mic 3",
+    id: "gear-dji-mic-mini",
+    slug: "dji-mic-mini",
+    aliases: ["dji-mic-3"],
+    name: "DJI Mic Mini",
     manufacturer: "DJI",
     category: "audio",
-    categoryLabel: "Audio Equipment",
-    tagline: "Ultra-compact dual-channel wireless microphone kit with 32-bit float.",
-    imageUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Wireless microphone transmitter with magnetic clip for clean audio recording",
+    categoryLabel: "Wireless microphone system",
+    modelNumber: "DJI Mic Mini Wireless Audio System",
+    description:
+      "Ultra-compact wireless microphone system engineered for high-fidelity voice recording, photography behind-the-scenes video creation, travel vlogging, on-location interviews, and hybrid camera/smartphone audio capture.",
+    primaryUses: [
+      "Voice Recording",
+      "Photography Behind-the-Scenes Videos",
+      "Travel Vlogging",
+      "On-Location Client Interviews",
+      "Camera and Smartphone Audio Recording",
+    ],
+    compatibility:
+      "Supported connection methods verified per equipment configuration: 3.5mm TRS analog camera interface, USB-C and Lightning digital smartphone connectivity, and magnetic clip-on clothing attachments.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "DJI Mic Mini wireless microphone system",
+    specifications: [
+      { label: "System Category", value: "Wireless Microphone System" },
+      { label: "Wireless Transmission", value: "Digital 2.4 GHz low-latency transmission" },
+      { label: "Form Factor", value: "Ultra-compact miniature transmitter with magnetic clip" },
+      { label: "Supported Connections", value: "3.5mm TRS camera jack, USB-C digital interface, Lightning adapter" },
+      { label: "Primary Recording Scope", value: "Voice, dialogue, vlogging, and ambient interview capture" },
+      { label: "Battery & Charging", value: "Internal rechargeable battery with compact charging case" },
+      { label: "Weight", value: "Approx. 10g per transmitter (ultra-lightweight)" },
+    ],
+    reviewUrl: "/photography-gear/dji-mic-mini",
+    relatedPortfolioUrls: [
+      { label: "Weddings & Ceremonies", url: "/portfolio/weddings" },
+    ],
+    ownershipStatus: "Active Audio Kit",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Ultra-compact wireless microphone kit for crystal-clear voice and BTS audio.",
     overview:
-      "The DJI Mic 3 is an ultra-portable wireless audio solution featuring two transmitters, a touchscreen receiver, and a magnetic charging case. With on-board 32-bit float backup recording, it prevents clipped audio during loud wedding speeches, emotional vows, and athletic interviews.",
+      "The DJI Mic Mini is an ultra-portable wireless audio solution engineered for creators on the move. Its discreet profile, reliable wireless transmission, and multi-device connection methods ensure clear speech recording during shoots, interviews, and travel vlogs.",
     personalUsage:
-      "Used for recording bride and groom vows during outdoor ceremonies, capturing athlete pre-game reflections, and recording clear voiceover tutorials for our educational photography journal.",
+      "Used for recording couple vows during outdoor ceremonies, capturing athlete pre-game reflections, and recording voiceover commentary for our photography journal.",
     isPersonallyVerified: true,
     specs: [
-      { label: "Channels", value: "Dual-Channel (2 Transmitters + 1 Receiver)" },
-      { label: "Transmission Range", value: "Up to 250m (820 ft) in line-of-sight" },
-      { label: "Internal Recording", value: "32-bit float on-board backup recording per TX" },
-      { label: "Mounting System", value: "Magnetic clip and cold shoe adapter" },
-      { label: "Battery Life", value: "Up to 6 hours (expandable to 18 hours with charging case)" },
-      { label: "Connectivity", value: "3.5mm TRS, Lightning, USB-C adapter direct to camera/phone" },
-      { label: "Weight (Transmitter)", value: "Approx. 28g per unit" },
+      { label: "Channels", value: "Wireless Transmitter & Receiver system" },
+      { label: "Transmission", value: "2.4 GHz digital frequency hopping" },
+      { label: "Mounting System", value: "Magnetic clip and shoe adapter" },
+      { label: "Connectivity", value: "3.5mm TRS, USB-C, Lightning" },
+      { label: "Weight (Transmitter)", value: "Approx. 10g" },
     ],
     pros: [
-      "32-bit float internal recording eliminates audio distortion from sudden yells or laughter",
-      "Magnetic clip allows discreet mounting under lapels and wedding dresses",
-      "Charging case stores and charges both transmitters and receiver simultaneously",
-      "Plug-and-play compatibility with mirrorless cameras, smartphones, and laptops",
+      "Ultra-miniature form factor is practically invisible on lapels and collars",
+      "Magnetic clip allows discreet mounting under clothing without stretching fabric",
+      "Multi-device connection methods verified for mirrorless cameras, iPhones, and Android devices",
+      "Instant automatic pairing right out of the charging case",
     ],
     cons: [
-      "Wind furries can dislodge if caught against heavy winter jacket zippers",
-      "Receiver touchscreen is small, requiring deliberate finger taps for gain adjustments",
-      "Limited EQ customization compared to bulky audio field mixers",
+      "Windscreen must be firmly seated in high-wind outdoor environments",
+      "Compact size requires careful storage to avoid misplacing miniature transmitters",
+      "Direct line of sight recommended for maximum range stability",
     ],
     bestFor: [
-      "Wedding ceremonies where clean vow audio is non-negotiable",
-      "Sideline athlete and coach interviews during tournament coverage",
-      "Documentary video features and brand client presentations",
+      "Client vows and emotional ceremony dialogue",
+      "Behind-the-scenes vlogging and photography YouTube features",
+      "Fast-paced interviews where setting up wired audio would slow the production",
+      "Camera and smartphone mobile recording",
     ],
     situationsWhereUseful: [
-      "Mic'ing the groom's jacket lapel to capture both vows clearly without a visible microphone",
-      "Recording high-wind interviews with sports directors at outdoor stadiums",
-      "Tutorial audio recorded directly into camera without complex external sync workflows",
+      "Mic'ing the subject discreetly during a portrait walkthrough",
+      "Recording dialogue while walking through noisy wind or bustling streets",
+      "Filming behind-the-scenes tutorial videos directly into the camera",
     ],
     imageOrAudioQuality:
-      "Captures warm, articulate vocal clarity with low self-noise. The 32-bit float file format allows recovery of whisper-quiet vows and roaring celebration cheers without clipping.",
+      "Delivers warm, articulate vocal clarity with low self-noise. Intelligibility is optimized for speech frequencies, ensuring dialogue cuts through ambient music.",
     portabilityAndHandling:
-      "The entire kit fits inside a palm-sized charging case, sliding into any camera backpack accessory pocket.",
+      "Weighing only ~10 grams per transmitter, it is the lightest wireless audio kit in our inventory.",
     limitations:
-      "Dense steel and concrete walls can attenuate wireless 2.4 GHz signal range if separated by multiple structural barriers.",
+      "Designed specifically for voice and dialogue; not intended for high-SPL instrument or concert recording.",
     whoShouldBuy:
-      "Solo wedding filmmakers, commercial photographers recording client case studies, and sports creators who need foolproof broadcast-quality voice audio.",
+      "Photographers, videographers, and content creators looking for a featherweight, reliable wireless microphone system for voice and BTS.",
     alternatives: [
-      { name: "Røde Wireless PRO", note: "Competitor wireless kit with timecode generation and lavalier mic accessories." },
-      { name: "Hollyland Lark Max", note: "Reliable wireless audio alternative with environmental noise cancellation." },
+      { name: "Røde Wireless ME", note: "Compact wireless system with built-in receiver microphone." },
+      { name: "DJI Mic 2", note: "Larger flagship kit featuring 32-bit float internal backup recording." },
     ],
-    relatedPortfolioCategory: "Weddings & Events",
+    relatedPortfolioCategory: "Weddings",
     relatedPortfolioSlug: "/portfolio/weddings",
     relatedTutorialSlug: "/blog/how-to-choose-a-wedding-photographer",
     faqs: [
       {
-        question: "Why is 32-bit float recording important for wedding ceremonies?",
-        answer: "Because you cannot ask a couple to redo their vows if audio clips. 32-bit float preserves the full dynamic range, allowing clipped audio to be restored in post-production without distortion.",
+        question: "What connection methods are supported on the DJI Mic Mini?",
+        answer: "It connects to cameras via standard 3.5mm TRS audio cables, and to smartphones and laptops via USB-C or Lightning adapters.",
       },
       {
-        question: "Can it connect directly to Sony mirrorless cameras?",
-        answer: "Yes, via the included 3.5mm TRS coiled cable or digital USB-C connection, matching camera gain levels seamlessly.",
+        question: "Can it be used for smartphone video recording?",
+        answer: "Yes, it pairs directly with mobile devices for high-quality audio in native camera and recording apps.",
       },
     ],
     retailerLinks: [
       {
-        retailer: "B&H Photo Video",
-        url: "https://www.bhphotovideo.com",
+        retailer: "DJI Official Store",
+        url: "https://store.dji.com",
         isAffiliate: false,
         note: "Includes charging case and magnetic accessories.",
       },
     ],
   },
 
-  // 6. Camera Accessories - Filters & Field Gear
+  // =========================================================================
+  // 5. TRIPOD AND VIDEO SUPPORT
+  // =========================================================================
+
+  // 5.1 Dijitek 520BH Tripod
   {
-    id: "gear-polarpro-quartzline-filters",
-    slug: "polarpro-quartzline-filters",
-    name: "PolarPro QuartzLine ND & CPL Filters",
-    manufacturer: "PolarPro",
-    category: "accessories",
-    categoryLabel: "Camera Accessories",
-    tagline: "Fused quartz glass optical filters for precise exposure and glare management.",
-    imageUrl: "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Circular glass optical photography filter mounted to camera lens",
+    id: "gear-dijitek-520bh",
+    slug: "dijitek-520bh",
+    name: "Dijitek 520BH Tripod",
+    manufacturer: "Dijitek",
+    category: "tripods-and-support",
+    categoryLabel: "Tripods and Support Equipment",
+    modelNumber: "Dijitek 520BH / 130 Video Head Setup",
+    description:
+      "Heavy-duty support system featuring the Dijitek 520BH tripod legs configured with dual head options: the 130 video head for smooth fluid panning and the default ball head for rapid still framing. Displayed as one unified tripod and support system with independently editable head configurations.",
+    primaryUses: [
+      "Smooth Video Panning & Tilts",
+      "Studio Staging & Stills",
+      "Long-Exposure Landscape Photography",
+      "Heavy Telephoto Lens Stability",
+    ],
+    compatibility:
+      "Standard 3/8\"-16 and 1/4\"-20 tripod base mounts; configured with 130 video head and default ball head. (Mounting compatibility, payload rating, and head specifications allow independent configuration and verification).",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Dijitek 520BH heavy-duty tripod with video and ball head support",
+    specifications: [
+      { label: "Tripod Model", value: "Dijitek 520BH" },
+      { label: "Reported Head Configuration", value: "130 Video Head + Included Default Ball Head" },
+      { label: "System Structure", value: "Unified tripod legs with dual interchangeable head setup" },
+      { label: "Mounting Thread", value: "Standard 3/8\"-16 base / 1/4\"-20 camera mounting plate" },
+      { label: "Leg Construction", value: "Heavy-duty multi-section locking legs with rubber feet" },
+      { label: "Configuration Status", value: "Head model, compatibility, and specifications editable independently" },
+      { label: "Maximum Load Capacity", value: "To be verified upon equipment confirmation" },
+    ],
+    reviewUrl: "/photography-gear/dijitek-520bh",
+    relatedPortfolioUrls: [
+      { label: "Commercial Photography", url: "/portfolio/commercial" },
+    ],
+    ownershipStatus: "Studio Support Rig",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Heavy-duty support system configured with 130 video head and default ball head.",
     overview:
-      "PolarPro QuartzLine filters feature 99.9% pure fused quartz glass elements set within brass frame rings. Combining Neutral Density (ND8, ND64) and Circular Polarizer (CPL) options, they eliminate water and foliage glare while allowing wide-aperture shooting in bright midday sun.",
+      "The Dijitek 520BH is a versatile support system configured with the 130 video head for fluid cinematic moves and the default ball head for agile portrait and still photography framing. Designed as an adaptable foundation for both studio and field workflows.",
     personalUsage:
-      "Essential field accessories for ocean surf sessions, alpine landscape expeditions, and midday bridal party portraits in direct sunlight.",
+      "Utilized for fixed studio commercial staging, architectural interior bracketing, and smooth video panning during interviews and documentary sequences.",
     isPersonallyVerified: true,
     specs: [
-      { label: "Glass Material", value: "99.9% Pure Fused Quartz Glass" },
-      { label: "Frame Material", value: "Machined Solid Brass (anti-galling threads)" },
-      { label: "Optical Coatings", value: "16-Layer Anti-Reflective, Scratch, Hydrophobic" },
-      { label: "Filter Types Used", value: "CPL (Circular Polarizer) & ND8/PL, ND64" },
-      { label: "Refractive Index", value: "1.46 (Extremely low optical dispersion)" },
+      { label: "Tripod Base", value: "Dijitek 520BH" },
+      { label: "Video Head", value: "130 Video Head" },
+      { label: "Still Head", value: "Default Ball Head" },
+      { label: "Mounting Compatibility", value: "3/8\"-16 and 1/4\"-20" },
+      { label: "Head Configuration", value: "Independently editable" },
     ],
     pros: [
-      "Zero noticeable color casting or green/magenta tinting across shadows",
-      "Brass frame threads screw smoothly onto lens barrels without binding or seizing",
-      "Hydrophobic coating sheds ocean spray, raindrops, and fingerprints effortlessly",
-      "Maintains razor-sharp resolution on high-megapixel sensors",
+      "Dual head configuration allows quick switching between fluid video panning and still framing",
+      "Sturdy multi-section leg construction isolates camera from floor vibrations and wind gusts",
+      "Standard mounting threads accommodate third-party accessories and friction arms",
+      "Independently editable head configuration supports future hardware upgrades",
     ],
     cons: [
-      "Significantly heavier and pricier than standard aluminum alloy filters",
-      "Deep knurling on brass frame requires dedicated pouch space to avoid scratching nearby gear",
+      "Heavier profile than ultralight carbon travel tripods, best suited for vehicle transport and studio work",
+      "Dual heads require dedicated storage space in equipment bags",
+      "Exact load capacity and head specifications require verified equipment documentation",
     ],
     bestFor: [
-      "Landscape and wildlife photographers seeking maximum optical transparency",
-      "Outdoor portrait shoots requiring f/1.4 or f/1.8 apertures under midday sunlight",
-      "Coastal and marine photography where water reflection control is essential",
+      "Video panning and smooth tilt shots with the 130 video head",
+      "Studio portraiture and commercial product staging with the ball head",
+      "Long-exposure night photography and architectural brackets",
     ],
     situationsWhereUseful: [
-      "Cutting through glare on coastal waves to reveal transparent water texture",
-      "Slowing shutter speeds for silky alpine waterfall cascades in bright daylight",
-      "Deepening blue sky contrast and separating white cloud formations in landscape panoramas",
+      "Recording steady, jitter-free video interviews with slow tracking pans",
+      "Positioning heavy camera rigs securely for multi-angle studio shoots",
+      "Locking down compositions for composite and HDR landscape captures",
     ],
     imageOrAudioQuality:
-      "Fused quartz ensures complete color neutrality, preserving accurate skin tones and true-to-life greens without the yellow-brown shift common in cheaper resin filters.",
+      "Eliminates micro-shake from long exposures and heavy telephoto zooms, resulting in maximum optical sharpness from sensors.",
     portabilityAndHandling:
-      "Includes a protective hard case with magnetic closure for fast field swaps.",
+      "Rugged leg locks engage securely with positive tactile feedback. Built for reliable stability.",
     limitations:
-      "Stacking a CPL on top of an ND filter on lenses wider than 24mm can introduce mechanical corner vignetting.",
+      "Not designed as a lightweight backpacking tripod; optimized for stability and dual head versatility.",
     whoShouldBuy:
-      "Photographers working with high-resolution glass who refuse to degrade optical quality with inferior filter glass.",
+      "Creators who need an all-in-one support system that transitions seamlessly between video panning and still photography.",
     alternatives: [
-      { name: "B+W Master HTC-POL", note: "Renowned German optical brass circular polarizer." },
-      { name: "NiSi True Color ND/PL", note: "Competitive alternative with dedicated rotating rings." },
+      { name: "Manfrotto 502AH Video System", note: "Standard fluid head support benchmark." },
+      { name: "Benro BV4", note: "Twin-leg video tripod setup for heavier cine rigs." },
     ],
-    relatedPortfolioCategory: "Travel & Wildlife",
-    relatedPortfolioSlug: "/portfolio/nature-wildlife",
-    relatedTutorialSlug: "/photography-gear/comparisons/nd-filters-vs-cpl-filters",
+    relatedPortfolioCategory: "Commercial",
+    relatedPortfolioSlug: "/portfolio/commercial",
+    relatedTutorialSlug: "/blog/understanding-commercial-photography-licensing",
     faqs: [
       {
-        question: "What is the difference between an ND filter and a CPL filter?",
-        answer: "A Neutral Density (ND) filter acts like sunglasses, reducing overall light entering the lens to allow slower shutter speeds. A Circular Polarizer (CPL) cuts polarized reflections from water, glass, and leaves, boosting color saturation.",
+        question: "Can the video head and ball head be used independently on the Dijitek 520BH?",
+        answer: "Yes, the tripod uses standard mounting threads, allowing either the 130 video head or default ball head to be attached based on the assignment.",
+      },
+      {
+        question: "Can the head model configuration be updated later?",
+        answer: "Yes, all head specifications and model numbers are managed in the centralized equipment data system and can be updated as verified.",
       },
     ],
     retailerLinks: [
       {
-        retailer: "B&H Photo Video",
+        retailer: "Photography Specialty Retailers",
         url: "https://www.bhphotovideo.com",
         isAffiliate: false,
-        note: "Available across standard filter thread sizes (67mm, 77mm, 82mm, 95mm).",
+        note: "Check local distributor availability.",
       },
     ],
   },
 ];
 
+// Helper functions for lookup & routing
+export function getGearItemBySlug(slug: string): GearItem | undefined {
+  const normalized = slug.toLowerCase();
+  return GEAR_ITEMS.find(
+    (item) =>
+      item.slug.toLowerCase() === normalized ||
+      (item.aliases && item.aliases.some((a) => a.toLowerCase() === normalized))
+  );
+}
+
+export function getGearItemsByCategory(category: GearCategory): GearItem[] {
+  return GEAR_ITEMS.filter((item) => item.category === category && item.published);
+}
+
+// =========================================================================
+// GEAR COMPARISONS (Preserved for compatibility and comparison routes)
+// =========================================================================
+
 export const GEAR_COMPARISONS: GearComparison[] = [
-  // Comparison 1: Sony 200-600mm vs 100-400mm
   {
     slug: "sony-200-600mm-vs-sony-100-400mm",
-    title: "Sony 200–600mm vs Sony 100–400mm Comparison",
+    title: "Sony 200–600mm vs. Sony 100–400mm GM: Telephoto Field Comparison",
     description:
-      "An in-depth, hands-on comparison between Sony's two flagship telephoto zoom lenses. Weighing reach, internal zoom stability, portability, and autofocus tracking for sports and wildlife.",
-    heroImage: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1600&q=80",
-    heroAlt: "Super-telephoto lenses compared for outdoor sports and wildlife photography",
+      "An in-depth real-world comparison between Sony's internal-zoom 200–600mm G and the compact 100–400mm G Master for wildlife, field sports, and expedition travel.",
+    heroImage:
+      "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80",
+    heroAlt: "Super-telephoto lens compared in field conditions",
     itemA: {
       name: "Sony FE 200–600mm F5.6–6.3 G OSS",
       slug: "sony-200-600mm",
-      category: "Super-Telephoto Zoom",
-      highlight: "Unmatched 600mm reach with non-extending internal zoom balance.",
+      category: "Full-frame telephoto zoom lens",
+      highlight: "Internal zoom mechanism and 600mm native reach",
     },
     itemB: {
       name: "Sony FE 100–400mm F4.5–5.6 GM OSS",
-      category: "Telephoto G Master Zoom",
-      highlight: "Compact 1.4 kg chassis with 0.98m close focusing and G Master glass.",
+      category: "Full-frame telephoto zoom lens",
+      highlight: "Compact travel packability and 0.98m close focus",
     },
     summary:
-      "Choosing between the Sony 200–600mm G and the Sony 100–400mm GM comes down to a direct trade-off between maximum reach and physical portability. While the 200–600mm offers superior reach for timid birds and distant athletic fields with an internal zoom barrel, the 100–400mm GM is easier to carry on multi-day mountain hikes and packs inside standard airline carry-ons.",
+      "Both lenses are optical standouts in the Sony E-mount ecosystem, but they serve distinct operational needs. The 200–600mm is the undisputed champion for dedicated wildlife and field sports where reach and gimbal balance take precedence. The 100–400mm GM shines for mobile backcountry hikers and travel photographers who need versatility, closer focusing, and reduced backpack weight.",
     specComparison: [
-      { feature: "Focal Length Range", itemAValue: "200–600mm (3x zoom ratio)", itemBValue: "100–400mm (4x zoom ratio)" },
-      { feature: "Maximum Aperture", itemAValue: "f/5.6 – f/6.3", itemBValue: "f/4.5 – f/5.6 (1/3 to 1/2 stop faster)" },
-      { feature: "Physical Length", itemAValue: "318 mm (Fixed length, internal zoom)", itemBValue: "205 mm (Extends when zooming)" },
-      { feature: "Weight", itemAValue: "2,115 g (4.66 lbs)", itemBValue: "1,395 g (3.07 lbs, ~34% lighter)" },
-      { feature: "Filter Thread", itemAValue: "95 mm", itemBValue: "77 mm (Standard pro size)" },
-      { feature: "Minimum Focus Distance", itemAValue: "2.4 m (7.88 ft)", itemBValue: "0.98 m (3.22 ft, pseudo-macro capability)" },
-      { feature: "Teleconverter Support", itemAValue: "1.4x and 2.0x TC compatible", itemBValue: "1.4x and 2.0x TC compatible" },
+      { feature: "Focal Length Range", itemAValue: "200–600mm", itemBValue: "100–400mm" },
+      { feature: "Maximum Aperture", itemAValue: "f/5.6–f/6.3", itemBValue: "f/4.5–f/5.6" },
+      { feature: "Zoom Mechanism", itemAValue: "Internal (fixed barrel length)", itemBValue: "External extending barrel" },
+      { feature: "Weight", itemAValue: "2,115g (74.6 oz)", itemBValue: "1,395g (49.2 oz)" },
+      { feature: "Filter Diameter", itemAValue: "95mm", itemBValue: "77mm" },
+      { feature: "Minimum Focus Distance", itemAValue: "2.4m (7.88 ft)", itemBValue: "0.98m (3.22 ft)" },
+      { feature: "Teleconverter Support", itemAValue: "1.4x and 2.0x (full AF support)", itemBValue: "1.4x and 2.0x" },
     ],
     prosAndCons: {
       itemAPros: [
-        "Extra 200mm of reach makes a dramatic difference for small birds and distant field sports",
-        "Internal zoom mechanism means the lens never changes length or center of gravity",
-        "Extremely short zoom throw (less than 90 degrees) enables instant focal adjustments",
-        "Better dust sealing due to stationary external barrel",
+        "Internal zoom preserves perfect gimbal/monopod balance",
+        "200mm extra reach brings skittish wildlife and distant action close",
+        "Rapid 90-degree short-throw zoom ring",
       ],
       itemACons: [
-        "Noticeably heavier at 2.1 kg; taxing on wrists for prolonged handheld work",
-        "Difficult to pack vertically in standard daypacks due to 318mm fixed length",
-        "2.4m minimum focus distance limits close-up floral or insect captures",
+        "Significantly heavier (2.1 kg) for prolonged handheld carrying",
+        "Modest f/6.3 aperture at the long end requires higher ISO at dusk",
       ],
       itemBPros: [
-        "Over 700g lighter and 11cm shorter when retracted, fitting standard camera bags",
-        "Brilliant 0.98m close-focus distance enables stunning tele-macro floral and lizard photography",
-        "Slightly faster aperture (f/5.6 at 400mm vs f/6.3 on the 200-600)",
-        "G Master badge optical coating delivers marginally snappier micro-contrast",
+        "Over 700g lighter and fits horizontally into standard camera backpacks",
+        "Very close minimum focusing distance (0.98m) enables tele-macro floral and insect details",
+        "100mm wide end offers greater flexibility for closer athletes",
       ],
       itemBCons: [
-        "400mm can leave photographers wanting more reach when photographing small fauna",
-        "External telescoping barrel can ingest fine dust over years of heavy desert use",
-        "Zoom ring requires more rotational effort when barrel is pointed vertically upward",
+        "Barrel extends during zoom, shifting balance forward",
+        "400mm reach can feel short for open savannah or small songbirds",
       ],
     },
     intendedUseCases: {
-      itemAUse:
-        "Dedicated wildlife expeditions, bird photography from hides or blinds, surf photography from the beach, and large-field sports like soccer, football, and track where maximum reach is essential.",
-      itemBUse:
-        "Backcountry mountain trekking, travel photography, air shows, closer field sports (basketball, tennis), and versatile nature assignments where flowers, butterflies, and large mammals occur on the same trail.",
+      itemAUse: "Best for dedicated stadium sports, surf line-ups, safari safaris, and stationary bird blinds.",
+      itemBUse: "Best for expedition hiking, mountain landscapes, air shows, and versatile travel documentary.",
     },
     tradeOffAnalysis:
-      "If 80% of your work involves birds, ocean action, or sideline field athletics, the 200–600mm is unequivocally the superior tool because cropping a 400mm frame sacrifices sensor resolution. Conversely, if you travel frequently on regional flights, hike steep mountain trails with heavy packs, or love close-up botanical details, the 100–400mm GM is far more versatile and practical.",
+      "The primary trade-off comes down to reach vs. portability. The 200–600mm gives you true super-telephoto power and internal balance at the cost of pack size. The 100–400mm GM sacrifices 200mm of reach but provides superior packability and versatile close-up capabilities.",
     practicalRecommendation:
-      "For sports and wildlife specialists with a sturdy monopod: choose the Sony 200–600mm G OSS. For adventure travel, landscape, and versatile outdoor hybrid shooters: choose the Sony 100–400mm GM.",
+      "If your assignments revolve around birds, distant wildlife, or tracking athletics from fixed media stands, choose the 200–600mm. If you hike long distances or need a single telephoto that handles both landscapes and active subjects, choose the 100–400mm GM.",
     faqs: [
       {
-        question: "Can I just use the Sony 100-400mm with a 1.4x teleconverter to get 560mm?",
-        answer: "Yes, the 100-400mm GM paired with the 1.4x TC becomes a 140-560mm f/6.3-f/8 lens. While optical sharpness remains quite good, native autofocus acquisition on the bare 200-600mm is slightly snappier in low contrast lighting.",
+        question: "Is the 200-600mm noticeably heavier in the field than the 100-400mm?",
+        answer: "Yes, the 720g difference is noticeable during handheld shooting. A monopod is strongly advised for the 200-600mm on multi-hour shoots.",
       },
       {
-        question: "Which lens balances better on a gimbal head?",
-        answer: "The 200-600mm balances significantly better because its internal zoom never shifts weight forward as you zoom, preventing gimbal rebalancing during active shooting.",
+        question: "Does the 200-600mm balance better on a gimbal head?",
+        answer: "Significantly so. Because its center of gravity does not shift when zooming from 200mm to 600mm, it stays perfectly balanced on gimbal mounts.",
       },
     ],
   },
-
-  // Comparison 2: ND Filters vs CPL Filters
   {
     slug: "nd-filters-vs-cpl-filters",
-    title: "ND Filters vs CPL Filters: Understanding Lens Filtration",
+    title: "ND Filters vs. CPL Filters: Which Filter Do You Need First?",
     description:
-      "A comprehensive guide breaking down the optical mechanics, aesthetic differences, and practical field use cases between Neutral Density (ND) and Circular Polarizer (CPL) filters.",
-    heroImage: "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1600&q=80",
-    heroAlt: "Camera lens filter glass demonstrating light reduction and reflection control",
+      "Understanding the optical differences, practical field scenarios, and creative applications of Neutral Density and Circular Polarizing filters.",
+    heroImage:
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1200&q=80",
+    heroAlt: "Camera lens filters compared side by side",
     itemA: {
       name: "Neutral Density (ND) Filters",
-      category: "Exposure Control Glass",
-      highlight: "Reduces volume of light entering the lens without altering scene color or polarization.",
+      category: "Optical density glass",
+      highlight: "Reduces overall light transmission without altering color",
     },
     itemB: {
       name: "Circular Polarizer (CPL) Filters",
-      category: "Reflection & Glare Control Glass",
-      highlight: "Selectively filters polarized light rays to eliminate surface reflections and enrich saturation.",
+      category: "Polarizing glass",
+      highlight: "Eliminates surface glare and increases color saturation",
     },
     summary:
-      "Neutral Density (ND) filters and Circular Polarizers (CPL) serve entirely different photographic purposes, yet are frequently confused by emerging photographers. An ND filter functions like tinted sunglasses to control exposure and motion blur, whereas a CPL filter removes physical glare from water, foliage, and atmospheric haze.",
+      "ND and CPL filters serve completely different photographic goals. An ND filter acts as sunglasses for your sensor, allowing slow shutter speeds in bright daylight for silky waterfalls or cinematic video shutter angles. A CPL cuts polarized light, cutting surface glare from water, foliage, and glass while boosting natural sky contrast—an effect that cannot be duplicated in editing software.",
     specComparison: [
-      { feature: "Primary Function", itemAValue: "Reduces light quantity uniformly across visible spectrum", itemBValue: "Filters reflected polarized light waves at specific angles" },
-      { feature: "Aesthetic Effect", itemAValue: "Allows slower shutter speeds or wider apertures in bright sun", itemBValue: "Cuts reflections from water/glass, deepens blue skies and foliage green" },
-      { feature: "Replicability in Post-Processing", itemAValue: "Partially simulated with multi-exposure stacking", itemBValue: "Impossible to replicate digitally (glare information is lost)" },
-      { feature: "Light Loss (Typical)", itemAValue: "Fixed (e.g., 3 stops for ND8, 6 stops for ND64, 10 stops for ND1000)", itemBValue: "Approx. 1.0 to 1.5 stops of light loss when rotated" },
-      { feature: "Moving Mechanics", itemAValue: "Fixed non-rotating frame", itemBValue: "Dual rotating ring adjusted manually while looking through viewfinder" },
-      { feature: "Ultra-Wide Angle Compatibility", itemAValue: "Works cleanly across all focal lengths", itemBValue: "Can cause uneven gradient bands in skies on lenses wider than 24mm" },
+      { feature: "Primary Optical Function", itemAValue: "Light attenuation (exposure reduction)", itemBValue: "Polarization and reflection cut" },
+      { feature: "Impact on Shutter Speed", itemAValue: "Drastically slows shutter (3 to 10 stops)", itemBValue: "Mild light loss (approx. 1 to 1.5 stops)" },
+      { feature: "Impact on Reflections", itemAValue: "None (water surface reflects normally)", itemBValue: "Cuts surface glare, revealing underwater detail" },
+      { feature: "Impact on Sky & Foliage", itemAValue: "Neutral color reproduction", itemBValue: "Deepens blue sky and boosts green leaf saturation" },
+      { feature: "Can Be Replicated in Post?", itemAValue: "Partially (via computational exposure averaging)", itemBValue: "No (lost polarized reflections cannot be recovered in RAW)" },
     ],
     prosAndCons: {
       itemAPros: [
-        "Enables silky smooth waterfall, ocean wave, and cloud motion blur during bright daylight",
-        "Allows shooting wide open at f/1.4 or f/1.8 in midday sun without exceeding max shutter speed",
-        "Essential for cinematographers matching 180-degree shutter angles in video",
+        "Enables dreamlike long exposures of ocean tides, clouds, and waterfalls",
+        "Allows shooting wide open at f/1.4 or f/1.8 under blazing midday sunlight",
+        "Crucial for video shooters maintaining the 180-degree shutter rule",
       ],
       itemACons: [
-        "Dense ND filters (10-stop) darken viewfinder, requiring composition before mounting",
-        "Does not reduce surface glare or specular highlights on wet rocks and water",
+        "Requires a tripod for longer shutter exposures",
+        "Extreme 10-stop NDs can make framing and autofocus dark without live view gain",
       ],
       itemBPros: [
-        "Unlocks clear transparency through riverbeds, ocean water, and display glass",
-        "Restores rich natural pigment to rain-soaked leaves and autumn trees",
-        "Significantly cuts atmospheric haze in distant mountain vistas",
+        "Removes haze and enriches sky and landscape colors organically",
+        "Eliminates glare from car windshields, wet rocks, and reflective water",
+        "Rotatable front element allows variable control in real time",
       ],
       itemBCons: [
-        "Produces uneven dark sky patches when used on ultra-wide lenses (16mm to 20mm)",
-        "Must be readjusted every time you change orientation from landscape to portrait",
+        "Uneven polarization band can appear on ultra-wide lenses (wider than 24mm)",
+        "Costs 1–1.5 stops of light, requiring ISO adjustment in darker conditions",
       ],
     },
     intendedUseCases: {
-      itemAUse:
-        "Long-exposure seascape and landscape photography, daytime portraiture with shallow depth of field, and video work maintaining shutter speed rules.",
-      itemBUse:
-        "Forest photography, coastal shoreline documentation, architecture shoots with glass facades, and autumn foliage road trips.",
+      itemAUse: "Essential for landscape long-exposure photographers, waterfall documentarians, and daylight filmmakers.",
+      itemBUse: "Essential for outdoor portrait photographers, automotive photographers, and travel landscape artists.",
     },
     tradeOffAnalysis:
-      "You cannot use an ND filter to remove reflections, and you cannot use a standard CPL to achieve a 30-second silky exposure on a sunny beach. Both filters solve different optical constraints.",
+      "A CPL is about light direction and reflection management. An ND filter is about exposure duration and aperture flexibility. Many professional landscape photographers stack a CPL with an ND filter to enjoy both glare removal and silky water motion simultaneously.",
     practicalRecommendation:
-      "If you can only carry one filter into the wilderness: choose a Circular Polarizer (CPL) first, because its reflection-canceling optical physics cannot be faked in Lightroom or Photoshop. For long exposure enthusiasts, add an ND64 (6-stop) filter.",
+      "If you shoot landscapes, architecture, or outdoor portraits, buy a quality Circular Polarizer first—its optical glare removal cannot be faked in Photoshop. If you want to create milky waterfall motion or shoot video at 1/50s in full sun, invest in a 3-stop or 6-stop ND filter.",
     faqs: [
       {
         question: "Can I stack an ND filter and a CPL filter together?",
-        answer: "Yes, many landscape photographers stack an ND filter with a CPL. However, ensure slim filter rings are used to prevent mechanical vignetting in the frame corners on wide-angle lenses.",
+        answer: "Yes, you can screw a CPL onto an ND filter. Use slim brass filter rings to avoid optical vignetting in the frame corners on wide-angle lenses.",
       },
       {
-        question: "What is an ND/PL combo filter?",
-        answer: "An ND/PL combo integrates neutral density coating directly onto polarizing glass, delivering both light reduction and glare cut in a single lightweight filter ring.",
+        question: "Why does my CPL filter look patchy in the sky on wide-angle lenses?",
+        answer: "At focal lengths wider than 24mm, the lens captures a wider swath of sky than the 90-degree polarization sweet spot, resulting in a dark polarization band. Rotate the filter slightly to reduce the effect.",
       },
     ],
   },

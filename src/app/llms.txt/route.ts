@@ -39,7 +39,7 @@ ${SERVICES_DATA.map(
 
 ## Photography Equipment & Gear Guides
 - Main Gear Showcase: ${siteConfig.baseUrl}/photography-gear
-${GEAR_ITEMS.map((g) => `- [${g.name} Review](${siteConfig.baseUrl}/photography-gear/${g.slug}): ${g.tagline}`).join("\n")}
+${GEAR_ITEMS.map((g) => `- [${g.name} Review](${siteConfig.baseUrl}/photography-gear/${g.slug}): ${g.tagline || g.description}`).join("\n")}
 ${GEAR_COMPARISONS.map((c) => `- [${c.title}](${siteConfig.baseUrl}/photography-gear/comparisons/${c.slug}): ${c.description}`).join("\n")}
 
 ## Booking & Inquiries

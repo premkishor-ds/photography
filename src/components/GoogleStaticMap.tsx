@@ -133,66 +133,98 @@ export default function GoogleStaticMap({
         ) : (
           /* Luxury High-Res Vector Static Map Preview (Used when no API key is configured or offline) */
           <div className="relative w-full h-full bg-[#F8F5F0] overflow-hidden flex items-center justify-center">
-            {/* Stylized Jaipur Road Grid Illustration */}
-            <svg
-              className="absolute inset-0 w-full h-full opacity-40"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid slice"
-              viewBox="0 0 800 450"
+            {/* Dynamic Zooming Map Layer */}
+            <div
+              className="absolute inset-0 w-full h-full transition-transform duration-500 ease-out origin-center pointer-events-none"
+              style={{
+                transform: `scale(${Math.min(Math.max(Math.pow(1.16, zoom - 15), 0.55), 2.6)})`,
+              }}
             >
-              {/* Land / District Polygons */}
-              <rect width="800" height="450" fill="#FAF7F2" />
-              <polygon points="0,0 280,0 350,150 150,220 0,180" fill="#F3ECE1" opacity="0.6" />
-              <polygon points="450,0 800,0 800,280 550,250 480,140" fill="#F3ECE1" opacity="0.5" />
-              <polygon points="120,290 380,260 480,450 60,450" fill="#EDE4D6" opacity="0.5" />
-              
-              {/* Secondary Roads */}
-              <g stroke="#E8DED0" strokeWidth="2.5" fill="none">
-                <line x1="0" y1="90" x2="800" y2="120" />
-                <line x1="0" y1="210" x2="800" y2="230" />
-                <line x1="0" y1="360" x2="800" y2="340" />
-                <line x1="180" y1="0" x2="160" y2="450" />
-                <line x1="340" y1="0" x2="380" y2="450" />
-                <line x1="580" y1="0" x2="560" y2="450" />
-                <line x1="720" y1="0" x2="740" y2="450" />
-                <path d="M 50,450 C 200,300 300,350 450,200 C 600,50 680,100 800,80" />
-                <path d="M 0,320 C 150,280 280,310 400,225 C 520,140 680,180 800,200" />
-              </g>
+              {/* Stylized Jaipur Road Grid Illustration */}
+              <svg
+                className="w-full h-full opacity-45"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid slice"
+                viewBox="0 0 800 450"
+              >
+                {/* Land / District Polygons */}
+                <rect width="800" height="450" fill="#FAF7F2" />
+                <polygon points="0,0 280,0 350,150 150,220 0,180" fill="#F3ECE1" opacity="0.6" />
+                <polygon points="450,0 800,0 800,280 550,250 480,140" fill="#F3ECE1" opacity="0.5" />
+                <polygon points="120,290 380,260 480,450 60,450" fill="#EDE4D6" opacity="0.5" />
+                
+                {/* Secondary Roads */}
+                <g stroke="#E8DED0" strokeWidth="2.5" fill="none">
+                  <line x1="0" y1="90" x2="800" y2="120" />
+                  <line x1="0" y1="210" x2="800" y2="230" />
+                  <line x1="0" y1="360" x2="800" y2="340" />
+                  <line x1="180" y1="0" x2="160" y2="450" />
+                  <line x1="340" y1="0" x2="380" y2="450" />
+                  <line x1="580" y1="0" x2="560" y2="450" />
+                  <line x1="720" y1="0" x2="740" y2="450" />
+                  <path d="M 50,450 C 200,300 300,350 450,200 C 600,50 680,100 800,80" />
+                  <path d="M 0,320 C 150,280 280,310 400,225 C 520,140 680,180 800,200" />
+                </g>
 
-              {/* Major Arterial Roads / Highways (Tonk Road / Jagatpura Arterials) */}
-              <g stroke="#D7C7B2" strokeWidth="6" strokeLinecap="round" fill="none">
-                <line x1="0" y1="260" x2="800" y2="190" />
-                <line x1="400" y1="0" x2="400" y2="450" />
-                <path d="M 100,0 C 250,150 350,200 500,300 C 650,400 700,450 780,450" />
-              </g>
+                {/* Major Arterial Roads / Highways (Tonk Road / Jagatpura Arterials) */}
+                <g stroke="#D7C7B2" strokeWidth="6" strokeLinecap="round" fill="none">
+                  <line x1="0" y1="260" x2="800" y2="190" />
+                  <line x1="400" y1="0" x2="400" y2="450" />
+                  <path d="M 100,0 C 250,150 350,200 500,300 C 650,400 700,450 780,450" />
+                </g>
 
-              {/* Highway White Inner */}
-              <g stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none">
-                <line x1="0" y1="260" x2="800" y2="190" />
-                <line x1="400" y1="0" x2="400" y2="450" />
-                <path d="M 100,0 C 250,150 350,200 500,300 C 650,400 700,450 780,450" />
-              </g>
+                {/* Highway White Inner */}
+                <g stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none">
+                  <line x1="0" y1="260" x2="800" y2="190" />
+                  <line x1="400" y1="0" x2="400" y2="450" />
+                  <path d="M 100,0 C 250,150 350,200 500,300 C 650,400 700,450 780,450" />
+                </g>
 
-              {/* District Labels */}
-              <text x="70" y="70" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
-                PINK CITY HERITAGE
-              </text>
-              <text x="560" y="80" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
-                MALVIYA NAGAR
-              </text>
-              <text x="180" y="420" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
-                TONK ROAD HIGHWAY
-              </text>
-              <text x="540" y="390" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
-                JAGATPURA DISTRICT
-              </text>
-              <text x="430" y="245" fill="#121212" fontSize="12" fontWeight="600" fontFamily="sans-serif" letterSpacing="1">
-                KAROLAN KA BARH
-              </text>
-            </svg>
+                {/* Local Street Grid (Visible on high zoom >= 16) */}
+                {zoom >= 16 && (
+                  <g stroke="#DFD4C5" strokeWidth="1.5" strokeDasharray="3 3" fill="none">
+                    <line x1="360" y1="180" x2="440" y2="180" />
+                    <line x1="360" y1="260" x2="440" y2="260" />
+                    <line x1="360" y1="180" x2="360" y2="260" />
+                    <line x1="440" y1="180" x2="440" y2="260" />
+                    <rect x="385" y="210" width="30" height="20" fill="#E8DED0" opacity="0.6" />
+                    <text x="360" y="172" fill="#7B6955" fontSize="8" fontFamily="sans-serif">
+                      ROOM 215 • STUDIO ENTRANCE
+                    </text>
+                  </g>
+                )}
 
-            {/* Pulsating Luxury Gold Pin at Studio Coordinates */}
-            <div className="relative z-10 flex flex-col items-center">
+                {/* Regional Highlights (Visible on low zoom <= 14) */}
+                {zoom <= 14 && (
+                  <g fill="#7B6955" fontSize="9" fontFamily="sans-serif" letterSpacing="1">
+                    <circle cx="620" cy="360" r="4" fill="#BFA076" />
+                    <text x="630" y="364">JAIPUR AIRPORT (JAI) • 9 KM</text>
+                    <circle cx="150" cy="90" r="4" fill="#BFA076" />
+                    <text x="160" y="94">HAWA MAHAL • 14 KM</text>
+                  </g>
+                )}
+
+                {/* District Labels */}
+                <text x="70" y="70" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
+                  PINK CITY HERITAGE
+                </text>
+                <text x="560" y="80" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
+                  MALVIYA NAGAR
+                </text>
+                <text x="180" y="420" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
+                  TONK ROAD HIGHWAY
+                </text>
+                <text x="540" y="390" fill="#9E8870" fontSize="11" fontFamily="sans-serif" letterSpacing="2">
+                  JAGATPURA DISTRICT
+                </text>
+                <text x="430" y="245" fill="#121212" fontSize="12" fontWeight="600" fontFamily="sans-serif" letterSpacing="1">
+                  KAROLAN KA BARH
+                </text>
+              </svg>
+            </div>
+
+            {/* Pulsating Luxury Gold Pin at Studio Coordinates (Anchored dead-center) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none flex flex-col items-center">
               <div className="relative flex items-center justify-center">
                 <span className="w-14 h-14 bg-[#BFA076]/20 rounded-full animate-ping absolute" />
                 <span className="w-9 h-9 bg-[#BFA076]/40 rounded-full animate-pulse absolute" />
@@ -200,7 +232,7 @@ export default function GoogleStaticMap({
                   <MapPin className="w-5 h-5 stroke-[2]" />
                 </div>
               </div>
-              <div className="mt-2 bg-[#121212] text-white px-3 py-1 text-[11px] font-sans uppercase tracking-widest border border-[#BFA076]/50 shadow-md">
+              <div className="mt-2 bg-[#121212] text-white px-3 py-1 text-[11px] font-sans uppercase tracking-widest border border-[#BFA076]/50 shadow-md whitespace-nowrap">
                 <span>Room 215 • Flagship Studio</span>
               </div>
             </div>
@@ -216,18 +248,31 @@ export default function GoogleStaticMap({
 
         {/* Map Controls (Top Right) */}
         {showControls && (
-          <div className="absolute top-3 right-3 z-20 flex flex-col gap-1.5 shadow-sm">
+          <div className="absolute top-3 right-3 z-20 flex flex-col items-center gap-1.5 shadow-sm">
+            <span className="w-8 py-0.5 bg-white/95 text-[10px] font-mono text-[#121212] border border-[#D7C7B2] text-center shadow-xs select-none">
+              {zoom}x
+            </span>
             <button
               onClick={handleZoomIn}
+              disabled={zoom >= 20}
               title="Zoom In"
-              className="w-8 h-8 bg-white hover:bg-[#FAF7F2] text-[#121212] border border-[#D7C7B2] flex items-center justify-center cursor-pointer transition-colors shadow-xs"
+              className={`w-8 h-8 border border-[#D7C7B2] flex items-center justify-center transition-colors shadow-xs ${
+                zoom >= 20
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white hover:bg-[#FAF7F2] text-[#121212] cursor-pointer"
+              }`}
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleZoomOut}
+              disabled={zoom <= 10}
               title="Zoom Out"
-              className="w-8 h-8 bg-white hover:bg-[#FAF7F2] text-[#121212] border border-[#D7C7B2] flex items-center justify-center cursor-pointer transition-colors shadow-xs"
+              className={`w-8 h-8 border border-[#D7C7B2] flex items-center justify-center transition-colors shadow-xs ${
+                zoom <= 10
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white hover:bg-[#FAF7F2] text-[#121212] cursor-pointer"
+              }`}
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
@@ -288,7 +333,7 @@ export default function GoogleStaticMap({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <button
               onClick={handleCopyPlusCode}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs uppercase tracking-wider text-[#554837] hover:text-[#121212] bg-[#FAF7F2] hover:bg-[#F3ECE1] border border-[#D7C7B2] cursor-pointer transition-colors"

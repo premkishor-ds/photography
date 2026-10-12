@@ -41,9 +41,9 @@ export default function Hero() {
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 text-center text-white pt-24 pb-20">
         {/* Subtle Pill Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md mb-8">
-          <Sparkles className="w-3.5 h-3.5 text-[#E8DED0]" />
-          <span className="text-[11px] uppercase tracking-[0.25em] font-sans text-[#FAF7F2]/90">
+        <div className="inline-flex max-w-full flex-wrap justify-center items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md mb-8">
+          <Sparkles className="w-3.5 h-3.5 text-[#E8DED0] shrink-0" />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.25em] font-sans text-[#FAF7F2]/90 text-center">
             {t("hero.pill", "Fine Art • Portraiture • Weddings • Sports • Expeditions")}
           </span>
         </div>
