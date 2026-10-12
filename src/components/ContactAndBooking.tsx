@@ -20,6 +20,7 @@ import { WhatsAppIcon } from "@/components/Icons";
 import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";
+import GoogleStaticMap from "@/components/GoogleStaticMap";
 
 interface ContactAndBookingProps {
   preselectedService?: string;
@@ -551,6 +552,41 @@ export default function ContactAndBooking({
                 {t("contact.whatsappResponse", "Quick responses typically within 1-2 hours during business hours.")}
               </p>
             </div>
+
+            {/* Google Static Map */}
+            <div className="pt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans font-medium flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#BFA076]" />
+                  <span>{t("contact.mapHeader", "Studio Google Map & Location")}</span>
+                </span>
+                <span className="text-[10px] text-[#BFA076] font-mono">
+                  {settings.map_latitude || 26.8285}° N, {settings.map_longitude || 75.8654}° E
+                </span>
+              </div>
+              <GoogleStaticMap
+                latitude={settings.map_latitude || 26.8285}
+                longitude={settings.map_longitude || 75.8654}
+                zoom={settings.map_zoom || 15}
+                apiKey={settings.google_maps_api_key}
+                title={settings.studio_name || "Your Photography Flagship Studio"}
+                address={language === "hi" && studioHindiAddress ? studioHindiAddress : studioAddress}
+                plusCode="RV2J+5PQ"
+                heightClass="h-[260px] sm:h-[300px]"
+                showOverlayCard={false}
+              />
+              <div className="pt-1 flex items-center justify-between text-[11px] text-[#7B6955]">
+                <span>Plus Code: <strong className="text-[#121212]">RV2J+5PQ</strong></span>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${settings.map_latitude || 26.8285},${settings.map_longitude || 75.8654}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs uppercase tracking-wider text-[#121212] hover:text-[#BFA076] font-medium inline-flex items-center gap-1 hover:underline"
+                >
+                  <span>Open in Google Maps →</span>
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Interactive Booking Form */}
@@ -665,7 +701,7 @@ export default function ContactAndBooking({
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder={language === "hi" ? "उदा. राहुल शर्मा" : "e.g. Rahul Sharma"}
+                      placeholder={language === "hi" ? "उदा. राज कुमार" : "e.g. Raj Kumar"}
                       aria-invalid={errors.name ? true : false}
                       aria-describedby={errors.name ? "name-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
@@ -696,7 +732,7 @@ export default function ContactAndBooking({
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="rahul.sharma@gmail.com"
+                      placeholder="rajkumar@example.com"
                       aria-invalid={errors.email ? true : false}
                       aria-describedby={errors.email ? "email-error" : undefined}
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${

@@ -30,6 +30,10 @@ export interface StudioSettings {
   five_hundred_px_url: string;
   youtube_url: string;
   favicon_url?: string;
+  map_latitude?: number;
+  map_longitude?: number;
+  map_zoom?: number;
+  google_maps_api_key?: string;
 }
 
 const defaultSettings: StudioSettings = {
@@ -38,6 +42,10 @@ const defaultSettings: StudioSettings = {
   subtagline: siteConfig.brandSubtitle || "Professional photography for life's most meaningful moments.",
   hero_image_url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=85",
   favicon_url: "camera",
+  map_latitude: siteConfig.business.geo.latitude || 26.8285,
+  map_longitude: siteConfig.business.geo.longitude || 75.8654,
+  map_zoom: 15,
+  google_maps_api_key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   email: siteConfig.business.email || "contact@yourphotography.com",
   phone: siteConfig.business.phone || "+91 98290 12345",
   whatsapp_number: siteConfig.business.whatsappNumber || "919829012345",

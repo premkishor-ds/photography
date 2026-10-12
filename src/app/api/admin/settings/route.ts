@@ -57,6 +57,10 @@ export async function PUT(req: NextRequest) {
       governing_jurisdiction: body.governing_jurisdiction ?? "Jaipur, Rajasthan, India",
       favicon_url: body.favicon_url !== undefined ? body.favicon_url : "camera",
       default_min_booking_duration: body.default_min_booking_duration ? Math.max(60, Number(body.default_min_booking_duration)) : 60,
+      map_latitude: body.map_latitude !== undefined ? Number(body.map_latitude) : 26.8285,
+      map_longitude: body.map_longitude !== undefined ? Number(body.map_longitude) : 75.8654,
+      map_zoom: body.map_zoom !== undefined ? Number(body.map_zoom) : 15,
+      google_maps_api_key: body.google_maps_api_key !== undefined ? body.google_maps_api_key : "",
       updated_at: new Date().toISOString(),
     };
 

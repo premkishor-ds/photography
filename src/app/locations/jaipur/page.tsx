@@ -12,11 +12,13 @@ import {
   ExternalLink,
   ShieldCheck,
   Compass,
+  Navigation,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BookingCtaBanner from "@/components/BookingCtaBanner";
+import GoogleStaticMap from "@/components/GoogleStaticMap";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
 import {
@@ -234,6 +236,47 @@ export default function JaipurLocationPage() {
                 </div>
               ))}
             </div>
+          </section>
+
+          {/* Flagship Studio Location & Google Static Map */}
+          <section className="py-12 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <span className="text-xs uppercase tracking-[0.25em] text-[#7B6955] font-sans font-medium">
+                  Studio Location &amp; Directions • गूगल मैप नेविगेशन
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#121212] mt-1">
+                  Find Our Jaipur Flagship Studio
+                </h2>
+                <p className="text-sm text-[#554837] font-light mt-2 max-w-xl leading-relaxed">
+                  Located at Karolan Ka Barh, Shri Kishanpura in south-east Jaipur, minutes away from Jagatpura and Jaipur International Airport (JAI).
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=26.8285,75.8654"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#121212] text-white hover:bg-[#2C2C2C] uppercase tracking-widest text-xs font-medium transition-colors"
+                >
+                  <Navigation className="w-3.5 h-3.5 text-[#BFA076]" />
+                  <span>Start Navigation</span>
+                  <ExternalLink className="w-3 h-3 text-white/60 ml-1" />
+                </a>
+              </div>
+            </div>
+
+            <GoogleStaticMap
+              latitude={siteConfig.business.geo.latitude || 26.8285}
+              longitude={siteConfig.business.geo.longitude || 75.8654}
+              zoom={15}
+              title="Your Photography Flagship Studio"
+              address={siteConfig.business.address.streetAddress + ", " + siteConfig.business.address.addressLocality + " " + siteConfig.business.address.postalCode}
+              plusCode={siteConfig.business.address.plusCode || "RV2J+5PQ"}
+              showOverlayCard={true}
+              heightClass="h-[380px] sm:h-[460px]"
+            />
           </section>
 
           {/* Pricing Overview in INR */}

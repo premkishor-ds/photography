@@ -41,11 +41,13 @@ import {
   ChevronRight,
   Check,
   HelpCircle,
+  Navigation,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import AdminBlogManager from "@/components/admin/AdminBlogManager";
 import AdminFaqManager from "@/components/admin/AdminFaqManager";
+import GoogleStaticMap from "@/components/GoogleStaticMap";
 
 interface Inquiry {
   id: string;
@@ -124,6 +126,10 @@ interface StudioSettingsData {
   cancellation_policy?: string;
   default_min_booking_duration?: number;
   favicon_url?: string;
+  map_latitude?: number;
+  map_longitude?: number;
+  map_zoom?: number;
+  google_maps_api_key?: string;
 }
 
 interface DayScheduleRow {
@@ -325,6 +331,10 @@ export default function AdminPage() {
     governing_jurisdiction: "Jaipur, Rajasthan, India",
     cancellation_policy: "For outdoor portrait and landscape shoots affected by severe adverse weather (heavy rain, extreme storms), sessions will be rescheduled to the earliest mutually agreed date at zero fee.",
     favicon_url: "camera",
+    map_latitude: 26.8285,
+    map_longitude: 75.8654,
+    map_zoom: 15,
+    google_maps_api_key: "",
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsFeedback, setSettingsFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -1766,7 +1776,7 @@ export default function AdminPage() {
                           required
                           value={newAppointment.name}
                           onChange={(e) => setNewAppointment({ ...newAppointment, name: e.target.value })}
-                          placeholder="e.g. Aditi Rao"
+                          placeholder="e.g. Raj Kumar"
                           className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                         />
                       </div>
@@ -1780,7 +1790,7 @@ export default function AdminPage() {
                           required
                           value={newAppointment.email}
                           onChange={(e) => setNewAppointment({ ...newAppointment, email: e.target.value })}
-                          placeholder="aditi@example.com"
+                          placeholder="rajkumar@example.com"
                           className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                         />
                       </div>
@@ -3849,6 +3859,178 @@ export default function AdminPage() {
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Card 3B: Google Static Map & Navigation Coordinates */}
+              <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
+                <div className="border-b border-[#F3ECE1] pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                      <Navigation className="w-4 h-4 text-[#BFA076]" />
+                      <span>Google Static Map &amp; Navigation Coordinates</span>
+                    </h4>
+                    <p className="text-xs text-[#7B6955]">
+                      Manages the Google Static Map shown on Contact and Jaipur Studio pages with live preview.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${studioSettings.map_latitude || 26.8285},${studioSettings.map_longitude || 75.8654}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 text-xs text-[#121212] bg-[#FAF7F2] hover:bg-[#F3ECE1] border border-[#D7C7B2] inline-flex items-center gap-1.5 transition-colors"
+                    >
+                      <span>Open on Google Maps</span>
+                      <ExternalLink className="w-3 h-3 text-[#7B6955]" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Live Static Map Preview */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-[#7B6955]">
+                    <span className="font-medium uppercase tracking-wider text-[10px]">
+                      Live Map Preview
+                    </span>
+                    <span className="font-mono text-[11px]">
+                      {(studioSettings.map_latitude || 26.8285).toFixed(4)}° N, {(studioSettings.map_longitude || 75.8654).toFixed(4)}° E • Zoom {studioSettings.map_zoom || 15}
+                    </span>
+                  </div>
+                  <GoogleStaticMap
+                    latitude={studioSettings.map_latitude || 26.8285}
+                    longitude={studioSettings.map_longitude || 75.8654}
+                    zoom={studioSettings.map_zoom || 15}
+                    apiKey={studioSettings.google_maps_api_key}
+                    title={studioSettings.studio_name || "Your Photography Flagship Studio"}
+                    address={studioSettings.address}
+                    plusCode="RV2J+5PQ"
+                    heightClass="h-[240px] sm:h-[280px]"
+                    showOverlayCard={false}
+                  />
+                </div>
+
+                {/* Map Configuration Form Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Latitude (°N) *
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      value={studioSettings.map_latitude ?? 26.8285}
+                      onChange={(e) =>
+                        setStudioSettings({
+                          ...studioSettings,
+                          map_latitude: parseFloat(e.target.value) || 26.8285,
+                        })
+                      }
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                    <p className="text-[10px] text-[#7B6955] mt-1 font-sans">
+                      Jaipur Studio default: 26.8285
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Longitude (°E) *
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      required
+                      value={studioSettings.map_longitude ?? 75.8654}
+                      onChange={(e) =>
+                        setStudioSettings({
+                          ...studioSettings,
+                          map_longitude: parseFloat(e.target.value) || 75.8654,
+                        })
+                      }
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                    <p className="text-[10px] text-[#7B6955] mt-1 font-sans">
+                      Jaipur Studio default: 75.8654
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Map Zoom Level ({studioSettings.map_zoom || 15})
+                    </label>
+                    <input
+                      type="range"
+                      min={11}
+                      max={20}
+                      step={1}
+                      value={studioSettings.map_zoom ?? 15}
+                      onChange={(e) =>
+                        setStudioSettings({
+                          ...studioSettings,
+                          map_zoom: parseInt(e.target.value) || 15,
+                        })
+                      }
+                      className="w-full mt-2 accent-[#BFA076] cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[10px] text-[#7B6955] mt-1 font-sans">
+                      <span>11 (City)</span>
+                      <span>15 (District)</span>
+                      <span>20 (Street)</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Maps API Key (Optional) */}
+                <div className="text-xs space-y-1">
+                  <label className="block uppercase tracking-wider text-[#7B6955] font-medium">
+                    Google Maps API Key (Optional)
+                  </label>
+                  <input
+                    type="password"
+                    value={studioSettings.google_maps_api_key ?? ""}
+                    onChange={(e) =>
+                      setStudioSettings({
+                        ...studioSettings,
+                        google_maps_api_key: e.target.value,
+                      })
+                    }
+                    placeholder="AIzaSy... (leave empty to use high-definition vector map fallback)"
+                    className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                  />
+                  <p className="text-[10px] text-[#7B6955] font-sans">
+                    When provided, live raster static tiles are requested from Google Static Maps API. When omitted, our vector map preview and interactive Google Maps embed are seamlessly rendered with zero broken images.
+                  </p>
+                </div>
+
+                {/* Actions Toolbar */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#F3ECE1]">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setStudioSettings({
+                        ...studioSettings,
+                        map_latitude: 26.8285,
+                        map_longitude: 75.8654,
+                        map_zoom: 15,
+                      })
+                    }
+                    className="text-xs text-[#7B6955] hover:text-[#121212] underline cursor-pointer"
+                  >
+                    ↺ Reset to Jaipur Flagship Studio Coordinates
+                  </button>
+
+                  <a
+                    href={`/api/static-map?lat=${studioSettings.map_latitude || 26.8285}&lng=${studioSettings.map_longitude || 75.8654}&zoom=${studioSettings.map_zoom || 15}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#BFA076] hover:underline inline-flex items-center gap-1 font-mono"
+                  >
+                    <span>View /api/static-map Endpoint</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               </div>
 
