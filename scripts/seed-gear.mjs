@@ -244,6 +244,142 @@ const ITEMS = [
     ],
     ownershipStatus: "Studio Support Rig",
     published: true
+  },
+  {
+    id: "gear-sony-cfexpress-type-a-240gb",
+    slug: "sony-cfexpress-type-a-240gb",
+    name: "Sony CFexpress Type A 240GB Memory Card",
+    manufacturer: "Sony",
+    category: "storage-and-memory",
+    categoryLabel: "CFexpress Type A memory card",
+    modelNumber: "CEA-G240T (TOUGH Series / 240GB)",
+    description: "Professional ultra-high-speed CFexpress Type A memory card engineered for Sony Alpha camera bodies like the Sony A7 V. Features rigid TOUGH construction, rapid write speeds for continuous high-speed sports bursts, and high-bitrate 4K video recording.",
+    primaryUses: [
+      "Continuous High-Speed Sports Bursts",
+      "High-Bitrate 4K 60p/120p Video Recording",
+      "Instant In-Camera Buffer Clearing",
+      "Dual-Slot Redundancy for Client Shoot Security"
+    ],
+    compatibility: "Sony Alpha mirrorless cameras featuring CFexpress Type A slots (e.g. Sony A7 V, Sony A7 IV, Sony A1, Sony FX3, Sony A7S III) and dedicated CFexpress Type A card readers.",
+    imageUrl: "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony CFexpress Type A 240GB professional high-speed memory card",
+    specifications: [
+      { label: "Card Format", value: "CFexpress Type A" },
+      { label: "Storage Capacity", value: "240 GB" },
+      { label: "Max Read Speed", value: "Up to 800 MB/s" },
+      { label: "Max Write Speed", value: "Up to 700 MB/s" },
+      { label: "Interface", value: "PCIe Gen3 x1" },
+      { label: "Durability Rating", value: "TOUGH specification (10x drop resistance, 5x bend resistance)" },
+      { label: "Dust & Water Resistance", value: "IP57 rated" }
+    ],
+    reviewUrl: "/photography-gear/sony-cfexpress-type-a-240gb",
+    relatedPortfolioUrls: [
+      { label: "Sports & Athletics", url: "/portfolio/sports" },
+      { label: "Portraits", url: "/portfolio/portraits" }
+    ],
+    ownershipStatus: "Active Primary Media",
+    published: true
+  },
+  {
+    id: "gear-lexar-sl500-1tb-ssd",
+    slug: "lexar-sl500-1tb-ssd",
+    name: "Lexar SL500 1TB Portable SSD",
+    manufacturer: "Lexar",
+    category: "storage-and-memory",
+    categoryLabel: "Portable solid-state drive",
+    modelNumber: "Lexar SL500 1TB (LSL500X001T)",
+    description: "Credit card-sized ultra-slim external solid-state drive with 1TB capacity and blazing USB 3.2 Gen 2x2 transfer speeds. Used for rapid on-location shoot backups, instant client gallery offloading, and secure field storage of high-resolution RAW files and 4K footage.",
+    primaryUses: [
+      "On-Location Field Shoot Backups",
+      "Rapid RAW & Video Offloading from Memory Cards",
+      "Travel Workflow & Laptop Storage Expansion",
+      "Client Deliverable Transfer & Safe Archiving"
+    ],
+    compatibility: "Universal USB Type-C connection. Compatible with Mac, Windows PC, iPad, Android smartphones, and direct-recording cameras with USB-C mass storage support.",
+    imageUrl: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Lexar SL500 1TB portable external SSD drive",
+    specifications: [
+      { label: "Drive Type", value: "Portable Solid State Drive (External SSD)" },
+      { label: "Capacity", value: "1 TB" },
+      { label: "Interface", value: "USB 3.2 Gen 2x2 Type-C" },
+      { label: "Read Speed", value: "Up to 2,000 MB/s" },
+      { label: "Write Speed", value: "Up to 1,800 MB/s" },
+      { label: "Enclosure", value: "Ultra-slim sleek aluminum unibody enclosure" },
+      { label: "Security", value: "256-bit AES software encryption support" },
+      { label: "Weight", value: "Approx. 43g (featherweight)" }
+    ],
+    reviewUrl: "/photography-gear/lexar-sl500-1tb-ssd",
+    relatedPortfolioUrls: [
+      { label: "Commercial Photography", url: "/portfolio/commercial" },
+      { label: "Travel & Expeditions", url: "/portfolio/travel" }
+    ],
+    ownershipStatus: "Active Field Backup Drive",
+    published: true
+  },
+  {
+    id: "gear-dji-action-6-nd-filters",
+    slug: "dji-action-6-nd-filters",
+    name: "ND Filter Set for DJI Osmo Action 6",
+    manufacturer: "DJI",
+    category: "accessories",
+    categoryLabel: "Action camera optical filters",
+    modelNumber: "DJI Osmo Action ND Filter Kit (ND8/16/32/64)",
+    description: "Precision optical Neutral Density (ND) filter set engineered specifically for the DJI Osmo Action 6. Controls incoming light in bright outdoor environments, allowing cinematic 180-degree shutter angles, natural motion blur on motorcycle footage, and glare-free video across open water and desert sun.",
+    primaryUses: [
+      "Cinematic Shutter Angle Control (180° Rule)",
+      "Natural Motion Blur for Motorcycle & POV Videos",
+      "High-Sun Exposure Management",
+      "Water Sports & Glare Reduction"
+    ],
+    compatibility: "Specifically designed for DJI Osmo Action 6 lens mounting bezel (native twist/snap fit with rubber gasket seal).",
+    imageUrl: "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Neutral Density optical filter set for DJI Osmo Action camera",
+    specifications: [
+      { label: "Filter Types Included", value: "ND8, ND16, ND32, ND64" },
+      { label: "Optical Glass", value: "Multi-coated optical glass with scratch and oil-resistant coatings" },
+      { label: "Mounting Type", value: "Direct replacement lens bezel mount with water-tight gasket" },
+      { label: "Purpose", value: "Reduces light transmission by 3 to 6 f-stops without color shift" },
+      { label: "Weight", value: "Approx. 5g per filter" }
+    ],
+    reviewUrl: "/photography-gear/dji-action-6-nd-filters",
+    relatedPortfolioUrls: [
+      { label: "Travel & Expeditions", url: "/portfolio/travel" },
+      { label: "Sports & Action", url: "/portfolio/sports" }
+    ],
+    ownershipStatus: "Active POV Accessory",
+    published: true
+  },
+  {
+    id: "gear-dji-action-6-waterproof-case",
+    slug: "dji-action-6-waterproof-case",
+    name: "Waterproof Case for DJI Osmo Action 6",
+    manufacturer: "DJI",
+    category: "accessories",
+    categoryLabel: "Underwater protective housing",
+    modelNumber: "DJI Osmo Action 6 Waterproof Housing (60m Rated)",
+    description: "Rugged deep-water submersible protective housing designed for the DJI Osmo Action 6. Extends water resistance down to 60 meters (197 ft) while shielding the camera against heavy surf impact, sharp coral reefs, sand abrasion, and high-pressure water jets.",
+    primaryUses: [
+      "Deep Water Scuba & Free Diving (up to 60m)",
+      "Heavy Ocean Surf & High-Impact Water Sports",
+      "Mud, Sand, and Severe Element Protection",
+      "Extreme Adventure Rigging"
+    ],
+    compatibility: "Precision-molded for the DJI Osmo Action 6 body; features dual-prong mounting ears compatible with all standard action camera mounts and quick-release adapters.",
+    imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Waterproof diving protective case housing for DJI Osmo Action camera",
+    specifications: [
+      { label: "Depth Rating", value: "Waterproof up to 60 meters (197 feet)" },
+      { label: "Lens Glass", value: "Flat optical tempered glass port for distortion-free underwater clarity" },
+      { label: "Latch Mechanism", value: "Secure locking latch with silicone sealing ring" },
+      { label: "Button Controls", value: "Stainless steel spring-loaded external buttons for full underwater operation" },
+      { label: "Weight", value: "Approx. 130g" }
+    ],
+    reviewUrl: "/photography-gear/dji-action-6-waterproof-case",
+    relatedPortfolioUrls: [
+      { label: "Travel & Expeditions", url: "/portfolio/travel" }
+    ],
+    ownershipStatus: "Active Marine Accessory",
+    published: true
   }
 ];
 
@@ -298,7 +434,7 @@ async function seed() {
     ]);
   }
 
-  console.log("Successfully seeded 8 gear items into Supabase!");
+  console.log(`Successfully seeded ${ITEMS.length} gear items into Supabase!`);
   await client.end();
 }
 

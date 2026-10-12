@@ -5,7 +5,9 @@ export type GearCategory =
   | "lenses"
   | "action-cameras"
   | "audio"
-  | "tripods-and-support";
+  | "tripods-and-support"
+  | "storage-and-memory"
+  | "accessories";
 
 export interface GearSpecification {
   label: string;
@@ -131,6 +133,16 @@ export const GEAR_CATEGORIES: { id: GearCategory; label: string; description: st
     id: "tripods-and-support",
     label: "Tripods and Support Equipment",
     description: "Heavy-duty stability platforms with interchangeable video and ball head configurations for smooth tracking and studio framing.",
+  },
+  {
+    id: "storage-and-memory",
+    label: "Storage & Memory Media",
+    description: "High-speed CFexpress Type A cards and rugged portable solid-state drives for high-bitrate buffer clearing and field backups.",
+  },
+  {
+    id: "accessories",
+    label: "Camera Accessories & Filters",
+    description: "Dedicated optical ND filters, waterproof dive housings, and protection gear for high-impact action shooting.",
   },
 ];
 
@@ -1040,6 +1052,438 @@ export const GEAR_ITEMS: GearItem[] = [
         url: "https://www.bhphotovideo.com",
         isAffiliate: false,
         note: "Check local distributor availability.",
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 6. STORAGE & MEMORY MEDIA
+  // =========================================================================
+
+  // 6.1 Sony CFexpress Type A 240GB Memory Card
+  {
+    id: "gear-sony-cfexpress-type-a-240gb",
+    slug: "sony-cfexpress-type-a-240gb",
+    name: "Sony CFexpress Type A 240GB Memory Card",
+    manufacturer: "Sony",
+    category: "storage-and-memory",
+    categoryLabel: "CFexpress Type A memory card",
+    modelNumber: "CEA-G240T (TOUGH Series / 240GB)",
+    description:
+      "Professional ultra-high-speed CFexpress Type A memory card engineered for Sony Alpha camera bodies like the Sony A7 V. Features rigid TOUGH construction, rapid write speeds for continuous high-speed sports bursts, and high-bitrate 4K video recording.",
+    primaryUses: [
+      "Continuous High-Speed Sports Bursts",
+      "High-Bitrate 4K 60p/120p Video Recording",
+      "Instant In-Camera Buffer Clearing",
+      "Dual-Slot Redundancy for Client Shoot Security",
+    ],
+    compatibility:
+      "Sony Alpha mirrorless cameras featuring CFexpress Type A slots (e.g. Sony A7 V, Sony A7 IV, Sony A1, Sony FX3, Sony A7S III) and dedicated CFexpress Type A card readers.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Sony CFexpress Type A 240GB professional high-speed memory card",
+    specifications: [
+      { label: "Card Format", value: "CFexpress Type A" },
+      { label: "Storage Capacity", value: "240 GB" },
+      { label: "Max Read Speed", value: "Up to 800 MB/s" },
+      { label: "Max Write Speed", value: "Up to 700 MB/s" },
+      { label: "Interface", value: "PCIe Gen3 x1" },
+      { label: "Durability Rating", value: "TOUGH specification (10x drop resistance, 5x bend resistance)" },
+      { label: "Dust & Water Resistance", value: "IP57 rated" },
+    ],
+    reviewUrl: "/photography-gear/sony-cfexpress-type-a-240gb",
+    relatedPortfolioUrls: [
+      { label: "Sports & Athletics", url: "/portfolio/sports" },
+      { label: "Portraits", url: "/portfolio/portraits" },
+    ],
+    ownershipStatus: "Active Primary Media",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Rugged TOUGH series CFexpress Type A card for high-speed bursts and 4K video.",
+    overview:
+      "The Sony CEA-G240T CFexpress Type A card delivers the throughput required by modern Sony Alpha bodies for continuous high-speed uncompressed RAW bursts and high-framerate 4K video. Built with Sony's TOUGH resin-molded design for superior field reliability.",
+    personalUsage:
+      "Primary media card slotted into Slot 1 of our Sony A7 V for track sports tournaments, rapid-fire wedding vows, and high-bitrate video capture without buffer bottleneck.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Form Factor", value: "CFexpress Type A" },
+      { label: "Capacity", value: "240 GB" },
+      { label: "Read Speed", value: "Up to 800 MB/s" },
+      { label: "Write Speed", value: "Up to 700 MB/s" },
+      { label: "Durability", value: "IP57 Dust & Water Proof, TOUGH Spec" },
+    ],
+    pros: [
+      "Ultra-fast write speed clears camera buffer virtually instantaneously during sports bursts",
+      "TOUGH unibody resin molding resists bending, twisting, and accidental drops",
+      "VPG200 certified for reliable, drop-free 4K video recording",
+      "Generous 240GB capacity handles full-day editorial assignments with ease",
+    ],
+    cons: [
+      "Requires dedicated CFexpress Type A card reader for full computer transfer speeds",
+      "Higher price per gigabyte compared to conventional SD UHS-II cards",
+    ],
+    bestFor: [
+      "High-speed sports and athletics where buffer stalls could miss critical action",
+      "High-bitrate All-Intra 4K video recording on Sony Alpha bodies",
+      "Demanding professional assignments requiring maximum media durability",
+    ],
+    situationsWhereUseful: [
+      "Continuous 10+ fps bursts tracking sprinters at athletic meets",
+      "All-day wedding ceremonies without pausing to swap cards",
+      "Shooting in dusty outdoor environments or near splashing water",
+    ],
+    imageOrAudioQuality:
+      "Ensures zero dropped frames during high-bitrate XAVC S-I 4K capture, with consistent sustained write performance.",
+    portabilityAndHandling:
+      "Compact Type A footprint, significantly smaller than Type B cards while maintaining professional speed.",
+    limitations:
+      "Compatible only with cameras supporting CFexpress Type A slots; cannot be inserted into Type B or standalone SD-only cameras.",
+    whoShouldBuy:
+      "Sony A7 V, A1, FX3, and A7 IV owners who want zero buffer lag and maximum media reliability.",
+    alternatives: [
+      { name: "Sony TOUGH SD UHS-II (128GB/256GB)", note: "Fast SD alternative for standard burst requirements." },
+      { name: "ProGrade Digital CFexpress Type A", note: "Third-party Type A card option." },
+    ],
+    relatedPortfolioCategory: "Sports",
+    relatedPortfolioSlug: "/portfolio/sports",
+    faqs: [
+      {
+        question: "Does the Sony A7 V require CFexpress Type A cards?",
+        answer: "While the A7 V also accepts SD UHS-II cards in its dual hybrid slots, CFexpress Type A is essential to unlock maximum burst buffer clearing and highest video bitrates.",
+      },
+      {
+        question: "Can this card be read in standard SD card slots?",
+        answer: "No, CFexpress Type A uses a different pin architecture and requires a dedicated CFexpress Type A reader or direct USB-C camera tethering.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "B&H Photo Video",
+        url: "https://www.bhphotovideo.com",
+        isAffiliate: false,
+        note: "Authorized Sony Pro dealer.",
+      },
+    ],
+  },
+
+  // 6.2 Lexar SL500 1TB Portable SSD
+  {
+    id: "gear-lexar-sl500-1tb-ssd",
+    slug: "lexar-sl500-1tb-ssd",
+    aliases: ["lexar-1tb-ssd", "lexar-500-1tb-ssd"],
+    name: "Lexar SL500 1TB Portable SSD",
+    manufacturer: "Lexar",
+    category: "storage-and-memory",
+    categoryLabel: "Portable solid-state drive",
+    modelNumber: "Lexar SL500 1TB (LSL500X001T)",
+    description:
+      "Credit card-sized ultra-slim external solid-state drive with 1TB capacity and blazing USB 3.2 Gen 2x2 transfer speeds. Used for rapid on-location shoot backups, instant client gallery offloading, and secure field storage of high-resolution RAW files and 4K footage.",
+    primaryUses: [
+      "On-Location Field Shoot Backups",
+      "Rapid RAW & Video Offloading from Memory Cards",
+      "Travel Workflow & Laptop Storage Expansion",
+      "Client Deliverable Transfer & Safe Archiving",
+    ],
+    compatibility:
+      "Universal USB Type-C connection. Compatible with Mac, Windows PC, iPad, Android smartphones, and direct-recording cameras with USB-C mass storage support.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Lexar SL500 1TB portable external SSD drive",
+    specifications: [
+      { label: "Drive Type", value: "Portable Solid State Drive (External SSD)" },
+      { label: "Capacity", value: "1 TB" },
+      { label: "Interface", value: "USB 3.2 Gen 2x2 Type-C" },
+      { label: "Read Speed", value: "Up to 2,000 MB/s" },
+      { label: "Write Speed", value: "Up to 1,800 MB/s" },
+      { label: "Enclosure", value: "Ultra-slim sleek aluminum unibody enclosure" },
+      { label: "Security", value: "256-bit AES software encryption support" },
+      { label: "Weight", value: "Approx. 43g (featherweight)" },
+    ],
+    reviewUrl: "/photography-gear/lexar-sl500-1tb-ssd",
+    relatedPortfolioUrls: [
+      { label: "Commercial Photography", url: "/portfolio/commercial" },
+      { label: "Travel & Expeditions", url: "/portfolio/travel" },
+    ],
+    ownershipStatus: "Active Field Backup Drive",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Ultra-slim 1TB portable SSD with up to 2,000 MB/s transfer speed for field backup.",
+    overview:
+      "The Lexar SL500 portable SSD combines an impossibly thin aluminum enclosure with blazing transfer speeds up to 2,000 MB/s read. It provides instant on-location backup for thousands of high-resolution RAW files, reducing offload times from card readers down to minutes.",
+    personalUsage:
+      "Carried in our primary camera bag on every client assignment for immediate on-site dual-backup offload before leaving the venue.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Storage Capacity", value: "1 TB" },
+      { label: "Host Interface", value: "USB 3.2 Gen 2x2 Type-C" },
+      { label: "Sequential Read", value: "Up to 2,000 MB/s" },
+      { label: "Sequential Write", value: "Up to 1,800 MB/s" },
+      { label: "Weight", value: "Approx. 43g" },
+    ],
+    pros: [
+      "Incredible transfer speeds (up to 2,000 MB/s) slash field offload and backup times",
+      "Ultra-slim 4.8mm credit-card profile fits into any shirt or backpack pocket",
+      "Durable aluminum unibody dissipates heat efficiently during continuous sustained writes",
+      "Plug-and-play compatibility across Mac, PC, iPad, iPhone, and Android devices",
+    ],
+    cons: [
+      "Reaching full 2,000 MB/s requires a USB 3.2 Gen 2x2 port (operates at 1,000 MB/s on standard USB 3.2 Gen 2 ports)",
+      "Included short USB-C cable requires care when placed on uneven surfaces",
+    ],
+    bestFor: [
+      "High-volume wedding and commercial shoots requiring immediate on-site duplicate backups",
+      "Travel photographers who want featherweight laptop storage expansion",
+      "Direct ProRes recording from compatible mobile devices and cameras",
+    ],
+    situationsWhereUseful: [
+      "Backing up dual memory cards during wedding reception dinner breaks",
+      "Offloading thousands of 50 MP sports RAW files in the media room",
+      "Editing high-resolution photo catalogs directly off the drive on laptop",
+    ],
+    imageOrAudioQuality:
+      "Solid-state design ensures zero mechanical vibration or head-parking failures in mobile working environments.",
+    portabilityAndHandling:
+      "At just 43 grams, it is one of the lightest and most compact 1TB portable SSDs on the market.",
+    limitations:
+      "Not immersion waterproof; store in protective pouch during torrential rain.",
+    whoShouldBuy:
+      "Working photographers, videographers, and travel creators needing lightning-fast, ultra-portable field backup.",
+    alternatives: [
+      { name: "SanDisk Extreme Portable SSD", note: "Rugged rubberized bumper design with IP55 rating." },
+      { name: "Samsung T7 Shield", note: "Durable IP65-rated portable SSD with 1,050 MB/s speeds." },
+    ],
+    relatedPortfolioCategory: "Commercial",
+    relatedPortfolioSlug: "/portfolio/commercial",
+    faqs: [
+      {
+        question: "Can I edit Lightroom catalogs directly on the Lexar SL500?",
+        answer: "Yes, with sequential speeds over 1,000–2,000 MB/s, editing RAW catalogs and 4K video timelines directly off the drive is seamless.",
+      },
+      {
+        question: "Does it work with iPads and smartphones?",
+        answer: "Yes, it connects directly via USB-C to modern iPads, iPhones (with USB-C), and Android devices without external power.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "B&H Photo Video",
+        url: "https://www.bhphotovideo.com",
+        isAffiliate: false,
+        note: "Includes USB-C cable.",
+      },
+    ],
+  },
+
+  // =========================================================================
+  // 7. CAMERA ACCESSORIES & FILTERS
+  // =========================================================================
+
+  // 7.1 ND Filter Set for DJI Osmo Action 6
+  {
+    id: "gear-dji-action-6-nd-filters",
+    slug: "dji-action-6-nd-filters",
+    aliases: ["dji-osmo-action-6-nd-filters"],
+    name: "ND Filter Set for DJI Osmo Action 6",
+    manufacturer: "DJI",
+    category: "accessories",
+    categoryLabel: "Action camera optical filters",
+    modelNumber: "DJI Osmo Action ND Filter Kit (ND8/16/32/64)",
+    description:
+      "Precision optical Neutral Density (ND) filter set engineered specifically for the DJI Osmo Action 6. Controls incoming light in bright outdoor environments, allowing cinematic 180-degree shutter angles, natural motion blur on motorcycle footage, and glare-free video across open water and desert sun.",
+    primaryUses: [
+      "Cinematic Shutter Angle Control (180° Rule)",
+      "Natural Motion Blur for Motorcycle & POV Videos",
+      "High-Sun Exposure Management",
+      "Water Sports & Glare Reduction",
+    ],
+    compatibility:
+      "Specifically designed for DJI Osmo Action 6 lens mounting bezel (native twist/snap fit with rubber gasket seal).",
+    imageUrl:
+      "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Neutral Density optical filter set for DJI Osmo Action camera",
+    specifications: [
+      { label: "Filter Types Included", value: "ND8, ND16, ND32, ND64" },
+      { label: "Optical Glass", value: "Multi-coated optical glass with scratch and oil-resistant coatings" },
+      { label: "Mounting Type", value: "Direct replacement lens bezel mount with water-tight gasket" },
+      { label: "Purpose", value: "Reduces light transmission by 3 to 6 f-stops without color shift" },
+      { label: "Weight", value: "Approx. 5g per filter" },
+    ],
+    reviewUrl: "/photography-gear/dji-action-6-nd-filters",
+    relatedPortfolioUrls: [
+      { label: "Travel & Expeditions", url: "/portfolio/travel" },
+      { label: "Sports & Action", url: "/portfolio/sports" },
+    ],
+    ownershipStatus: "Active POV Accessory",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Precision optical ND filter set for cinematic shutter angles and motion blur on Osmo Action 6.",
+    overview:
+      "A must-have optical accessory kit for the DJI Osmo Action 6, providing ND8, ND16, ND32, and ND64 filters. By reducing light hitting the sensor in bright conditions, it allows you to lock your shutter speed to double your framerate, creating buttery-smooth motion blur instead of jittery high-shutter video.",
+    personalUsage:
+      "Permanently utilized on our DJI Osmo Action 6 for motorcycle travel footage and bright midday watersports where natural speed blur gives footage a cinematic cadence.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Included Densities", value: "ND8 (3 stops), ND16 (4 stops), ND32 (5 stops), ND64 (6 stops)" },
+      { label: "Glass Coating", value: "AF hydrophobic, anti-scratch, anti-reflective coating" },
+      { label: "Compatibility", value: "DJI Osmo Action 6" },
+      { label: "Weight", value: "Approx. 5g per filter" },
+    ],
+    pros: [
+      "Enables cinematic motion blur on motorcycle and high-speed POV video",
+      "Direct bezel thread replacement maintains watertight seal on the camera",
+      "Neutral color transmission without unwanted magenta or green color casts",
+      "Compact protective carry case keeps filters organized in the field",
+    ],
+    cons: [
+      "Must be removed in low-light dusk or indoor conditions to prevent underexposure",
+      "Small optical glass requires microfiber lens cloth to keep free of fingerprints",
+    ],
+    bestFor: [
+      "Motorcycle travel footage and bicycle handlebar mounts",
+      "Bright midday beach, surf, and snow sports capture",
+      "Cinematic travel videos requiring smooth 180-degree shutter angles",
+    ],
+    situationsWhereUseful: [
+      "Motorcycle tours under harsh desert noon sun where shutter speeds would otherwise spike to 1/2000s",
+      "Capturing river rafting and kayaking with smooth splashing water",
+      "Outdoor action documentary sequences",
+    ],
+    imageOrAudioQuality:
+      "Multi-coated optical glass prevents stray flares and maintains full sensor resolution and contrast.",
+    portabilityAndHandling:
+      "Filters twist securely onto the lens bezel with a positive click lock.",
+    limitations:
+      "Engineered specifically for the Osmo Action 6 bezel dimensions.",
+    whoShouldBuy:
+      "Any DJI Osmo Action 6 owner filming outdoors who wants professional cinematic video cadence instead of choppy motion.",
+    alternatives: [
+      { name: "Freewell All Day ND Kit", note: "Third-party alternative with magnetic mounting." },
+      { name: "PolarPro Shutter Collection", note: "Cinema glass ND filter set." },
+    ],
+    relatedPortfolioCategory: "Travel",
+    relatedPortfolioSlug: "/portfolio/travel",
+    faqs: [
+      {
+        question: "Why are ND filters necessary on an action camera?",
+        answer: "Because action cameras have fixed apertures, the only way to prevent overexposure in bright sun is to raise shutter speed, which makes motion look jittery. An ND filter allows you to keep shutter speed at 1/50s or 1/120s for natural motion blur.",
+      },
+      {
+        question: "Does the camera stay waterproof with the ND filter attached?",
+        answer: "Yes, the replacement filter bezel includes the integrated rubber gasket preserving water resistance.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "DJI Official Store",
+        url: "https://store.dji.com",
+        isAffiliate: false,
+        note: "Official manufacturer accessories.",
+      },
+    ],
+  },
+
+  // 7.2 Waterproof Diving Case for DJI Osmo Action 6
+  {
+    id: "gear-dji-action-6-waterproof-case",
+    slug: "dji-action-6-waterproof-case",
+    aliases: ["dji-osmo-action-6-waterproof-case"],
+    name: "Waterproof Case for DJI Osmo Action 6",
+    manufacturer: "DJI",
+    category: "accessories",
+    categoryLabel: "Underwater protective housing",
+    modelNumber: "DJI Osmo Action 6 Waterproof Housing (60m Rated)",
+    description:
+      "Rugged deep-water submersible protective housing designed for the DJI Osmo Action 6. Extends water resistance down to 60 meters (197 ft) while shielding the camera against heavy surf impact, sharp coral reefs, sand abrasion, and high-pressure water jets.",
+    primaryUses: [
+      "Deep Water Scuba & Free Diving (up to 60m)",
+      "Heavy Ocean Surf & High-Impact Water Sports",
+      "Mud, Sand, and Severe Element Protection",
+      "Extreme Adventure Rigging",
+    ],
+    compatibility:
+      "Precision-molded for the DJI Osmo Action 6 body; features dual-prong mounting ears compatible with all standard action camera mounts and quick-release adapters.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Waterproof diving protective case housing for DJI Osmo Action camera",
+    specifications: [
+      { label: "Depth Rating", value: "Waterproof up to 60 meters (197 feet)" },
+      { label: "Lens Glass", value: "Flat optical tempered glass port for distortion-free underwater clarity" },
+      { label: "Latch Mechanism", value: "Secure locking latch with silicone sealing ring" },
+      { label: "Button Controls", value: "Stainless steel spring-loaded external buttons for full underwater operation" },
+      { label: "Weight", value: "Approx. 130g" },
+    ],
+    reviewUrl: "/photography-gear/dji-action-6-waterproof-case",
+    relatedPortfolioUrls: [
+      { label: "Travel & Expeditions", url: "/portfolio/travel" },
+    ],
+    ownershipStatus: "Active Marine Accessory",
+    published: true,
+
+    // Rich Template Extensions
+    tagline: "Rugged 60m submersible diving housing for extreme underwater depth and impact protection.",
+    overview:
+      "While the DJI Osmo Action 6 has native waterproofing for shallow activities, this dedicated diving housing extends safe operating depth to 60 meters (197 ft). Tempered flat optical glass preserves underwater sharpness without chromatic distortion.",
+    personalUsage:
+      "Used for scuba diving underwater documentation, mounting on boat transoms subjected to high-speed water pressure, and harsh river expedition rigging.",
+    isPersonallyVerified: true,
+    specs: [
+      { label: "Maximum Depth", value: "60 meters (197 ft)" },
+      { label: "Port Material", value: "High-transparency tempered optical glass" },
+      { label: "Buttons", value: "Corrosion-resistant stainless steel buttons" },
+      { label: "Weight", value: "Approx. 130g" },
+    ],
+    pros: [
+      "Extends dive depth rating from native surface depths to 60 meters for scuba exploration",
+      "Protects the camera chassis from sharp rocks, high-impact wave crashes, and sand scuffs",
+      "Flat optical glass port prevents underwater optical vignetting and distortion",
+      "Heavy-duty spring latch prevents accidental opening under water pressure",
+    ],
+    cons: [
+      "Muffles internal microphone audio (external audio required for dialogue)",
+      "Touchscreen operation is disabled underwater; camera is controlled via physical buttons",
+    ],
+    bestFor: [
+      "Scuba diving, deep spearfishing, and marine biology expeditions",
+      "High-pressure boat wakeboarding and wave impacts",
+      "Harsh off-road mud and silt racing where cleaning the housing is easier than the camera",
+    ],
+    situationsWhereUseful: [
+      "Coral reef diving at 20–30 meter depths",
+      "Rigging to kayak bows that pierce heavy whitewater rapids",
+      "Protecting camera from sandstorms on desert motorcycle rallies",
+    ],
+    imageOrAudioQuality:
+      "Maintains crisp edge-to-edge optical clarity through the anti-reflective tempered glass port.",
+    portabilityAndHandling:
+      "Easy latch access with anti-fog insert slots inside the housing.",
+    limitations:
+      "Blocks direct USB-C port access while sealed.",
+    whoShouldBuy:
+      "Divers, marine photographers, and extreme water sports enthusiasts pushing the Osmo Action 6 beyond surface depths.",
+    alternatives: [
+      { name: "Third-party Dive Shells", note: "Budget underwater case options." },
+    ],
+    relatedPortfolioCategory: "Travel",
+    relatedPortfolioSlug: "/portfolio/travel",
+    faqs: [
+      {
+        question: "Why do I need a waterproof case if the Osmo Action 6 is already waterproof?",
+        answer: "Native waterproofing is designed for surface water and shallow snorkeling. For deep scuba diving (beyond 18–20m) and high-impact boat water pressure, this housing is essential to protect seals and maintain pressure integrity down to 60 meters.",
+      },
+      {
+        question: "Can I operate the camera inside the case?",
+        answer: "Yes, spring-loaded stainless steel buttons allow full power, mode switching, and shutter control underwater.",
+      },
+    ],
+    retailerLinks: [
+      {
+        retailer: "DJI Official Store",
+        url: "https://store.dji.com",
+        isAffiliate: false,
+        note: "Includes anti-fog inserts.",
       },
     ],
   },

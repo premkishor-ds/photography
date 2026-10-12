@@ -105,6 +105,13 @@ async function runAudit() {
     { path: "/photography-gear/dji-mic-mini", name: "DJI Mic Mini Review" },
     { path: "/photography-gear/dji-mic-3", name: "DJI Mic 3 Alias Review" },
     { path: "/photography-gear/dijitek-520bh", name: "Dijitek 520BH Tripod Review" },
+    { path: "/photography-gear/sony-cfexpress-type-a-240gb", name: "Sony CFexpress Type A 240GB Review" },
+    { path: "/photography-gear/lexar-sl500-1tb-ssd", name: "Lexar SL500 1TB SSD Review" },
+    { path: "/photography-gear/lexar-1tb-ssd", name: "Lexar 1TB SSD Alias Review" },
+    { path: "/photography-gear/dji-action-6-nd-filters", name: "DJI Action 6 ND Filters Review" },
+    { path: "/photography-gear/dji-osmo-action-6-nd-filters", name: "DJI Action 6 ND Filters Alias Review" },
+    { path: "/photography-gear/dji-action-6-waterproof-case", name: "DJI Action 6 Waterproof Case Review" },
+    { path: "/photography-gear/dji-osmo-action-6-waterproof-case", name: "DJI Action 6 Waterproof Case Alias Review" },
     { path: "/photography-gear/comparisons/sony-200-600mm-vs-sony-100-400mm", name: "Telephoto Lens Comparison" },
     { path: "/photography-gear/comparisons/nd-filters-vs-cpl-filters", name: "Filter Comparison" },
   ];

@@ -546,11 +546,11 @@ export default function AdminGearManager() {
                     }
                     className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#D7C7B2] text-[#121212] focus:outline-none focus:border-[#121212]"
                   >
-                    <option value="camera-bodies">Camera Bodies</option>
-                    <option value="lenses">Camera Lenses</option>
-                    <option value="action-cameras">Action Cameras</option>
-                    <option value="audio">Audio Equipment</option>
-                    <option value="tripods-and-support">Tripods and Support Equipment</option>
+                    {GEAR_CATEGORIES.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
