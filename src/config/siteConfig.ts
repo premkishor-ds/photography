@@ -6,6 +6,192 @@
  * via NEXT_PUBLIC_* environment variables or runtime database settings.
  */
 
+const DAYS_LOOKUP: Record<string, string> = {
+  mon: "Monday",
+  monday: "Monday",
+  tue: "Tuesday",
+  tues: "Tuesday",
+  tuesday: "Tuesday",
+  wed: "Wednesday",
+  wednesday: "Wednesday",
+  thu: "Thursday",
+  thur: "Thursday",
+  thurs: "Thursday",
+  thursday: "Thursday",
+  fri: "Friday",
+  friday: "Friday",
+  sat: "Saturday",
+  saturday: "Saturday",
+  sun: "Sunday",
+  sunday: "Sunday",
+};
+
+const ORDERED_DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+function normalizeTime24(timeStr?: string): string {
+  if (!timeStr) return "09:30";
+  const clean = timeStr.trim();
+  const ampmMatch = clean.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  if (ampmMatch) {
+    let h = parseInt(ampmMatch[1], 10);
+    const m = ampmMatch[2];
+    const ampm = ampmMatch[3]?.toUpperCase();
+    if (ampm === "PM" && h < 12) h += 12;
+    if (ampm === "AM" && h === 12) h = 0;
+    return `${String(h).padStart(2, "0")}:${m}`;
+  }
+  return clean;
+}
+
+function expandDayRange(startDay: string, endDay: string): string[] {
+  const startNorm = DAYS_LOOKUP[startDay.toLowerCase()];
+  const endNorm = DAYS_LOOKUP[endDay.toLowerCase()];
+  if (!startNorm || !endNorm) return [startNorm || endNorm].filter(Boolean);
+  const sIdx = ORDERED_DAYS.indexOf(startNorm);
+  const eIdx = ORDERED_DAYS.indexOf(endNorm);
+  if (sIdx === -1 || eIdx === -1) return [startNorm];
+  if (sIdx <= eIdx) {
+    return ORDERED_DAYS.slice(sIdx, eIdx + 1);
+  }
+  return [startNorm, endNorm];
+}
+
+export interface OpeningHoursItem {
+  dayOfWeek: string[];
+  opens: string;
+  closes: string;
+}
+
+/**
+ * Dynamically parse any working hours summary string or JSON into Schema.org OpeningHours specification
+ */
+export function parseWorkingHoursToOpeningHours(rawString?: string): OpeningHoursItem[] {
+  if (!rawString) {
+    return [
+      {
+        dayOfWeek: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ],
+        opens: "09:30",
+        closes: "19:00",
+      },
+    ];
+  }
+
+  // If user provided valid JSON array directly
+  if (rawString.trim().startsWith("[") && rawString.trim().endsWith("]")) {
+    try {
+      const parsed = JSON.parse(rawString);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (e) {}
+  }
+
+  // Remove parenthesis/bracket notes like (Sunday by Appointment) or [Holiday: ...]
+  const cleaned = rawString.replace(/\(.*?\)/g, "").replace(/\[.*?\]/g, "").trim();
+
+  // Split segments by comma, semicolon or pipe
+  const segments = cleaned.split(/[,;|]/).map((s) => s.trim()).filter(Boolean);
+  const results: OpeningHoursItem[] = [];
+
+  for (const seg of segments) {
+    if (/closed/i.test(seg)) continue;
+
+    const colonIdx = seg.indexOf(":");
+    if (colonIdx === -1) continue;
+
+    const dayPart = seg.substring(0, colonIdx).trim();
+    const timePart = seg.substring(colonIdx + 1).trim();
+
+    const timeMatches = timePart.match(/(\d{1,2}:\d{2}(?:\s*[AP]M)?)/gi);
+    if (!timeMatches || timeMatches.length < 2) continue;
+
+    const opens = normalizeTime24(timeMatches[0]);
+    const closes = normalizeTime24(timeMatches[1]);
+
+    const rangeMatch = dayPart.match(/([a-z]+)\s*[–\-—to]+\s*([a-z]+)/i);
+    let days: string[] = [];
+    if (rangeMatch) {
+      days = expandDayRange(rangeMatch[1], rangeMatch[2]);
+    } else {
+      const singleDay = DAYS_LOOKUP[dayPart.toLowerCase()];
+      if (singleDay) days = [singleDay];
+    }
+
+    if (days.length > 0) {
+      results.push({
+        dayOfWeek: days,
+        opens,
+        closes,
+      });
+    }
+  }
+
+  if (results.length === 0) {
+    return [
+      {
+        dayOfWeek: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ],
+        opens: "09:30",
+        closes: "19:00",
+      },
+    ];
+  }
+
+  return results;
+}
+
+function getInitialOpeningHours(): OpeningHoursItem[] {
+  // 1. Explicit JSON override
+  if (process.env.NEXT_PUBLIC_OPENING_HOURS_JSON) {
+    try {
+      const parsed = JSON.parse(process.env.NEXT_PUBLIC_OPENING_HOURS_JSON);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (e) {}
+  }
+
+  // 2. Custom comma-separated days override
+  if (process.env.NEXT_PUBLIC_STUDIO_HOURS_DAYS) {
+    const days = process.env.NEXT_PUBLIC_STUDIO_HOURS_DAYS.split(",")
+      .map((d) => d.trim())
+      .map((d) => DAYS_LOOKUP[d.toLowerCase()] || d)
+      .filter(Boolean);
+    if (days.length > 0) {
+      return [
+        {
+          dayOfWeek: days,
+          opens: process.env.NEXT_PUBLIC_STUDIO_HOURS_OPEN || "09:30",
+          closes: process.env.NEXT_PUBLIC_STUDIO_HOURS_CLOSE || "19:00",
+        },
+      ];
+    }
+  }
+
+  // 3. Dynamic parse from hours summary
+  return parseWorkingHoursToOpeningHours(
+    process.env.NEXT_PUBLIC_WORKING_HOURS_SUMMARY ||
+      "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)"
+  );
+}
+
 export const siteConfig = {
   // Domain & Environment
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://yourphotography.com",
@@ -81,21 +267,8 @@ export const siteConfig = {
           "Rajasthan Destination Weddings (Udaipur, Jodhpur, Jaisalmer, Pushkar)",
           "Delhi NCR & Pan-India Commissions",
         ],
-    // Studio Operating Hours
-    openingHours: [
-      {
-        dayOfWeek: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ],
-        opens: process.env.NEXT_PUBLIC_STUDIO_HOURS_OPEN || "09:30",
-        closes: process.env.NEXT_PUBLIC_STUDIO_HOURS_CLOSE || "19:00",
-      },
-    ],
+    // Studio Operating Hours (Dynamic)
+    openingHours: getInitialOpeningHours(),
     hoursSummary:
       process.env.NEXT_PUBLIC_WORKING_HOURS_SUMMARY ||
       "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
@@ -194,6 +367,9 @@ export function getMergedSiteConfig(settings?: StudioSettingsInput) {
         hindiAddress: settings.hindi_address || siteConfig.business.address.hindiAddress,
       },
       hoursSummary: settings.working_hours || siteConfig.business.hoursSummary,
+      openingHours: settings.working_hours
+        ? parseWorkingHoursToOpeningHours(settings.working_hours)
+        : siteConfig.business.openingHours,
     },
     photographer: {
       ...siteConfig.photographer,

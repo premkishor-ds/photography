@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/siteConfig";
+import { siteConfig, getMergedSiteConfig, StudioSettingsInput } from "@/config/siteConfig";
 import { ServiceDetail } from "@/data/servicesData";
 import { FAQItem } from "@/data/faqData";
 import { BlogPost } from "@/data/blogData";
@@ -15,46 +15,47 @@ export function getAbsoluteUrl(path: string = ""): string {
 /**
  * PhotographyBusiness / LocalBusiness structured data
  */
-export function generatePhotographyBusinessSchema() {
+export function generatePhotographyBusinessSchema(customSettings?: StudioSettingsInput) {
+  const config = getMergedSiteConfig(customSettings);
   return {
     "@context": "https://schema.org",
     "@type": "PhotographyBusiness",
-    "@id": `${siteConfig.baseUrl}/#business`,
-    name: siteConfig.business.tradingName,
-    legalName: siteConfig.business.legalName,
-    url: siteConfig.baseUrl,
+    "@id": `${config.baseUrl}/#business`,
+    name: config.business.tradingName,
+    legalName: config.business.legalName,
+    url: config.baseUrl,
     logo: getAbsoluteUrl("/logo.png"),
-    image: siteConfig.defaultOgImage,
-    description: siteConfig.brandSubtitle,
-    telephone: siteConfig.business.phone,
-    email: siteConfig.business.email,
-    priceRange: siteConfig.business.priceRange,
-    currenciesAccepted: siteConfig.business.currenciesAccepted,
-    paymentAccepted: siteConfig.business.paymentAccepted,
+    image: config.defaultOgImage,
+    description: config.brandSubtitle,
+    telephone: config.business.phone,
+    email: config.business.email,
+    priceRange: config.business.priceRange,
+    currenciesAccepted: config.business.currenciesAccepted,
+    paymentAccepted: config.business.paymentAccepted,
     address: {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.business.address.streetAddress,
-      addressLocality: siteConfig.business.address.addressLocality,
-      addressRegion: siteConfig.business.address.addressRegion,
-      postalCode: siteConfig.business.address.postalCode,
-      addressCountry: siteConfig.business.address.addressCountry,
+      streetAddress: config.business.address.streetAddress,
+      addressLocality: config.business.address.addressLocality,
+      addressRegion: config.business.address.addressRegion,
+      postalCode: config.business.address.postalCode,
+      addressCountry: config.business.address.addressCountry,
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: siteConfig.business.geo.latitude,
-      longitude: siteConfig.business.geo.longitude,
+      latitude: config.business.geo.latitude,
+      longitude: config.business.geo.longitude,
     },
-    areaServed: siteConfig.business.serviceAreas.map((area) => ({
+    areaServed: config.business.serviceAreas.map((area) => ({
       "@type": "AdministrativeArea",
       name: area,
     })),
-    openingHoursSpecification: siteConfig.business.openingHours.map((hours) => ({
+    openingHoursSpecification: config.business.openingHours.map((hours) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: hours.dayOfWeek,
       opens: hours.opens,
       closes: hours.closes,
     })),
-    sameAs: Object.values(siteConfig.socialProfiles).filter(Boolean),
+    sameAs: Object.values(config.socialProfiles).filter(Boolean),
   };
 }
 
@@ -140,20 +141,21 @@ export function generateServiceSchema(service: ServiceDetail) {
 /**
  * Person (Photographer) structured data
  */
-export function generatePersonSchema() {
+export function generatePersonSchema(customSettings?: StudioSettingsInput) {
+  const config = getMergedSiteConfig(customSettings);
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    "@id": `${siteConfig.baseUrl}/#photographer`,
-    name: siteConfig.photographer.name,
-    jobTitle: siteConfig.photographer.role,
-    description: siteConfig.photographer.biography,
-    image: siteConfig.photographer.portraitUrl,
+    "@id": `${config.baseUrl}/#photographer`,
+    name: config.photographer.name,
+    jobTitle: config.photographer.role,
+    description: config.photographer.biography,
+    image: config.photographer.portraitUrl,
     worksFor: {
-      "@id": `${siteConfig.baseUrl}/#business`,
+      "@id": `${config.baseUrl}/#business`,
     },
     url: getAbsoluteUrl("/about"),
-    sameAs: Object.values(siteConfig.socialProfiles).filter(Boolean),
+    sameAs: Object.values(config.socialProfiles).filter(Boolean),
   };
 }
 
