@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Camera, ArrowUp, Mail, Phone, MapPin } from "lucide-react";
+import { Camera, ArrowUp, Mail, Phone, MapPin, Clock } from "lucide-react";
 import { InstagramIcon, FacebookIcon, PinterestIcon, YouTubeIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -190,6 +190,12 @@ export default function Footer() {
                     </p>
                   )}
                 </div>
+              </div>
+              <div className="flex items-start gap-2.5 pt-0.5">
+                <Clock className="w-3.5 h-3.5 text-[#BFA076] shrink-0 mt-0.5" />
+                <p className="text-xs text-[#FAF7F2]/75 leading-relaxed">
+                  {settings.working_hours || "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)"}
+                </p>
               </div>
             </div>
           </div>

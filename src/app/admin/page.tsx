@@ -37,6 +37,9 @@ import {
   FileText,
   Award,
   Info,
+  ChevronDown,
+  ChevronRight,
+  Check,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
@@ -104,6 +107,14 @@ interface StudioSettingsData {
   pinterest_url: string;
   five_hundred_px_url: string;
   youtube_url: string;
+}
+
+interface DayScheduleRow {
+  key: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+  name: string;
+  isOpen: boolean;
+  openTime: string;
+  closeTime: string;
 }
 
 interface Stats {
@@ -216,6 +227,27 @@ export default function AdminPage() {
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [settingsFeedback, setSettingsFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // Business Hours Management State (Google Business Profile Style)
+  const [isHoursExpanded, setIsHoursExpanded] = useState(true);
+  const [hoursHeading, setHoursHeading] = useState("Regular Studio Operating Hours");
+  const [specifyHours, setSpecifyHours] = useState(true);
+  const [daysSchedule, setDaysSchedule] = useState<DayScheduleRow[]>([
+    { key: "Mon", name: "Monday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+    { key: "Tue", name: "Tuesday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+    { key: "Wed", name: "Wednesday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+    { key: "Thu", name: "Thursday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+    { key: "Fri", name: "Friday", isOpen: true, openTime: "08:00", closeTime: "17:00" },
+    { key: "Sat", name: "Saturday", isOpen: false, openTime: "08:00", closeTime: "18:00" },
+    { key: "Sun", name: "Sunday", isOpen: false, openTime: "08:00", closeTime: "18:00" },
+  ]);
+  const [holidayHours, setHolidayHours] = useState("");
+  const [isTemporarilyClosed, setIsTemporarilyClosed] = useState(false);
+  const [tempClosedReason, setTempClosedReason] = useState("");
+  const [additionalHoursText, setAdditionalHoursText] = useState("Sunday by Appointment");
+  const [isSavingHours, setIsSavingHours] = useState(false);
+  const [hoursSavedFeedback, setHoursSavedFeedback] = useState<string | null>(null);
+  const [showManualHoursOverride, setShowManualHoursOverride] = useState(false);
 
   // Hero Image Upload
   const [uploadModeHero, setUploadModeHero] = useState<"file" | "url">("file");
@@ -500,6 +532,28 @@ export default function AdminPage() {
           ...prev,
           ...data.settings,
         }));
+
+        // Hydrate business hours from localStorage or database string
+        try {
+          const cached = localStorage.getItem("studio_business_hours_config");
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed.daysSchedule) setDaysSchedule(parsed.daysSchedule);
+            if (parsed.hoursHeading) setHoursHeading(parsed.hoursHeading);
+            if (parsed.specifyHours !== undefined) setSpecifyHours(parsed.specifyHours);
+            if (parsed.holidayHours !== undefined) setHolidayHours(parsed.holidayHours);
+            if (parsed.isTemporarilyClosed !== undefined) setIsTemporarilyClosed(parsed.isTemporarilyClosed);
+            if (parsed.tempClosedReason !== undefined) setTempClosedReason(parsed.tempClosedReason);
+            if (parsed.additionalHoursText !== undefined) setAdditionalHoursText(parsed.additionalHoursText);
+          } else if (data.settings.working_hours) {
+            const str = data.settings.working_hours;
+            if (str.includes("08:00") && str.includes("18:00")) {
+              applyHoursPreset("mockup");
+            } else if (/mon(?:day)?\s*–\s*sat(?:urday)?/i.test(str)) {
+              applyHoursPreset("jaipur");
+            }
+          }
+        } catch (e) {}
       }
     } catch (err) {
       console.error("Studio settings load failed:", err);
@@ -537,6 +591,237 @@ export default function AdminPage() {
     } finally {
       setIsSavingSettings(false);
     }
+  };
+
+  // Business Hours computation & handlers (matching Google Business Profile style)
+  const computeWorkingHoursSummary = (config: {
+    specifyHours: boolean;
+    daysSchedule: DayScheduleRow[];
+    holidayHours: string;
+    isTemporarilyClosed: boolean;
+    tempClosedReason: string;
+    additionalHoursText: string;
+  }): string => {
+    if (config.isTemporarilyClosed) {
+      return config.tempClosedReason?.trim()
+        ? `Temporarily Closed (${config.tempClosedReason.trim()})`
+        : "Temporarily Closed";
+    }
+
+    if (!config.specifyHours) {
+      return "Open 24 Hours / Available by Appointment";
+    }
+
+    const groups: {
+      startDay: string;
+      endDay: string;
+      isOpen: boolean;
+      openTime: string;
+      closeTime: string;
+    }[] = [];
+
+    for (const day of config.daysSchedule) {
+      const lastGroup = groups[groups.length - 1];
+      const isSame =
+        lastGroup &&
+        lastGroup.isOpen === day.isOpen &&
+        (!day.isOpen || (lastGroup.openTime === day.openTime && lastGroup.closeTime === day.closeTime));
+
+      if (isSame) {
+        lastGroup.endDay = day.name;
+      } else {
+        groups.push({
+          startDay: day.name,
+          endDay: day.name,
+          isOpen: day.isOpen,
+          openTime: day.openTime,
+          closeTime: day.closeTime,
+        });
+      }
+    }
+
+    const parts = groups.map((g) => {
+      const dayLabel = g.startDay === g.endDay ? g.startDay : `${g.startDay} – ${g.endDay}`;
+      if (!g.isOpen) {
+        return `${dayLabel}: Closed`;
+      }
+      return `${dayLabel}: ${g.openTime} – ${g.closeTime}`;
+    });
+
+    let result = parts.join(", ");
+    if (config.additionalHoursText && config.additionalHoursText.trim()) {
+      result += ` (${config.additionalHoursText.trim()})`;
+    }
+    if (config.holidayHours && config.holidayHours.trim()) {
+      result += ` [Holiday: ${config.holidayHours.trim()}]`;
+    }
+    return result;
+  };
+
+  const syncWorkingHours = (
+    newSchedule: DayScheduleRow[],
+    overrides?: Partial<{
+      specifyHours: boolean;
+      holidayHours: string;
+      isTemporarilyClosed: boolean;
+      tempClosedReason: string;
+      additionalHoursText: string;
+    }>
+  ) => {
+    const formatted = computeWorkingHoursSummary({
+      specifyHours: overrides?.specifyHours ?? specifyHours,
+      daysSchedule: newSchedule,
+      holidayHours: overrides?.holidayHours ?? holidayHours,
+      isTemporarilyClosed: overrides?.isTemporarilyClosed ?? isTemporarilyClosed,
+      tempClosedReason: overrides?.tempClosedReason ?? tempClosedReason,
+      additionalHoursText: overrides?.additionalHoursText ?? additionalHoursText,
+    });
+    setStudioSettings((prev) => ({ ...prev, working_hours: formatted }));
+  };
+
+  const handleDayOpenChange = (index: number, isOpen: boolean) => {
+    const updated = [...daysSchedule];
+    updated[index] = { ...updated[index], isOpen };
+    setDaysSchedule(updated);
+    syncWorkingHours(updated);
+  };
+
+  const handleDayTimeChange = (index: number, field: "openTime" | "closeTime", val: string) => {
+    const updated = [...daysSchedule];
+    updated[index] = { ...updated[index], [field]: val };
+    setDaysSchedule(updated);
+    syncWorkingHours(updated);
+  };
+
+  const handleApplyMondayToAll = () => {
+    const mon = daysSchedule[0];
+    const updated = daysSchedule.map((d) => ({
+      ...d,
+      isOpen: mon.isOpen,
+      openTime: mon.openTime,
+      closeTime: mon.closeTime,
+    }));
+    setDaysSchedule(updated);
+    syncWorkingHours(updated);
+  };
+
+  const applyHoursPreset = (type: "mockup" | "jaipur" | "corporate" | "allweek") => {
+    let updatedSchedule: DayScheduleRow[] = [];
+    let newAddText = additionalHoursText;
+    if (type === "mockup") {
+      updatedSchedule = [
+        { key: "Mon", name: "Monday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+        { key: "Tue", name: "Tuesday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+        { key: "Wed", name: "Wednesday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+        { key: "Thu", name: "Thursday", isOpen: true, openTime: "08:00", closeTime: "18:00" },
+        { key: "Fri", name: "Friday", isOpen: true, openTime: "08:00", closeTime: "17:00" },
+        { key: "Sat", name: "Saturday", isOpen: false, openTime: "08:00", closeTime: "18:00" },
+        { key: "Sun", name: "Sunday", isOpen: false, openTime: "08:00", closeTime: "18:00" },
+      ];
+    } else if (type === "jaipur") {
+      newAddText = "Sunday by Appointment";
+      updatedSchedule = [
+        { key: "Mon", name: "Monday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Tue", name: "Tuesday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Wed", name: "Wednesday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Thu", name: "Thursday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Fri", name: "Friday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Sat", name: "Saturday", isOpen: true, openTime: "09:30", closeTime: "19:00" },
+        { key: "Sun", name: "Sunday", isOpen: false, openTime: "09:30", closeTime: "19:00" },
+      ];
+    } else if (type === "corporate") {
+      newAddText = "Weekend by Appointment";
+      updatedSchedule = [
+        { key: "Mon", name: "Monday", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { key: "Tue", name: "Tuesday", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { key: "Wed", name: "Wednesday", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { key: "Thu", name: "Thursday", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { key: "Fri", name: "Friday", isOpen: true, openTime: "09:00", closeTime: "18:00" },
+        { key: "Sat", name: "Saturday", isOpen: false, openTime: "09:00", closeTime: "18:00" },
+        { key: "Sun", name: "Sunday", isOpen: false, openTime: "09:00", closeTime: "18:00" },
+      ];
+    } else if (type === "allweek") {
+      newAddText = "";
+      updatedSchedule = [
+        { key: "Mon", name: "Monday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Tue", name: "Tuesday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Wed", name: "Wednesday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Thu", name: "Thursday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Fri", name: "Friday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Sat", name: "Saturday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+        { key: "Sun", name: "Sunday", isOpen: true, openTime: "08:00", closeTime: "20:00" },
+      ];
+    }
+    setDaysSchedule(updatedSchedule);
+    setAdditionalHoursText(newAddText);
+    syncWorkingHours(updatedSchedule, { additionalHoursText: newAddText });
+  };
+
+  const handleSaveBusinessHours = async () => {
+    setIsSavingHours(true);
+    setHoursSavedFeedback(null);
+    try {
+      const formatted = computeWorkingHoursSummary({
+        specifyHours,
+        daysSchedule,
+        holidayHours,
+        isTemporarilyClosed,
+        tempClosedReason,
+        additionalHoursText,
+      });
+      const updated = { ...studioSettings, working_hours: formatted };
+      setStudioSettings(updated);
+
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setHoursSavedFeedback("Saved for 1 profile! Synchronized with Supabase.");
+        try {
+          localStorage.setItem(
+            "studio_business_hours_config",
+            JSON.stringify({
+              hoursHeading,
+              specifyHours,
+              daysSchedule,
+              holidayHours,
+              isTemporarilyClosed,
+              tempClosedReason,
+              additionalHoursText,
+            })
+          );
+        } catch (e) {}
+        setTimeout(() => setHoursSavedFeedback(null), 5000);
+      } else {
+        alert(`Save failed: ${data.error || "Unknown error"}`);
+      }
+    } catch (err: any) {
+      alert(`Save failed: ${err.message}`);
+    } finally {
+      setIsSavingHours(false);
+    }
+  };
+
+  const handleCancelHours = () => {
+    try {
+      const cached = localStorage.getItem("studio_business_hours_config");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.daysSchedule) setDaysSchedule(parsed.daysSchedule);
+        if (parsed.hoursHeading) setHoursHeading(parsed.hoursHeading);
+        if (parsed.specifyHours !== undefined) setSpecifyHours(parsed.specifyHours);
+        if (parsed.holidayHours !== undefined) setHolidayHours(parsed.holidayHours);
+        if (parsed.isTemporarilyClosed !== undefined) setIsTemporarilyClosed(parsed.isTemporarilyClosed);
+        if (parsed.tempClosedReason !== undefined) setTempClosedReason(parsed.tempClosedReason);
+        if (parsed.additionalHoursText !== undefined) setAdditionalHoursText(parsed.additionalHoursText);
+        syncWorkingHours(parsed.daysSchedule, parsed);
+        return;
+      }
+    } catch (e) {}
+    applyHoursPreset("jaipur");
   };
 
   const handleHeroUpload = async (file: File) => {
@@ -2780,15 +3065,15 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Card 3: Studio Physical Address & Operating Hours */}
+              {/* Card 3: Studio Physical Address */}
               <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
                 <div className="border-b border-[#F3ECE1] pb-3">
                   <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-[#BFA076]" />
-                    <span>Physical Studio Location & Hours</span>
+                    <span>Physical Studio Location</span>
                   </h4>
                   <p className="text-xs text-[#7B6955]">
-                    Official addresses in English and Hindi for local SEO in Jaipur, Rajasthan, and operational hours.
+                    Official addresses in English and Hindi for local SEO in Jaipur, Rajasthan.
                   </p>
                 </div>
 
@@ -2824,25 +3109,356 @@ export default function AdminPage() {
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076] resize-none"
                     />
                   </div>
-
-                  <div>
-                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
-                      Operating / Studio Working Hours
-                    </label>
-                    <input
-                      type="text"
-                      value={studioSettings.working_hours}
-                      onChange={(e) =>
-                        setStudioSettings({ ...studioSettings, working_hours: e.target.value })
-                      }
-                      placeholder="Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)"
-                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
-                    />
-                  </div>
                 </div>
               </div>
 
-              {/* Card 4: Social Media Profiles */}
+              {/* Card 4: Business Hours Management (Google Business Profile Style) */}
+              <div className="bg-white border border-[#E8DED0] shadow-xs overflow-hidden">
+                {/* Accordion Card Header */}
+                <div
+                  onClick={() => setIsHoursExpanded(!isHoursExpanded)}
+                  className="bg-[#FAF7F2]/60 px-6 py-4 border-b border-[#E8DED0] flex items-center justify-between cursor-pointer hover:bg-[#FAF7F2] transition-colors select-none"
+                >
+                  <div className="flex items-center gap-2.5">
+                    {isHoursExpanded ? (
+                      <ChevronDown className="w-4 h-4 text-[#7B6955]" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-[#7B6955]" />
+                    )}
+                    <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-[#BFA076]" />
+                      <span>Business Hours</span>
+                    </h4>
+                  </div>
+                  <span className="text-xs text-[#7B6955] font-sans">
+                    {isHoursExpanded ? "Collapse" : "Expand"}
+                  </span>
+                </div>
+
+                {isHoursExpanded && (
+                  <div>
+                    {/* Row 1: Hours Heading */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-start">
+                      <div className="md:col-span-3 space-y-0.5">
+                        <label className="text-xs font-semibold text-gray-800 block">
+                          Hours Heading
+                        </label>
+                        <span className="text-[11px] text-gray-400 font-mono block">
+                          c_hoursHeading
+                        </span>
+                      </div>
+                      <div className="md:col-span-9">
+                        <input
+                          type="text"
+                          value={hoursHeading}
+                          onChange={(e) => setHoursHeading(e.target.value)}
+                          placeholder="Click to add"
+                          className="w-full max-w-md p-2 bg-[#FAF7F2] border border-[#D7C7B2] rounded text-xs text-[#121212] placeholder-gray-400 focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 2: Hours (Day-by-Day Schedule) */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-5 border-b border-gray-100 items-start">
+                      <div className="md:col-span-3 space-y-0.5">
+                        <label className="text-xs font-semibold text-gray-800 block">
+                          Hours
+                        </label>
+                        <span className="text-[11px] text-gray-400 font-mono block">
+                          hours
+                        </span>
+                      </div>
+
+                      <div className="md:col-span-9 space-y-4">
+                        {/* Specify hours Checkbox & Presets */}
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <label className="inline-flex items-center gap-2 text-xs font-medium text-gray-800 cursor-pointer select-none">
+                            <input
+                              type="checkbox"
+                              checked={specifyHours}
+                              onChange={(e) => {
+                                setSpecifyHours(e.target.checked);
+                                syncWorkingHours(daysSchedule, { specifyHours: e.target.checked });
+                              }}
+                              className="rounded text-[#BFA076] focus:ring-[#BFA076] w-4 h-4 cursor-pointer"
+                            />
+                            <span>Specify hours</span>
+                          </label>
+
+                          {/* Quick Presets */}
+                          <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                            <span className="text-gray-400 font-sans mr-1">Presets:</span>
+                            <button
+                              type="button"
+                              onClick={() => applyHoursPreset("mockup")}
+                              className="px-2 py-0.5 bg-gray-100 hover:bg-[#E8DED0] text-gray-700 rounded text-[11px] transition-colors cursor-pointer"
+                            >
+                              Mockup (Mon–Thu 8–18, Fri 8–17)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => applyHoursPreset("jaipur")}
+                              className="px-2 py-0.5 bg-gray-100 hover:bg-[#E8DED0] text-gray-700 rounded text-[11px] transition-colors cursor-pointer"
+                            >
+                              Jaipur Standard (Mon–Sat 9:30–19:00)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => applyHoursPreset("corporate")}
+                              className="px-2 py-0.5 bg-gray-100 hover:bg-[#E8DED0] text-gray-700 rounded text-[11px] transition-colors cursor-pointer"
+                            >
+                              Corporate (Mon–Fri)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => applyHoursPreset("allweek")}
+                              className="px-2 py-0.5 bg-gray-100 hover:bg-[#E8DED0] text-gray-700 rounded text-[11px] transition-colors cursor-pointer"
+                            >
+                              7 Days Open
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Days Table (Mon-Sun) */}
+                        {specifyHours && (
+                          <div className="space-y-2.5 pt-1">
+                            {daysSchedule.map((day, idx) => (
+                              <div
+                                key={day.key}
+                                className="flex flex-wrap items-center gap-3 text-xs"
+                              >
+                                {/* Day Name */}
+                                <span className="w-10 font-medium text-gray-800">
+                                  {day.key}
+                                </span>
+
+                                {/* Open / Closed Dropdown Pill */}
+                                <div className="relative">
+                                  <select
+                                    value={day.isOpen ? "open" : "closed"}
+                                    onChange={(e) =>
+                                      handleDayOpenChange(idx, e.target.value === "open")
+                                    }
+                                    className={`appearance-none pl-3.5 pr-7 py-1 rounded-full text-xs font-medium border cursor-pointer focus:outline-none transition-colors ${
+                                      day.isOpen
+                                        ? "bg-white text-gray-800 border-gray-300 shadow-2xs hover:border-gray-400"
+                                        : "bg-gray-100 text-gray-500 border-gray-200"
+                                    }`}
+                                  >
+                                    <option value="open">Open</option>
+                                    <option value="closed">Closed</option>
+                                  </select>
+                                  <ChevronDown className="w-3 h-3 text-gray-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                </div>
+
+                                {/* Start & End Time Inputs */}
+                                {day.isOpen ? (
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="time"
+                                      value={day.openTime}
+                                      onChange={(e) =>
+                                        handleDayTimeChange(idx, "openTime", e.target.value)
+                                      }
+                                      className="px-2.5 py-1 bg-white border border-gray-300 rounded-md font-mono text-xs text-center text-gray-800 focus:outline-none focus:border-[#BFA076] shadow-2xs"
+                                    />
+                                    <span className="text-gray-500 font-sans text-xs">to</span>
+                                    <input
+                                      type="time"
+                                      value={day.closeTime}
+                                      onChange={(e) =>
+                                        handleDayTimeChange(idx, "closeTime", e.target.value)
+                                      }
+                                      className="px-2.5 py-1 bg-white border border-gray-300 rounded-md font-mono text-xs text-center text-gray-800 focus:outline-none focus:border-[#BFA076] shadow-2xs"
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <div className="px-3.5 py-1 bg-gray-100/90 border border-gray-200 rounded-md font-mono text-xs text-gray-400 select-none">
+                                      — : —
+                                    </div>
+                                    <span className="text-gray-400 font-sans text-xs">to</span>
+                                    <div className="px-3.5 py-1 bg-gray-100/90 border border-gray-200 rounded-md font-mono text-xs text-gray-400 select-none">
+                                      — : —
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Apply to All link on Monday */}
+                                {day.key === "Mon" && (
+                                  <button
+                                    type="button"
+                                    onClick={handleApplyMondayToAll}
+                                    className="text-xs text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-0.5 ml-2 cursor-pointer font-medium"
+                                  >
+                                    ↓ Apply to All
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Action buttons below table */}
+                        <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+                          <button
+                            type="button"
+                            onClick={handleSaveBusinessHours}
+                            disabled={isSavingHours}
+                            className="px-4 py-1.5 rounded-full text-xs font-medium bg-[#E8DED0] hover:bg-[#BFA076] hover:text-white text-gray-800 transition-all cursor-pointer shadow-2xs disabled:opacity-50 flex items-center gap-1.5"
+                          >
+                            {isSavingHours ? (
+                              "Saving to Supabase..."
+                            ) : hoursSavedFeedback ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>{hoursSavedFeedback}</span>
+                              </>
+                            ) : (
+                              "Save for 1 profile"
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCancelHours}
+                            className="text-xs text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Holiday Hours */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-start">
+                      <div className="md:col-span-3 space-y-0.5">
+                        <label className="text-xs font-semibold text-gray-800 block">
+                          Hours (Holiday Hours)
+                        </label>
+                        <span className="text-[11px] text-gray-400 font-mono block">
+                          hours
+                        </span>
+                      </div>
+                      <div className="md:col-span-9">
+                        <input
+                          type="text"
+                          value={holidayHours}
+                          onChange={(e) => {
+                            setHolidayHours(e.target.value);
+                            syncWorkingHours(daysSchedule, { holidayHours: e.target.value });
+                          }}
+                          placeholder="Click to add (e.g. Closed on Diwali, Holi & National Holidays)"
+                          className="w-full max-w-md p-2 bg-[#FAF7F2] border border-[#D7C7B2] rounded text-xs text-[#121212] placeholder-gray-400 focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 4: Temporarily Closed */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-start">
+                      <div className="md:col-span-3 space-y-0.5">
+                        <label className="text-xs font-semibold text-gray-800 block">
+                          Hours (Temporarily Closed)
+                        </label>
+                        <span className="text-[11px] text-gray-400 font-mono block">
+                          hours
+                        </span>
+                      </div>
+                      <div className="md:col-span-9 space-y-2">
+                        <label className="inline-flex items-center gap-2 text-xs font-medium text-gray-800 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={isTemporarilyClosed}
+                            onChange={(e) => {
+                              setIsTemporarilyClosed(e.target.checked);
+                              syncWorkingHours(daysSchedule, { isTemporarilyClosed: e.target.checked });
+                            }}
+                            className="rounded text-amber-600 focus:ring-amber-500 w-4 h-4 cursor-pointer"
+                          />
+                          <span className={isTemporarilyClosed ? "font-semibold text-amber-800" : "text-gray-600"}>
+                            {isTemporarilyClosed ? "Studio marked as Temporarily Closed" : "Click to mark as Temporarily Closed"}
+                          </span>
+                        </label>
+                        {isTemporarilyClosed && (
+                          <input
+                            type="text"
+                            value={tempClosedReason}
+                            onChange={(e) => {
+                              setTempClosedReason(e.target.value);
+                              syncWorkingHours(daysSchedule, { tempClosedReason: e.target.value });
+                            }}
+                            placeholder="Reason (e.g. On-location royal wedding assignment in Udaipur)"
+                            className="w-full max-w-md p-2 bg-[#FAF7F2] border border-amber-300 rounded text-xs text-[#121212] focus:outline-none"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Row 5: Additional Hours Text */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-start">
+                      <div className="md:col-span-3 space-y-0.5">
+                        <label className="text-xs font-semibold text-gray-800 block">
+                          Additional Hours Text
+                        </label>
+                        <span className="text-[11px] text-gray-400 font-mono block">
+                          additionalHoursText
+                        </span>
+                      </div>
+                      <div className="md:col-span-9">
+                        <input
+                          type="text"
+                          value={additionalHoursText}
+                          onChange={(e) => {
+                            setAdditionalHoursText(e.target.value);
+                            syncWorkingHours(daysSchedule, { additionalHoursText: e.target.value });
+                          }}
+                          placeholder="Click to add (e.g. Sunday by Appointment • 24/7 on call for destination shoots)"
+                          className="w-full max-w-md p-2 bg-[#FAF7F2] border border-[#D7C7B2] rounded text-xs text-[#121212] placeholder-gray-400 focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Live Preview & Direct Override Footer */}
+                    <div className="bg-[#FAF7F2]/80 px-6 py-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-semibold flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-[#BFA076]" />
+                            <span>Live Working Hours String (Public Facing & Schema)</span>
+                          </p>
+                          <p className="text-xs text-[#121212] font-medium font-sans mt-0.5">
+                            {studioSettings.working_hours}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowManualHoursOverride(!showManualHoursOverride)}
+                          className="text-[11px] text-[#7B6955] hover:text-[#121212] underline cursor-pointer text-left sm:text-right"
+                        >
+                          {showManualHoursOverride ? "Hide raw text edit" : "Edit raw string directly"}
+                        </button>
+                      </div>
+
+                      {showManualHoursOverride && (
+                        <div className="mt-3 pt-3 border-t border-[#E8DED0]">
+                          <label className="block text-[11px] text-[#7B6955] mb-1 font-medium">
+                            Manual Raw Override:
+                          </label>
+                          <input
+                            type="text"
+                            value={studioSettings.working_hours}
+                            onChange={(e) =>
+                              setStudioSettings({ ...studioSettings, working_hours: e.target.value })
+                            }
+                            className="w-full p-2 bg-white border border-[#D7C7B2] text-xs font-mono text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Card 5: Social Media Profiles */}
               <div className="bg-white p-6 sm:p-8 border border-[#E8DED0] space-y-6 shadow-xs">
                 <div className="border-b border-[#F3ECE1] pb-3">
                   <h4 className="font-serif text-lg text-[#121212] flex items-center gap-2">
