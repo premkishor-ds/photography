@@ -54,6 +54,10 @@ interface Inquiry {
   phone: string;
   service: string;
   preferred_date: string;
+  appointment_time?: string;
+  duration_minutes?: number;
+  blocked_start_time?: string;
+  blocked_end_time?: string;
   message: string;
   status: "new" | "contacted" | "confirmed" | "completed" | "cancelled";
   notes?: string;
@@ -78,6 +82,9 @@ interface ServiceItem {
   description?: string;
   image_url: string;
   duration?: string;
+  min_duration_minutes?: number;
+  duration_type?: "selectable" | "fixed";
+  supported_durations?: number[];
   delivery_time?: string;
   starting_price_inr?: number;
   deliverables?: string[];
@@ -115,6 +122,7 @@ interface StudioSettingsData {
   booking_retainer_percent?: string;
   governing_jurisdiction?: string;
   cancellation_policy?: string;
+  default_min_booking_duration?: number;
 }
 
 interface DayScheduleRow {
@@ -155,6 +163,20 @@ export default function AdminPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [inquiryFilter, setInquiryFilter] = useState<string>("all");
   const [inquirySearch, setInquirySearch] = useState("");
+  const [isCreateAppointmentOpen, setIsCreateAppointmentOpen] = useState(false);
+  const [isCreatingAppointment, setIsCreatingAppointment] = useState(false);
+  const [appointmentFeedback, setAppointmentFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [newAppointment, setNewAppointment] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "Portrait Photography",
+    preferredDate: new Date().toISOString().split("T")[0],
+    appointmentTime: "10:00",
+    durationMinutes: 60,
+    message: "Admin-created appointment",
+    status: "confirmed" as "new" | "contacted" | "confirmed" | "completed" | "cancelled",
+  });
 
   // Portfolio
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
@@ -196,6 +218,9 @@ export default function AdminPage() {
     image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
     deliverablesText: "High-resolution edited digital photographs\nOnline private gallery delivery with download access\nFull personal printing rights and social sharing permissions",
     ideal_for: "",
+    min_duration_minutes: 60,
+    duration_type: "selectable" as "selectable" | "fixed",
+    supported_durations: [60, 120, 180, 240],
   });
   const [uploadModeServiceNew, setUploadModeServiceNew] = useState<"file" | "url">("file");
   const [isUploadingServiceNew, setIsUploadingServiceNew] = useState(false);
@@ -396,6 +421,60 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error("Delete failed:", err);
+    }
+  };
+
+  const handleCreateAppointment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newAppointment.durationMinutes < 60) {
+      setAppointmentFeedback({
+        type: "error",
+        message: "Mandatory minimum booking duration is 60 minutes. Shorter bookings are prohibited.",
+      });
+      return;
+    }
+
+    setIsCreatingAppointment(true);
+    setAppointmentFeedback(null);
+    try {
+      const res = await fetch("/api/admin/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newAppointment),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setAppointmentFeedback({
+          type: "success",
+          message: `Appointment reserved for ${newAppointment.name}! Travel buffer protected (${data.inquiry?.blocked_start_time || "1h before"} – ${data.inquiry?.blocked_end_time || "1h after"}).`,
+        });
+        setIsCreateAppointmentOpen(false);
+        setNewAppointment({
+          name: "",
+          email: "",
+          phone: "",
+          service: "Portrait Photography",
+          preferredDate: new Date().toISOString().split("T")[0],
+          appointmentTime: "10:00",
+          durationMinutes: 60,
+          message: "Admin-created appointment",
+          status: "confirmed",
+        });
+        fetchInquiries();
+        fetchStats();
+      } else {
+        setAppointmentFeedback({
+          type: "error",
+          message: data.error || "Failed to create appointment.",
+        });
+      }
+    } catch (err: any) {
+      setAppointmentFeedback({
+        type: "error",
+        message: `Error creating appointment: ${err.message}`,
+      });
+    } finally {
+      setIsCreatingAppointment(false);
     }
   };
 
@@ -947,6 +1026,9 @@ export default function AdminPage() {
           image_url: newService.image_url,
           deliverables: deliverablesArr,
           ideal_for: newService.ideal_for,
+          min_duration_minutes: Math.max(60, Number(newService.min_duration_minutes) || 60),
+          duration_type: newService.duration_type || "selectable",
+          supported_durations: newService.supported_durations || [60, 120, 180, 240],
         }),
       });
       const data = await res.json();
@@ -962,6 +1044,9 @@ export default function AdminPage() {
           image_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
           deliverablesText: "High-resolution edited digital photographs\nOnline private gallery delivery with download access\nFull personal printing rights and social sharing permissions",
           ideal_for: "",
+          min_duration_minutes: 60,
+          duration_type: "selectable",
+          supported_durations: [60, 120, 180, 240],
         });
         fetchServices();
         fetchStats();
@@ -994,7 +1079,10 @@ export default function AdminPage() {
       const res = await fetch("/api/admin/services", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingService),
+        body: JSON.stringify({
+          ...editingService,
+          min_duration_minutes: Math.max(60, Number(editingService.min_duration_minutes) || 60),
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -1325,8 +1413,8 @@ export default function AdminPage() {
         {activeTab === "inquiries" && (
           <div className="space-y-6">
             {/* Filter and Search Bar */}
-            <div className="bg-white p-4 border border-[#E8DED0] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+            <div className="bg-white p-4 border border-[#E8DED0] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
                 {["all", "new", "contacted", "confirmed", "completed"].map((st) => (
                   <button
                     key={st}
@@ -1345,18 +1433,54 @@ export default function AdminPage() {
                 ))}
               </div>
 
-              <div className="relative w-full sm:w-72">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#7B6955]" />
-                <input
-                  type="text"
-                  value={inquirySearch}
-                  onChange={(e) => setInquirySearch(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && fetchInquiries()}
-                  placeholder="Search name, phone, email..."
-                  className="w-full pl-9 pr-3 py-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:bg-white"
-                />
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 md:w-64">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#7B6955]" />
+                  <input
+                    type="text"
+                    value={inquirySearch}
+                    onChange={(e) => setInquirySearch(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && fetchInquiries()}
+                    placeholder="Search name, phone, email..."
+                    className="w-full pl-9 pr-3 py-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:bg-white"
+                  />
+                </div>
+
+                <button
+                  onClick={() => setIsCreateAppointmentOpen(true)}
+                  className="px-3.5 py-2 bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] text-xs uppercase tracking-wider flex items-center gap-1.5 shrink-0 font-medium cursor-pointer shadow-xs"
+                >
+                  <Plus className="w-3.5 h-3.5 text-[#BFA076]" />
+                  <span>+ Create Appointment</span>
+                </button>
               </div>
             </div>
+
+            {/* Appointment Feedback Banner */}
+            {appointmentFeedback && (
+              <div
+                className={`p-3.5 text-xs flex items-center justify-between border ${
+                  appointmentFeedback.type === "success"
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : "bg-red-50 text-red-800 border-red-200"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {appointmentFeedback.type === "success" ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                  )}
+                  <span className="font-medium">{appointmentFeedback.message}</span>
+                </div>
+                <button
+                  onClick={() => setAppointmentFeedback(null)}
+                  className="text-xs hover:underline cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
 
             {/* Inquiries Table / Cards */}
             {inquiries.length === 0 ? (
@@ -1444,8 +1568,21 @@ export default function AdminPage() {
                           <p className="font-medium text-[#121212]">{inq.service}</p>
                           <p className="text-[#554837] flex items-center gap-1">
                             <Calendar className="w-3 h-3 text-[#BFA076]" />
-                            {inq.preferred_date}
+                            <span>{inq.preferred_date}</span>
                           </p>
+                          {inq.appointment_time && (
+                            <p className="text-[#121212] font-semibold flex items-center gap-1 pt-0.5">
+                              <Clock className="w-3 h-3 text-[#BFA076]" />
+                              <span>
+                                {inq.appointment_time} ({(inq.duration_minutes || 60) / 60}h session)
+                              </span>
+                            </p>
+                          )}
+                          {inq.blocked_start_time && inq.blocked_end_time && (
+                            <p className="text-[10px] font-mono text-[#7B6955] bg-[#FAF7F2] px-2 py-0.5 border border-[#E8DED0] inline-block mt-1">
+                              🛡️ Travel Buffer: {inq.blocked_start_time} – {inq.blocked_end_time}
+                            </p>
+                          )}
                         </div>
 
                         <div className="space-y-1">
@@ -1496,6 +1633,196 @@ export default function AdminPage() {
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {/* CREATE APPOINTMENT MODAL */}
+            {isCreateAppointmentOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
+                <div className="bg-white border border-[#E8DED0] max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl my-8">
+                  <div className="flex items-center justify-between border-b border-[#F3ECE1] pb-3">
+                    <h4 className="font-serif text-2xl text-[#121212] flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-[#BFA076]" />
+                      <span>Create Studio Appointment</span>
+                    </h4>
+                    <button
+                      onClick={() => setIsCreateAppointmentOpen(false)}
+                      className="text-xs text-[#7B6955] hover:text-[#121212] px-2 py-1 font-bold cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div className="p-3 bg-[#FAF7F2] border border-[#E8DED0] text-xs text-[#554837] space-y-1">
+                    <div className="flex items-center gap-1.5 font-semibold text-[#121212]">
+                      <ShieldCheck className="w-4 h-4 text-[#BFA076]" />
+                      <span>Automatic Travel Buffer Protection</span>
+                    </div>
+                    <p>
+                      Minimum duration is <strong>60 minutes (1 hour)</strong>. Appointments shorter than 60m are strictly blocked. 1 hour before and 1 hour after will be reserved for travel.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleCreateAppointment} className="space-y-4 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Client Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={newAppointment.name}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, name: e.target.value })}
+                          placeholder="e.g. Aditi Rao"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Client Email *
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={newAppointment.email}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, email: e.target.value })}
+                          placeholder="aditi@example.com"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          required
+                          value={newAppointment.phone}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, phone: e.target.value })}
+                          placeholder="+91 98290 12345"
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Photography Service *
+                        </label>
+                        <select
+                          value={newAppointment.service}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, service: e.target.value })}
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        >
+                          {services.map((s) => (
+                            <option key={s.id} value={s.title}>
+                              {s.title}
+                            </option>
+                          ))}
+                          <option value="Custom Photography Session">Custom Photography Session</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Session Date *
+                        </label>
+                        <input
+                          type="date"
+                          required
+                          value={newAppointment.preferredDate}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, preferredDate: e.target.value })}
+                          className="w-full p-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Start Time *
+                        </label>
+                        <input
+                          type="time"
+                          required
+                          value={newAppointment.appointmentTime}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, appointmentTime: e.target.value })}
+                          className="w-full p-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Duration (Min 60m) *
+                        </label>
+                        <select
+                          value={newAppointment.durationMinutes}
+                          onChange={(e) => setNewAppointment({ ...newAppointment, durationMinutes: Math.max(60, Number(e.target.value)) })}
+                          className="w-full p-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        >
+                          <option value={60}>60 min (1 Hour - Min)</option>
+                          <option value={120}>120 min (2 Hours)</option>
+                          <option value={180}>180 min (3 Hours)</option>
+                          <option value={240}>240 min (4 Hours)</option>
+                          <option value={300}>300 min (5 Hours)</option>
+                          <option value={360}>360 min (6 Hours)</option>
+                          <option value={480}>480 min (8 Hours)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Travel Buffer Notice */}
+                    <div className="p-2.5 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-xs">
+                      <strong>Buffer Math:</strong>
+                      <p className="mt-0.5 font-mono text-[11px]">
+                        Start - 60m ➔ Start + {newAppointment.durationMinutes}m + 60m
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                        Internal Session Notes
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={newAppointment.message}
+                        onChange={(e) => setNewAppointment({ ...newAppointment, message: e.target.value })}
+                        className="w-full p-2 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] resize-none focus:outline-none focus:border-[#BFA076]"
+                      />
+                    </div>
+
+                    <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#F3ECE1]">
+                      <button
+                        type="button"
+                        onClick={() => setIsCreateAppointmentOpen(false)}
+                        className="px-4 py-2 border border-[#D7C7B2] text-[#554837] hover:bg-[#FAF7F2] text-xs uppercase tracking-wider cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isCreatingAppointment}
+                        className="px-5 py-2 bg-[#121212] text-white hover:bg-[#2C2C2C] disabled:bg-gray-400 text-xs uppercase tracking-wider font-medium cursor-pointer flex items-center gap-2"
+                      >
+                        {isCreatingAppointment ? (
+                          <>
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <span>Validating &amp; Creating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#BFA076]" />
+                            <span>Create Appointment</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             )}
           </div>
@@ -2422,6 +2749,53 @@ export default function AdminPage() {
                       </div>
                     </div>
 
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Min Booking Duration (Minutes, Min 60) *
+                        </label>
+                        <input
+                          type="number"
+                          min={60}
+                          step={30}
+                          required
+                          value={newService.min_duration_minutes}
+                          onChange={(e) =>
+                            setNewService({
+                              ...newService,
+                              min_duration_minutes: Math.max(60, Number(e.target.value) || 60),
+                            })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                        <p className="text-[10px] text-[#7B6955] mt-1">
+                          Mandatory minimum is 60 minutes (1 hour).
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Duration Configuration *
+                        </label>
+                        <select
+                          value={newService.duration_type}
+                          onChange={(e) =>
+                            setNewService({
+                              ...newService,
+                              duration_type: e.target.value as "selectable" | "fixed",
+                            })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        >
+                          <option value="selectable">Selectable (Customer chooses 1h, 2h, 3h, etc.)</option>
+                          <option value="fixed">Fixed Duration (Customer cannot change)</option>
+                        </select>
+                        <p className="text-[10px] text-[#7B6955] mt-1">
+                          {newService.duration_type === "fixed" ? "Locks session to exact duration." : "Customers pick from valid duration options."}
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Image Asset Picker */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -2659,6 +3033,53 @@ export default function AdminPage() {
                           }
                           className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                         />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Min Duration (Minutes, Min 60) *
+                        </label>
+                        <input
+                          type="number"
+                          min={60}
+                          step={30}
+                          required
+                          value={editingService.min_duration_minutes || 60}
+                          onChange={(e) =>
+                            setEditingService({
+                              ...editingService,
+                              min_duration_minutes: Math.max(60, Number(e.target.value) || 60),
+                            })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        />
+                        <p className="text-[10px] text-[#7B6955] mt-1">
+                          Mandatory minimum is 60 minutes. Shorter values are not permitted.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                          Duration Configuration *
+                        </label>
+                        <select
+                          value={editingService.duration_type || "selectable"}
+                          onChange={(e) =>
+                            setEditingService({
+                              ...editingService,
+                              duration_type: e.target.value as "selectable" | "fixed",
+                            })
+                          }
+                          className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                        >
+                          <option value="selectable">Selectable (Customer chooses 1h, 2h, 3h, etc.)</option>
+                          <option value="fixed">Fixed Duration (Customer cannot change)</option>
+                        </select>
+                        <p className="text-[10px] text-[#7B6955] mt-1">
+                          {editingService.duration_type === "fixed" ? "Locks session to exact duration." : "Customers pick from valid duration options."}
+                        </p>
                       </div>
                     </div>
 
@@ -3628,6 +4049,28 @@ export default function AdminPage() {
                       placeholder="e.g. 30–50% or 50%"
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
                     />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block uppercase tracking-wider text-[#7B6955] mb-1 font-medium">
+                      Default Minimum Booking Duration (Minutes, Min 60)
+                    </label>
+                    <input
+                      type="number"
+                      min={60}
+                      step={30}
+                      value={studioSettings.default_min_booking_duration || 60}
+                      onChange={(e) =>
+                        setStudioSettings({
+                          ...studioSettings,
+                          default_min_booking_duration: Math.max(60, Number(e.target.value) || 60),
+                        })
+                      }
+                      className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
+                    />
+                    <p className="text-[10px] text-[#7B6955] mt-1">
+                      System-wide minimum duration is strictly 60 minutes (1 hour). Custom service minimums can be longer, but never below 60 minutes.
+                    </p>
                   </div>
 
                   <div className="sm:col-span-2">

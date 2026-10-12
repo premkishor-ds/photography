@@ -200,7 +200,9 @@ async function runAudit() {
         email: "eleanor.vance@example.com",
         phone: "+1 (555) 890-1234",
         service: "Sports Photography",
-        preferredDate: "2026-11-20",
+        preferredDate: `2027-11-${Math.floor(Math.random() * 15 + 10)}`,
+        appointmentTime: "10:00",
+        durationMinutes: 60,
         message: "Inquiring about tournament athletics coverage in New York.",
         website_url: "",
       }),
@@ -210,6 +212,17 @@ async function runAudit() {
       validRes.status === 200 && validData.success === true,
       "API successfully accepts valid inquiry and returns structured confirmation"
     );
+
+    // Clean up test entry
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://qvzvnblosedrqktisdsz.supabase.co";
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable__ios76DkRwhZ9FWMyUr07Q_5a-JQx1d";
+    await fetch(`${supabaseUrl}/rest/v1/inquiries?email=eq.eleanor.vance%40example.com`, {
+      method: "DELETE",
+      headers: {
+        "apikey": supabaseAnonKey,
+        "Authorization": `Bearer ${supabaseAnonKey}`,
+      },
+    }).catch(() => {});
   } catch (err) {
     assert(false, `Contact API test failed: ${err.message}`);
   }

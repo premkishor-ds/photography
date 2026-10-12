@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Languages, Check, Globe } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Globe, ChevronDown, Check } from "lucide-react";
 import { useLanguage, Language } from "@/context/LanguageContext";
 
 interface LanguageSwitcherProps {
@@ -17,6 +17,22 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   const handleSelect = (lang: Language) => {
     if (lang !== language) {
@@ -101,42 +117,49 @@ export default function LanguageSwitcher({
     );
   }
 
-  // Default Desktop Header variant
+  // Default Desktop Header variant - aligned with CTA button height & baseline
   return (
-    <div className="relative inline-block text-left">
+    <div ref={dropdownRef} className="relative inline-block text-left shrink-0">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 text-xs uppercase tracking-wider font-medium transition-colors cursor-pointer border ${
+        className={`h-9 px-3 text-[11px] xl:text-xs uppercase tracking-wider font-medium transition-all duration-200 cursor-pointer border flex items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap ${
           isDarkHeader
-            ? "border-[#E8DED0] text-[#121212] bg-[#FAF7F2]/80 hover:bg-white"
-            : "border-white/30 text-white bg-black/30 hover:bg-black/50"
+            ? "border-[#D8CFC4] text-[#121212] bg-[#FAF7F2]/80 hover:bg-[#FAF7F2] hover:border-[#121212]"
+            : "border-white/30 text-white bg-black/30 hover:bg-black/50 hover:border-white/60 backdrop-blur-sm"
         }`}
         aria-haspopup="true"
         aria-expanded={isOpen}
         aria-label="Language selection / भाषा चुनें"
       >
-        <Languages className="w-3.5 h-3.5" />
-        <span>{language === "hi" ? "हिन्दी (HI)" : "English (EN)"}</span>
-        <span className="text-[9px] opacity-70">▼</span>
+        <Globe className="w-3.5 h-3.5 text-[#BFA076] shrink-0" />
+        <span className="font-sans font-medium tracking-wider">
+          <span className="hidden xl:inline">{language === "hi" ? "हिन्दी" : "English"}</span>
+          <span className="xl:hidden">{language === "hi" ? "HI" : "EN"}</span>
+        </span>
+        <ChevronDown
+          className={`w-3 h-3 opacity-60 transition-transform duration-200 shrink-0 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-40 bg-[#FAF7F2] border border-[#E8DED0] shadow-xl z-50 py-1 focus:outline-none">
+        <div className="absolute right-0 mt-1.5 w-44 bg-[#FAF7F2] border border-[#E8DED0] shadow-2xl py-1 z-50 focus:outline-none backdrop-blur-md animate-in fade-in slide-in-from-top-1 duration-150">
           <button
             type="button"
             onClick={() => handleSelect("en")}
-            className="w-full text-left px-3 py-2 text-xs uppercase tracking-wider flex items-center justify-between text-[#121212] hover:bg-[#F3ECE1] cursor-pointer"
+            className="w-full text-left px-3.5 py-2 text-xs uppercase tracking-wider flex items-center justify-between text-[#121212] hover:bg-[#F3ECE1] cursor-pointer transition-colors"
           >
             <span className={language === "en" ? "font-semibold text-[#121212]" : "text-[#554837]"}>
-              English (Default)
+              English (EN)
             </span>
             {language === "en" && <Check className="w-3.5 h-3.5 text-[#7B6955]" />}
           </button>
           <button
             type="button"
             onClick={() => handleSelect("hi")}
-            className="w-full text-left px-3 py-2 text-xs tracking-wider flex items-center justify-between text-[#121212] hover:bg-[#F3ECE1] cursor-pointer"
+            className="w-full text-left px-3.5 py-2 text-xs tracking-wider flex items-center justify-between text-[#121212] hover:bg-[#F3ECE1] cursor-pointer transition-colors"
           >
             <span className={language === "hi" ? "font-semibold text-[#121212]" : "text-[#554837]"}>
               हिन्दी (Hindi)

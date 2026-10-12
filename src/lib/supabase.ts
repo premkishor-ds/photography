@@ -115,7 +115,7 @@ export async function fetchServices(): Promise<ServiceItem[]> {
   }
 }
 
-// Insert new inquiry into Supabase
+// Insert new inquiry into Supabase with duration & travel buffers
 export async function insertInquiry(inquiryData: {
   name: string;
   email: string;
@@ -123,8 +123,30 @@ export async function insertInquiry(inquiryData: {
   service: string;
   preferredDate: string;
   message: string;
+  appointmentTime?: string;
+  durationMinutes?: number;
+  blockedStartTime?: string;
+  blockedEndTime?: string;
+  serviceId?: string;
 }): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
+    const duration = Math.max(60, inquiryData.durationMinutes || 60);
+    const appointmentTime = inquiryData.appointmentTime || "10:00";
+
+    // Auto-compute travel buffers if not explicitly supplied
+    let blockedStart = inquiryData.blockedStartTime;
+    let blockedEnd = inquiryData.blockedEndTime;
+    if (!blockedStart || !blockedEnd) {
+      const parts = appointmentTime.split(":");
+      const startM = (parseInt(parts[0], 10) || 10) * 60 + (parseInt(parts[1], 10) || 0);
+      const bStartM = Math.max(0, startM - 60);
+      const bEndM = Math.min(24 * 60, startM + duration + 60);
+      const toStr = (m: number) =>
+        `${Math.floor(m / 60).toString().padStart(2, "0")}:${(m % 60).toString().padStart(2, "0")}`;
+      blockedStart = toStr(bStartM);
+      blockedEnd = toStr(bEndM);
+    }
+
     const { data, error } = await supabase
       .from("inquiries")
       .insert([
@@ -134,6 +156,11 @@ export async function insertInquiry(inquiryData: {
           phone: inquiryData.phone,
           service: inquiryData.service,
           preferred_date: inquiryData.preferredDate,
+          appointment_time: appointmentTime,
+          duration_minutes: duration,
+          blocked_start_time: blockedStart,
+          blocked_end_time: blockedEnd,
+          service_id: inquiryData.serviceId || null,
           message: inquiryData.message,
           status: "new",
         },

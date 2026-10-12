@@ -56,6 +56,7 @@ export async function PUT(req: NextRequest) {
       booking_retainer_percent: body.booking_retainer_percent ?? "30–50%",
       governing_jurisdiction: body.governing_jurisdiction ?? "Jaipur, Rajasthan, India",
       cancellation_policy: body.cancellation_policy ?? "",
+      default_min_booking_duration: body.default_min_booking_duration ? Math.max(60, Number(body.default_min_booking_duration)) : 60,
       updated_at: new Date().toISOString(),
     };
 

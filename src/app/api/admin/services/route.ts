@@ -33,11 +33,20 @@ export async function POST(req: NextRequest) {
       delivery_time,
       deliverables,
       ideal_for,
+      min_duration_minutes,
+      duration_type,
+      supported_durations,
     } = body;
 
     if (!title) {
       return NextResponse.json({ success: false, error: "Service title is required" }, { status: 400 });
     }
+
+    const minDur = min_duration_minutes ? Math.max(60, Number(min_duration_minutes)) : 60;
+    const durType = duration_type === "fixed" ? "fixed" : "selectable";
+    const suppDur = Array.isArray(supported_durations) && supported_durations.length > 0
+      ? supported_durations.map((d: any) => Math.max(60, Number(d))).filter((d: number) => d >= minDur)
+      : [60, 120, 180, 240];
 
     const cleanId = `${title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")}-service-${Date.now().toString().slice(-4)}`;
 
@@ -51,10 +60,13 @@ export async function POST(req: NextRequest) {
           description: description || "",
           image_url: image_url || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
           starting_price_inr: starting_price_inr ? Number(starting_price_inr) : 25000,
-          duration: duration || "2 Hours",
+          duration: duration || `${minDur / 60} Hours`,
           delivery_time: delivery_time || "7 business days",
           deliverables: Array.isArray(deliverables) ? deliverables : [],
           ideal_for: ideal_for || "",
+          min_duration_minutes: minDur,
+          duration_type: durType,
+          supported_durations: suppDur,
           order_index: Date.now() % 1000,
         },
       ])
@@ -85,6 +97,9 @@ export async function PUT(req: NextRequest) {
       delivery_time,
       deliverables,
       ideal_for,
+      min_duration_minutes,
+      duration_type,
+      supported_durations,
     } = body;
 
     if (!id) {
@@ -101,6 +116,33 @@ export async function PUT(req: NextRequest) {
     if (delivery_time !== undefined) updates.delivery_time = delivery_time;
     if (deliverables !== undefined) updates.deliverables = Array.isArray(deliverables) ? deliverables : [];
     if (ideal_for !== undefined) updates.ideal_for = ideal_for;
+
+    if (min_duration_minutes !== undefined) {
+      const minD = Number(min_duration_minutes);
+      if (minD < 60) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Service minimum booking duration cannot fall below 60 minutes (1 hour).",
+          },
+          { status: 400 }
+        );
+      }
+      updates.min_duration_minutes = minD;
+    }
+
+    if (duration_type !== undefined) {
+      updates.duration_type = duration_type === "fixed" ? "fixed" : "selectable";
+    }
+
+    if (supported_durations !== undefined) {
+      if (Array.isArray(supported_durations)) {
+        const clean = supported_durations
+          .map((d: any) => Number(d))
+          .filter((d: number) => !isNaN(d) && d >= 60);
+        updates.supported_durations = clean.length > 0 ? clean : [60, 120, 180, 240];
+      }
+    }
 
     const { data, error } = await supabase
       .from("services")

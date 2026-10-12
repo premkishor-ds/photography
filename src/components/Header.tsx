@@ -52,12 +52,12 @@ export default function Header() {
           : "bg-gradient-to-b from-black/60 via-black/30 to-transparent py-6"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between gap-4 xl:gap-8">
         {/* Logo */}
         <Link
           href="/"
           onClick={() => handleLinkClick("/")}
-          className="group flex items-center gap-3 transition-opacity duration-200"
+          className="group flex items-center gap-3 shrink-0 transition-opacity duration-200"
           aria-label={`${settings.studio_name || "Your Photography"} - Home`}
         >
           <div
@@ -71,14 +71,14 @@ export default function Header() {
           </div>
           <div className="flex flex-col">
             <span
-              className={`font-serif text-xl tracking-[0.2em] uppercase font-medium transition-colors duration-300 ${
+              className={`font-serif text-lg xl:text-xl tracking-[0.18em] xl:tracking-[0.2em] uppercase font-medium transition-colors duration-300 leading-tight ${
                 isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
               }`}
             >
               {settings.studio_name || "Your Photography"}
             </span>
             <span
-              className={`text-[9px] tracking-[0.3em] uppercase -mt-1 font-sans transition-colors duration-300 ${
+              className={`text-[8.5px] xl:text-[9px] tracking-[0.28em] xl:tracking-[0.3em] uppercase font-sans transition-colors duration-300 ${
                 isScrolled || !isHomepage ? "text-[#7B6955]" : "text-white/80"
               }`}
             >
@@ -88,7 +88,10 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-7" aria-label="Main Navigation">
+        <nav
+          className="hidden lg:flex items-center gap-3.5 xl:gap-5 2xl:gap-6 shrink-0"
+          aria-label="Main Navigation"
+        >
           {PRIMARY_NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/"
@@ -101,14 +104,14 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-xs tracking-widest uppercase transition-all duration-200 relative py-1 ${
+                className={`text-[11px] xl:text-xs tracking-[0.16em] xl:tracking-[0.2em] uppercase transition-all duration-200 relative py-1.5 whitespace-nowrap ${
                   isDarkHeader
                     ? isActive
                       ? "text-[#121212] font-semibold"
                       : "text-[#554837] hover:text-[#121212]"
                     : isActive
                     ? "text-white font-semibold"
-                    : "text-white/80 hover:text-white"
+                    : "text-white/85 hover:text-white"
                 }`}
               >
                 {t(link.key, link.name)}
@@ -125,7 +128,7 @@ export default function Header() {
         </nav>
 
         {/* Desktop CTA & Language Switcher */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 shrink-0">
           <LanguageSwitcher
             variant="header"
             isScrolled={isScrolled}
@@ -133,10 +136,10 @@ export default function Header() {
           />
           <Link
             href="/contact"
-            className={`px-5 py-2.5 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-300 rounded-none border flex items-center gap-2 group ${
+            className={`h-9 px-4 xl:px-5 text-[11px] xl:text-xs uppercase tracking-[0.18em] font-medium transition-all duration-300 rounded-none border flex items-center gap-2 shrink-0 whitespace-nowrap group ${
               isScrolled || !isHomepage
                 ? "bg-[#121212] text-[#FAF7F2] border-[#121212] hover:bg-transparent hover:text-[#121212]"
-                : "bg-white text-[#121212] border-white hover:bg-transparent hover:text-white hover:border-white"
+                : "bg-white text-[#121212] border-white hover:bg-transparent hover:text-white hover:border-white shadow-sm"
             }`}
           >
             <span>{t("nav.book", "Book a Session")}</span>
