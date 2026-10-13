@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Mail,
   Phone,
@@ -12,6 +12,10 @@ import {
   AlertCircle,
   ShieldCheck,
   Sparkles,
+  KeyRound,
+  Check,
+  X,
+  RotateCw,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
 import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
@@ -91,6 +95,19 @@ export default function ContactAndBooking({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedBooking, setSubmittedBooking] = useState<any>(null);
+
+  // Email OTP Authentication & Verification State
+  const [verificationToken, setVerificationToken] = useState<string | null>(null);
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpSuccess, setOtpSuccess] = useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [debugOtp, setDebugOtp] = useState<string | null>(null);
+  const digitInputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
@@ -265,25 +282,56 @@ export default function ContactAndBooking({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.preferredDate, formData.service, formData.durationMinutes]);
 
+  // Resend OTP countdown timer
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
+    const trimmedName = formData.name.trim();
 
-    if (!formData.name.trim()) {
+    const testNames = new Set([
+      "test", "testing", "tester", "admin", "fake", "dummy", "user",
+      "asdf", "qwerty", "none", "null", "undefined", "xyz", "abc"
+    ]);
+
+    if (!trimmedName) {
       newErrors.name = "Full name is required.";
-    } else if (formData.name.trim().length < 2) {
+    } else if (trimmedName.length < 2) {
       newErrors.name = "Name must be at least 2 characters.";
+    } else if (trimmedName.length > 80) {
+      newErrors.name = "Name cannot exceed 80 characters.";
+    } else if (testNames.has(trimmedName.toLowerCase())) {
+      newErrors.name = "Please enter your genuine full name (not a test placeholder).";
+    } else if (!/^[\p{L}\s.'\-]+$/u.test(trimmedName)) {
+      newErrors.name = "Name should contain letters, spaces, and standard punctuation only.";
     }
 
-    if (!formData.email.trim()) {
+    const trimmedEmail = formData.email.trim().toLowerCase();
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!trimmedEmail) {
       newErrors.email = "Email address is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      newErrors.email = "Please enter a valid email address.";
+    } else if (!emailRegex.test(trimmedEmail)) {
+      newErrors.email = "Please enter a valid, active email address.";
     }
 
+    const digitsOnly = formData.phone.replace(/\D/g, "");
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required.";
-    } else if (formData.phone.trim().length < 7) {
-      newErrors.phone = "Please enter a valid contact phone number.";
+    } else if (digitsOnly.length < 8 || digitsOnly.length > 15) {
+      newErrors.phone = "Please enter a valid phone number (8–15 digits).";
+    } else if (
+      /^(\d)\1+$/.test(digitsOnly) ||
+      digitsOnly === "12345678" ||
+      digitsOnly === "123456789"
+    ) {
+      newErrors.phone = "Please enter a genuine contact phone number.";
     }
 
     if (!formData.service) {
@@ -297,16 +345,48 @@ export default function ContactAndBooking({
 
     if (!formData.preferredDate) {
       newErrors.preferredDate = "Please choose a preferred date.";
+    } else {
+      const selDate = new Date(formData.preferredDate);
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      if (isNaN(selDate.getTime()) || selDate < now) {
+        newErrors.preferredDate = "Please choose today or a future date.";
+      }
     }
 
     if (!formData.appointmentTime) {
       newErrors.appointmentTime = "Please select an available appointment time slot.";
     }
 
-    if (!formData.message.trim()) {
-      newErrors.message = "Please include a short message or project notes.";
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Message must be at least 10 characters.";
+    const trimmedMsg = formData.message.trim();
+    if (!trimmedMsg) {
+      newErrors.message = "Please include a project or session description.";
+    } else if (trimmedMsg.length < 15) {
+      newErrors.message = "Message must be at least 15 characters.";
+    } else {
+      // Anti-gibberish / spam check (e.g. "ef g ewrtg ery55rt3yt 35y4 353324235435t")
+      const words = trimmedMsg.split(/\s+/).filter(Boolean);
+      const lettersOnly = trimmedMsg.replace(/[^a-zA-Z]/g, "").toLowerCase();
+      const vowels = lettersOnly.replace(/[^aeiou]/g, "").length;
+      const vowelRatio = lettersOnly.length > 0 ? vowels / lettersOnly.length : 0;
+
+      const hasAlphanumericMash = words.some((w) => /[a-zA-Z]\d|\d[a-zA-Z]/.test(w));
+      const singleCharWordCount = words.filter((w) => w.length === 1).length;
+      const hasUnnaturalConsonantCluster = /[bcdfghjklmnpqrstvwxyz]{5,}/i.test(lettersOnly);
+
+      if (hasAlphanumericMash) {
+        newErrors.message =
+          "Please provide real project details rather than random test text or numbers.";
+      } else if (singleCharWordCount >= 2 && words.length <= 6) {
+        newErrors.message =
+          "Please describe your session needs with complete words.";
+      } else if (lettersOnly.length > 15 && vowelRatio < 0.2 && hasUnnaturalConsonantCluster) {
+        newErrors.message =
+          "Please share a meaningful description of your shoot rather than random characters.";
+      } else if (words.length < 3 && trimmedMsg.length < 25) {
+        newErrors.message =
+          "Please provide a few more details (e.g., event type, venue, or creative vision).";
+      }
     }
 
     setErrors(newErrors);
@@ -321,6 +401,15 @@ export default function ContactAndBooking({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
+    // If email changes after verification, invalidate verification so user must re-verify
+    if (name === "email") {
+      if (verifiedEmail && value.trim().toLowerCase() !== verifiedEmail) {
+        setVerifiedEmail(null);
+        setVerificationToken(null);
+        setOtpSuccess(null);
+      }
+    }
+
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -334,10 +423,127 @@ export default function ContactAndBooking({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
+  // Dispatch 6-digit OTP code to the client's email
+  const sendOtp = async (targetEmail?: string) => {
+    const emailToSend = (targetEmail || formData.email).trim().toLowerCase();
+    if (!emailToSend) return;
 
+    setIsSendingOtp(true);
+    setOtpError(null);
+
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailToSend, name: formData.name.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setOtpSuccess(`Verification code dispatched to ${emailToSend}`);
+        setDebugOtp(data.debugOtp || null);
+        setResendCooldown(45);
+        setOtpDigits(["", "", "", "", "", ""]);
+        setTimeout(() => {
+          digitInputsRef.current[0]?.focus();
+        }, 150);
+      } else {
+        setOtpError(data.error || "Failed to dispatch verification code. Please try again.");
+      }
+    } catch {
+      setOtpError("Network error while sending verification code. Please check your connection.");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleOtpDigitChange = (index: number, val: string) => {
+    const cleaned = val.replace(/\D/g, "");
+    if (!cleaned && val !== "") return;
+
+    const char = cleaned.slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = char;
+    setOtpDigits(newDigits);
+    setOtpError(null);
+
+    if (char && index < 5) {
+      digitInputsRef.current[index + 1]?.focus();
+    }
+
+    // Auto verify if all 6 digits entered
+    if (newDigits.every((d) => d.length === 1)) {
+      const fullCode = newDigits.join("");
+      verifyOtpCode(fullCode);
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      digitInputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+
+    const newDigits = ["", "", "", "", "", ""];
+    for (let i = 0; i < pasted.length; i++) {
+      newDigits[i] = pasted[i];
+    }
+    setOtpDigits(newDigits);
+
+    if (pasted.length === 6) {
+      verifyOtpCode(pasted);
+    } else {
+      digitInputsRef.current[Math.min(5, pasted.length)]?.focus();
+    }
+  };
+
+  const fillDebugCode = (code: string) => {
+    const chars = code.split("").slice(0, 6);
+    setOtpDigits(chars);
+    verifyOtpCode(code);
+  };
+
+  const verifyOtpCode = async (codeToVerify?: string) => {
+    const code = (codeToVerify || otpDigits.join("")).trim();
+    if (code.length !== 6) {
+      setOtpError("Please enter all 6 digits of your verification code.");
+      return;
+    }
+
+    setIsVerifyingOtp(true);
+    setOtpError(null);
+
+    try {
+      const email = formData.email.trim().toLowerCase();
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.verificationToken) {
+        setVerificationToken(data.verificationToken);
+        setVerifiedEmail(data.verifiedEmail || email);
+        setIsOtpModalOpen(false);
+
+        // Execute the booking reservation with verified token
+        await executeBookingSubmission(data.verificationToken);
+      } else {
+        setOtpError(data.error || "Incorrect verification code. Please check and try again.");
+      }
+    } catch {
+      setOtpError("Network error while validating code. Please try again.");
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const executeBookingSubmission = async (token: string) => {
     setIsSubmitting(true);
     setServerError(null);
 
@@ -348,6 +554,7 @@ export default function ContactAndBooking({
         body: JSON.stringify({
           ...formData,
           durationMinutes: Math.max(60, formData.durationMinutes),
+          verificationToken: token,
           website_url: honeypot,
         }),
       });
@@ -361,9 +568,9 @@ export default function ContactAndBooking({
           preferredDate: formData.preferredDate,
           appointmentTime: formData.appointmentTime,
           durationMinutes: formData.durationMinutes,
+          verifiedEmail: true,
         });
       } else {
-        // Overlap or validation error from backend
         setServerError(
           result.error ||
           result.message ||
@@ -376,6 +583,26 @@ export default function ContactAndBooking({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const normalizedEmail = formData.email.trim().toLowerCase();
+    const isVerified =
+      verifiedEmail === normalizedEmail && verificationToken !== null;
+
+    if (!isVerified) {
+      // Open OTP modal and dispatch verification code
+      setIsOtpModalOpen(true);
+      setOtpError(null);
+      sendOtp(normalizedEmail);
+      return;
+    }
+
+    // Already verified! Submit directly
+    await executeBookingSubmission(verificationToken);
   };
 
   const handleReset = () => {
@@ -435,161 +662,182 @@ export default function ContactAndBooking({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* Left Column: Contact Info & Policies */}
-          <div className="lg:col-span-5 space-y-8 flex flex-col justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+          {/* Left Column: Studio & Inquiries Card */}
+          <div className="lg:col-span-5 bg-white p-6 sm:p-8 border border-[#E8DED0] shadow-xs flex flex-col justify-between space-y-6">
             <div className="space-y-6">
-              <h3 className="font-serif text-2xl text-[#121212]">
-                {t("contact.studioTitle", "Studio & Booking Inquiries")}
-              </h3>
-              <p className="text-sm text-[#554837] leading-relaxed font-light">
-                {t(
-                  "contact.studioDesc",
-                  "We accept a limited number of commissions each year to give every client our undivided artistic dedication. Reserve your slot online or message us directly via WhatsApp."
-                )}
-              </p>
+              {/* Studio Info Header */}
+              <div className="border-b border-[#F3ECE1] pb-4">
+                <h3 className="font-serif text-2xl text-[#121212]">
+                  {t("contact.studioTitle", "Studio & Booking Inquiries")}
+                </h3>
+                <p className="text-xs text-[#7B6955] mt-1 font-sans leading-relaxed">
+                  {t(
+                    "contact.studioDesc",
+                    "We accept a limited number of commissions each year to give every client our undivided artistic dedication. Reach out below or message us directly via WhatsApp."
+                  )}
+                </p>
+              </div>
 
-              {/* Travel Buffer Policy Callout */}
-              <div className="p-4 bg-[#F4EDE2] border border-[#DFCBB5] space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#121212]">
-                  <ShieldCheck className="w-4 h-4 text-[#BFA076]" />
-                  <span>Protected Travel Buffers</span>
+              {/* Cleaned Up Travel Buffer Policy Callout */}
+              <div className="p-4 bg-[#FAF7F2] border border-[#E8DED0] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#121212]">
+                    <ShieldCheck className="w-4 h-4 text-[#BFA076]" />
+                    <span>Protected Travel Buffers</span>
+                  </div>
+                  <span className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans font-medium px-2 py-0.5 bg-white border border-[#E8DED0]">
+                    Zero-Overlap Policy
+                  </span>
                 </div>
                 <p className="text-xs text-[#554837] leading-relaxed font-light">
                   To ensure punctual arrival, equipment staging, and travel between locations, our studio automatically reserves <strong>1 hour before</strong> and <strong>1 hour after</strong> every booking. Appointments must be at least <strong>60 minutes</strong>.
                 </p>
-                <div className="pt-1.5 text-[11px] font-mono text-[#7B6955] bg-white/70 p-2 border border-[#E3D4C1]">
-                  Blocked Window = Start Time - 60m ➔ Start Time + Duration + 60m
+                {/* Visual Timeline Buffer Bar */}
+                <div className="grid grid-cols-3 gap-2 pt-1 text-center text-[10px] font-sans">
+                  <div className="py-1.5 px-2 bg-white border border-[#E8DED0] text-[#7B6955]">
+                    <span className="block font-semibold text-[#121212]">-60 Min</span>
+                    <span className="text-[9px]">Arrival & Prep</span>
+                  </div>
+                  <div className="py-1.5 px-2 bg-[#121212] text-[#FAF7F2] border border-[#121212]">
+                    <span className="block font-semibold text-white">Your Session</span>
+                    <span className="text-[9px] text-[#D7C7B2]">60+ Min Shoot</span>
+                  </div>
+                  <div className="py-1.5 px-2 bg-white border border-[#E8DED0] text-[#7B6955]">
+                    <span className="block font-semibold text-[#121212]">+60 Min</span>
+                    <span className="text-[9px]">Wrap & Buffer</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Direct Info List */}
-              <div className="space-y-4 pt-1">
-                <div className="flex items-start gap-4 p-4 bg-white border border-[#F3ECE1]">
-                  <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
-                    <Mail className="w-4 h-4 stroke-[1.5]" />
+              {/* Direct Info 2x2 Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-0.5">
+                {/* Email */}
+                <div className="flex items-start gap-3 p-3 bg-[#FAF7F2] border border-[#E8DED0] transition-colors hover:border-[#121212]">
+                  <div className="w-8 h-8 rounded-full bg-white border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
+                    <Mail className="w-3.5 h-3.5 stroke-[1.5]" />
                   </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-sans font-medium">
                       {t("contact.email", "Email Address")}
                     </p>
                     <a
                       href={`mailto:${studioEmail}`}
-                      className="text-sm font-medium text-[#121212] hover:underline"
+                      className="text-xs font-medium text-[#121212] hover:underline truncate block"
+                      title={studioEmail}
                     >
                       {studioEmail}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white border border-[#F3ECE1]">
-                  <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
-                    <Phone className="w-4 h-4 stroke-[1.5]" />
+                {/* Phone */}
+                <div className="flex items-start gap-3 p-3 bg-[#FAF7F2] border border-[#E8DED0] transition-colors hover:border-[#121212]">
+                  <div className="w-8 h-8 rounded-full bg-white border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
+                    <Phone className="w-3.5 h-3.5 stroke-[1.5]" />
                   </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-sans font-medium">
                       {t("contact.phone", "Phone Number")}
                     </p>
                     <a
                       href={`tel:${studioPhone.replace(/[^0-9+]/g, "")}`}
-                      className="text-sm font-medium text-[#121212] hover:underline"
+                      className="text-xs font-medium text-[#121212] hover:underline truncate block"
+                      title={studioPhone}
                     >
                       {studioPhone}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white border border-[#F3ECE1]">
-                  <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
-                    <MapPin className="w-4 h-4 stroke-[1.5]" />
+                {/* Studio Location */}
+                <div className="flex items-start gap-3 p-3 bg-[#FAF7F2] border border-[#E8DED0] transition-colors hover:border-[#121212]">
+                  <div className="w-8 h-8 rounded-full bg-white border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
+                    <MapPin className="w-3.5 h-3.5 stroke-[1.5]" />
                   </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-sans font-medium">
                       {t("contact.location", "Studio Location")}
                     </p>
-                    <p className="text-xs sm:text-sm text-[#121212] font-medium">
+                    <p className="text-xs text-[#121212] font-medium line-clamp-2 leading-tight">
                       {language === "hi" && studioHindiAddress
                         ? studioHindiAddress
                         : studioAddress}
                     </p>
-                    {language !== "hi" && studioHindiAddress && (
-                      <p className="text-xs text-[#7B6955] font-sans mt-1">
-                        {studioHindiAddress}
-                      </p>
-                    )}
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white border border-[#F3ECE1]">
-                  <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
-                    <Clock className="w-4 h-4 stroke-[1.5]" />
+                {/* Studio Hours */}
+                <div className="flex items-start gap-3 p-3 bg-[#FAF7F2] border border-[#E8DED0] transition-colors hover:border-[#121212]">
+                  <div className="w-8 h-8 rounded-full bg-white border border-[#E8DED0] flex items-center justify-center shrink-0 text-[#121212]">
+                    <Clock className="w-3.5 h-3.5 stroke-[1.5]" />
                   </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-wider text-[#7B6955] font-sans font-medium">
                       {t("contact.hours", "Studio Hours")}
                     </p>
-                    <p className="text-xs sm:text-sm text-[#121212]">
+                    <p className="text-xs text-[#121212] line-clamp-2 leading-tight">
                       {studioWorkingHours}
                     </p>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Prominent WhatsApp Button */}
-            <div className="pt-2">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-3 px-6 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-medium text-xs sm:text-sm uppercase tracking-[0.18em] transition-all shadow-md group"
-              >
-                <WhatsAppIcon className="w-4 h-4 fill-white" />
-                <span>{t("contact.whatsappBtn", "Chat Directly on WhatsApp")}</span>
-              </a>
-              <p className="text-[11px] text-center text-[#7B6955] mt-2 font-sans">
-                {t("contact.whatsappResponse", "Quick responses typically within 1-2 hours during business hours.")}
-              </p>
-            </div>
-
-            {/* Google Static Map */}
-            <div className="pt-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans font-medium flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#BFA076]" />
-                  <span>{t("contact.mapHeader", "Studio Google Map & Location")}</span>
-                </span>
-                <span className="text-[10px] text-[#BFA076] font-mono">
-                  {settings.map_latitude || 26.8285}° N, {settings.map_longitude || 75.8654}° E
-                </span>
-              </div>
-              <GoogleStaticMap
-                latitude={settings.map_latitude || 26.8285}
-                longitude={settings.map_longitude || 75.8654}
-                zoom={settings.map_zoom || 15}
-                apiKey={settings.google_maps_api_key}
-                title={settings.studio_name || "Your Photography Flagship Studio"}
-                address={language === "hi" && studioHindiAddress ? studioHindiAddress : studioAddress}
-                plusCode="RV2J+5PQ"
-                heightClass="h-[260px] sm:h-[300px]"
-                showOverlayCard={false}
-              />
-              <div className="pt-1 flex items-center justify-between text-[11px] text-[#7B6955]">
-                <span>Plus Code: <strong className="text-[#121212]">RV2J+5PQ</strong></span>
+              {/* Prominent WhatsApp Button */}
+              <div>
                 <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${settings.map_latitude || 26.8285},${settings.map_longitude || 75.8654}`}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs uppercase tracking-wider text-[#121212] hover:text-[#BFA076] font-medium inline-flex items-center gap-1 hover:underline"
+                  className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-medium text-xs uppercase tracking-[0.18em] transition-all shadow-xs group"
                 >
-                  <span>Open in Google Maps →</span>
+                  <WhatsAppIcon className="w-4 h-4 fill-white" />
+                  <span>{t("contact.whatsappBtn", "Chat Directly on WhatsApp")}</span>
                 </a>
+                <p className="text-[11px] text-center text-[#7B6955] mt-1.5 font-sans">
+                  {t("contact.whatsappResponse", "Quick responses typically within 1-2 hours during business hours.")}
+                </p>
+              </div>
+
+              {/* Google Static Map */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="uppercase tracking-wider text-[#7B6955] font-sans font-medium flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#BFA076]" />
+                    <span>{t("contact.mapHeader", "Studio Google Map & Location")}</span>
+                  </span>
+                  <span className="text-[10px] text-[#BFA076] font-mono">
+                    {settings.map_latitude || 26.8285}° N, {settings.map_longitude || 75.8654}° E
+                  </span>
+                </div>
+                <GoogleStaticMap
+                  latitude={settings.map_latitude || 26.8285}
+                  longitude={settings.map_longitude || 75.8654}
+                  zoom={settings.map_zoom || 15}
+                  apiKey={settings.google_maps_api_key}
+                  title={settings.studio_name || "Your Photography Flagship Studio"}
+                  address={language === "hi" && studioHindiAddress ? studioHindiAddress : studioAddress}
+                  plusCode="RV2J+5PQ"
+                  heightClass="h-[170px] sm:h-[190px]"
+                  showOverlayCard={false}
+                />
+                <div className="flex items-center justify-between text-[11px] text-[#7B6955] pt-0.5">
+                  <span>Plus Code: <strong className="text-[#121212]">RV2J+5PQ</strong></span>
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${settings.map_latitude || 26.8285},${settings.map_longitude || 75.8654}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs uppercase tracking-wider text-[#121212] hover:text-[#BFA076] font-medium inline-flex items-center gap-1 hover:underline"
+                  >
+                    <span>Open in Google Maps →</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right Column: Interactive Booking Form */}
-          <div className="lg:col-span-7 bg-white p-8 sm:p-10 border border-[#E8DED0] shadow-sm">
+          <div className="lg:col-span-7 bg-white p-6 sm:p-8 border border-[#E8DED0] shadow-xs flex flex-col justify-between">
             {isSubmitted ? (
               <div className="py-10 text-center space-y-6">
                 <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 mx-auto flex items-center justify-center">
@@ -719,12 +967,25 @@ export default function ContactAndBooking({
 
                   {/* Email */}
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium mb-2"
-                    >
-                      {t("contact.form.email", "Email Address")} <span className="text-red-500">*</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label
+                        htmlFor="email"
+                        className="block text-xs uppercase tracking-wider text-[#121212] font-sans font-medium"
+                      >
+                        {t("contact.form.email", "Email Address")} <span className="text-red-500">*</span>
+                      </label>
+                      {verifiedEmail === formData.email.trim().toLowerCase() && verificationToken ? (
+                        <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 inline-flex items-center gap-1 font-sans">
+                          <Check className="w-3 h-3 text-emerald-600" />
+                          Verified
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-[#7B6955] inline-flex items-center gap-1 font-sans">
+                          <KeyRound className="w-2.5 h-2.5 text-[#BFA076]" />
+                          OTP Required
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="email"
                       id="email"
@@ -737,6 +998,8 @@ export default function ContactAndBooking({
                       className={`w-full px-4 py-3 bg-[#FAF7F2] border text-sm text-[#121212] placeholder-[#9E8870] focus:outline-none focus:bg-white transition-colors ${
                         errors.email
                           ? "border-red-500"
+                          : verifiedEmail === formData.email.trim().toLowerCase() && verificationToken
+                          ? "border-emerald-500 focus:border-emerald-600"
                           : "border-[#D7C7B2] focus:border-[#121212]"
                       }`}
                     />
@@ -820,12 +1083,12 @@ export default function ContactAndBooking({
                   </div>
                 </div>
 
-                {/* SECTION 2: BOOKING DURATION (Mandatory Minimum 60 min) */}
+                {/* SECTION 2: BOOKING DURATION (Consolidated) */}
                 <div className="p-4 bg-[#FAF7F2] border border-[#E8DED0] space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <label className="text-xs uppercase tracking-wider text-[#121212] font-sans font-medium flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#BFA076]" />
-                      <span>Booking Duration (Mandatory Minimum: 60 min)</span>
+                      <span>{t("contact.form.duration", "Booking Duration")} (Min: 60 min)</span>
                     </label>
                     <span className="text-[11px] text-[#7B6955] font-sans">
                       Selected: <strong className="text-[#121212]">{formData.durationMinutes / 60} Hour(s) ({formData.durationMinutes} min)</strong>
@@ -843,7 +1106,8 @@ export default function ContactAndBooking({
                       </span>
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
+                      {/* Standard Duration Buttons */}
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {supportedDurations.map((dur) => {
                           const isSelected = formData.durationMinutes === dur;
@@ -853,7 +1117,7 @@ export default function ContactAndBooking({
                               key={dur}
                               type="button"
                               onClick={() => handleDurationSelect(dur)}
-                              className={`py-2.5 px-3 text-xs font-medium border text-center transition-all cursor-pointer ${
+                              className={`py-2 px-2 text-xs font-medium border text-center transition-all cursor-pointer ${
                                 isSelected
                                   ? "bg-[#121212] text-white border-[#121212] shadow-xs"
                                   : "bg-white text-[#554837] border-[#D7C7B2] hover:border-[#121212] hover:text-[#121212]"
@@ -870,21 +1134,28 @@ export default function ContactAndBooking({
                         })}
                       </div>
 
-                      {/* Custom duration option if supported */}
-                      <div className="flex items-center gap-2 pt-1 text-xs text-[#7B6955]">
-                        <span>Need a custom duration?</span>
+                      {/* Extended / Custom Duration Selector */}
+                      <div className="flex items-center justify-between gap-2 pt-0.5 text-xs text-[#7B6955]">
+                        <span className="text-[11px] font-sans">Need extended coverage?</span>
                         <select
-                          value={formData.durationMinutes}
-                          onChange={(e) => handleDurationSelect(Number(e.target.value))}
-                          className="px-2 py-1 bg-white border border-[#D7C7B2] text-xs text-[#121212] cursor-pointer"
+                          value={formData.durationMinutes > 240 ? formData.durationMinutes : ""}
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              handleDurationSelect(Number(e.target.value));
+                            }
+                          }}
+                          className={`px-3 py-1.5 text-xs border cursor-pointer transition-colors ${
+                            formData.durationMinutes > 240
+                              ? "bg-[#121212] text-white border-[#121212] font-medium"
+                              : "bg-white text-[#554837] border-[#D7C7B2] hover:border-[#121212]"
+                          }`}
                         >
-                          <option value={60}>60 minutes (1 Hour - Minimum)</option>
-                          <option value={120}>120 minutes (2 Hours)</option>
-                          <option value={180}>180 minutes (3 Hours)</option>
-                          <option value={240}>240 minutes (4 Hours)</option>
-                          <option value={300}>300 minutes (5 Hours)</option>
-                          <option value={360}>360 minutes (6 Hours)</option>
-                          <option value={480}>480 minutes (8 Hours Full Day)</option>
+                          <option value="" disabled={formData.durationMinutes > 240}>
+                            {formData.durationMinutes > 240 ? `${formData.durationMinutes / 60} Hours (${formData.durationMinutes} min)` : "Custom (5h – 8h)..."}
+                          </option>
+                          <option value={300} className="bg-white text-[#121212]">5 Hours (300 min)</option>
+                          <option value={360} className="bg-white text-[#121212]">6 Hours (360 min)</option>
+                          <option value={480} className="bg-white text-[#121212]">8 Hours (Full Day)</option>
                         </select>
                       </div>
                     </div>
@@ -1082,22 +1353,32 @@ export default function ContactAndBooking({
                 <div>
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isSendingOtp}
                     className="w-full py-4 text-xs uppercase tracking-[0.22em] font-medium bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
                     {isSubmitting ? (
                       <span>{t("contact.form.submitting", "Validating & Reserving Slot...")}</span>
+                    ) : isSendingOtp ? (
+                      <span className="inline-flex items-center gap-2">
+                        <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>Sending Verification Code...</span>
+                      </span>
+                    ) : verifiedEmail === formData.email.trim().toLowerCase() && verificationToken ? (
+                      <>
+                        <span>{t("contact.form.submitVerified", "Confirm Booking (Verified)")}</span>
+                        <Send className="w-3.5 h-3.5" />
+                      </>
                     ) : (
                       <>
-                        <span>{t("contact.form.submit", "Confirm Booking (Min 60 min)")}</span>
-                        <Send className="w-3.5 h-3.5" />
+                        <span>{t("contact.form.submitWithOtp", "Verify Email & Submit Booking")}</span>
+                        <KeyRound className="w-3.5 h-3.5 text-[#BFA076]" />
                       </>
                     )}
                   </button>
                   <p className="text-[11px] text-center text-[#7B6955] mt-3 font-sans">
                     {t(
                       "contact.form.privacyNote",
-                      "We treat your details with absolute privacy. Every confirmed booking blocks the calendar with required travel buffers."
+                      "We treat your details with absolute privacy. Email OTP verification ensures only authenticated clients reserve slots."
                     )}
                   </p>
                 </div>
@@ -1106,6 +1387,151 @@ export default function ContactAndBooking({
           </div>
         </div>
       </div>
+
+      {/* OTP Verification Modal Dialog */}
+      {isOtpModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="otp-modal-title"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+        >
+          <div className="bg-white max-w-md w-full p-6 sm:p-8 border border-[#E8DED0] shadow-2xl relative space-y-6 animate-in fade-in zoom-in-95 duration-150">
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setIsOtpModalOpen(false)}
+              className="absolute top-4 right-4 text-[#7B6955] hover:text-[#121212] p-1 cursor-pointer transition-colors"
+              aria-label="Close verification modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header */}
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#E8DED0] flex items-center justify-center text-[#121212] mx-auto">
+                <KeyRound className="w-6 h-6 text-[#BFA076]" />
+              </div>
+              <h3 id="otp-modal-title" className="font-serif text-2xl text-[#121212]">
+                Verify Your Email Address
+              </h3>
+              <p className="text-xs text-[#554837] leading-relaxed font-light">
+                To guarantee genuine appointments and prevent spam reservations, please enter the 6-digit confirmation code dispatched to:
+              </p>
+              <p className="text-xs font-semibold text-[#121212] bg-[#FAF7F2] py-1.5 px-3 border border-[#E8DED0] inline-block font-mono">
+                {formData.email}
+              </p>
+            </div>
+
+            {/* Development Mode Helper Banner */}
+            {debugOtp && (
+              <div className="p-3 bg-[#FAF7F2] border border-[#E8DED0] text-xs flex items-center justify-between gap-2">
+                <span className="text-[#7B6955]">
+                  Development Code: <strong className="font-mono text-[#121212] tracking-wider">{debugOtp}</strong>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => fillDebugCode(debugOtp)}
+                  className="text-[11px] uppercase tracking-wider font-semibold text-[#121212] hover:text-[#BFA076] underline cursor-pointer"
+                >
+                  Auto-Fill
+                </button>
+              </div>
+            )}
+
+            {/* Status & Error Alerts */}
+            {otpError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <span>{otpError}</span>
+              </div>
+            )}
+            {otpSuccess && !otpError && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{otpSuccess}</span>
+              </div>
+            )}
+
+            {/* 6 Digit Inputs */}
+            <div>
+              <label className="block text-[11px] uppercase tracking-wider text-[#7B6955] text-center mb-3 font-sans font-medium">
+                Enter 6-Digit Verification Code
+              </label>
+              <div className="flex justify-center gap-2 sm:gap-3" onPaste={handleOtpPaste}>
+                {otpDigits.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    ref={(el) => {
+                      digitInputsRef.current[idx] = el;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpDigitChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                    disabled={isVerifyingOtp}
+                    className="w-11 h-14 sm:w-12 sm:h-14 text-center text-xl font-mono font-bold bg-[#FAF7F2] border border-[#D7C7B2] focus:border-[#121212] focus:bg-white focus:outline-none transition-colors"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Verification Actions */}
+            <div className="space-y-3 pt-1">
+              <button
+                type="button"
+                onClick={() => verifyOtpCode()}
+                disabled={isVerifyingOtp || otpDigits.some((d) => !d)}
+                className="w-full py-3.5 text-xs uppercase tracking-[0.2em] font-medium bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                {isVerifyingOtp ? (
+                  <span className="inline-flex items-center gap-2">
+                    <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Verifying Code...</span>
+                  </span>
+                ) : (
+                  <>
+                    <span>Verify & Confirm Booking</span>
+                    <Check className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+
+              <div className="flex items-center justify-between text-xs text-[#7B6955] pt-1">
+                <button
+                  type="button"
+                  disabled={resendCooldown > 0 || isSendingOtp}
+                  onClick={() => sendOtp()}
+                  className={`text-xs hover:underline cursor-pointer ${
+                    resendCooldown > 0 ? "text-gray-400 cursor-not-allowed" : "text-[#121212] font-medium"
+                  }`}
+                >
+                  {resendCooldown > 0
+                    ? `Resend code in ${resendCooldown}s`
+                    : isSendingOtp
+                    ? "Dispatching code..."
+                    : "Resend Code"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOtpModalOpen(false);
+                    const emailInput = document.getElementById("email");
+                    emailInput?.focus();
+                  }}
+                  className="text-xs text-[#7B6955] hover:text-[#121212] hover:underline cursor-pointer"
+                >
+                  Change Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
