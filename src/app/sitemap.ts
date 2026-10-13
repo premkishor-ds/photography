@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/config/siteConfig";
 import { getAbsoluteUrl } from "@/lib/schema";
 import { SERVICES_DATA } from "@/data/servicesData";
 import { PORTFOLIO_CATEGORIES_META } from "@/data/portfolioData";
 import { fetchBlogPosts, fetchGearItems } from "@/lib/supabase";
-import { GEAR_ITEMS, GEAR_COMPARISONS } from "@/data/gearData";
+import { GEAR_COMPARISONS } from "@/data/gearData";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString().split("T")[0];

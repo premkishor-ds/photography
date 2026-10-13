@@ -1,5 +1,3 @@
-import { siteConfig } from "@/config/siteConfig";
-
 export interface ServiceDetail {
   id: string;
   slug: string;

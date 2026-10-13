@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { GEAR_ITEMS, GearItem } from "@/data/gearData";
+import { GEAR_ITEMS } from "@/data/gearData";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, items });
-  } catch (err: any) {
+  } catch {
     // Graceful fallback to static items if database call throws
     return NextResponse.json({ success: true, items: GEAR_ITEMS });
   }

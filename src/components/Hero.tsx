@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowDown, Camera, Sparkles } from "lucide-react";
+import { ArrowDown, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";
 

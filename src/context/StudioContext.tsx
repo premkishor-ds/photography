@@ -88,6 +88,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchSettings = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch("/api/admin/settings");
       const data = await res.json();
@@ -97,8 +98,10 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
           ...data.settings,
         }));
       }
-    } catch (err) {
+    } catch {
       // Graceful fallback to defaultSettings
+    } finally {
+      setIsLoading(false);
     }
   };
 

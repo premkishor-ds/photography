@@ -12,9 +12,8 @@ import { fetchGearItems } from "@/lib/supabase";
 import {
   GEAR_CATEGORIES,
   GEAR_COMPARISONS,
-  GearCategory,
 } from "@/data/gearData";
-import { ArrowRight, SlidersHorizontal, Scale, ShieldCheck } from "lucide-react";
+import { SlidersHorizontal, Scale, ArrowRight } from "lucide-react";
 
 export const metadata = constructMetadata({
   title: "My Photography Gear | Cameras, Lenses & Audio Equipment",

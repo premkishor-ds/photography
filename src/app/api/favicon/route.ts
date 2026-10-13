@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +30,7 @@ export const PRESET_FAVICONS: Record<string, string> = {
 </svg>`,
 };
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const { data } = await supabase
       .from("studio_settings")

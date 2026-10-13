@@ -3,14 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   MapPin,
-  Calendar,
-  Clock,
-  Phone,
-  Mail,
-  Check,
   ArrowRight,
   ExternalLink,
-  ShieldCheck,
   Compass,
   Navigation,
 } from "lucide-react";

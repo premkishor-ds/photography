@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -9,7 +9,7 @@ import BookingCtaBanner from "@/components/BookingCtaBanner";
 import FaqAccordion from "@/components/FaqAccordion";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
-import { generateWebPageSchema, generateServiceSchema } from "@/lib/schema";
+import { generateWebPageSchema } from "@/lib/schema";
 import { SERVICES_DATA } from "@/data/servicesData";
 import { fetchFaqItems } from "@/lib/supabase";
 

@@ -24,19 +24,16 @@ import {
   IndianRupee,
   Layers,
   MapPin,
-  MessageSquare,
   Sparkles,
   Upload,
   FileUp,
   Image as ImageIcon,
   User,
   Building,
-  Sliders,
   Globe,
   Share2,
   FileText,
   Award,
-  Info,
   ChevronDown,
   ChevronRight,
   Check,
@@ -383,6 +380,7 @@ export default function AdminPage() {
       setIsAuthenticated(true);
       loadAllData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -724,7 +722,7 @@ export default function AdminPage() {
               applyHoursPreset("jaipur");
             }
           }
-        } catch (e) {}
+        } catch {}
       }
     } catch (err) {
       console.error("Studio settings load failed:", err);
@@ -964,7 +962,7 @@ export default function AdminPage() {
               additionalHoursText,
             })
           );
-        } catch (e) {}
+        } catch {}
         setTimeout(() => setHoursSavedFeedback(null), 5000);
       } else {
         alert(`Save failed: ${data.error || "Unknown error"}`);
@@ -991,7 +989,7 @@ export default function AdminPage() {
         syncWorkingHours(parsed.daysSchedule, parsed);
         return;
       }
-    } catch (e) {}
+    } catch {}
     applyHoursPreset("jaipur");
   };
 

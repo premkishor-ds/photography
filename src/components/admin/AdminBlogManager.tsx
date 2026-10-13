@@ -11,14 +11,11 @@ import {
   Trash2,
   ExternalLink,
   CheckCircle2,
-  AlertCircle,
   RefreshCw,
   Upload,
   Calendar,
   Clock,
-  User,
   Image as ImageIcon,
-  Sparkles,
 } from "lucide-react";
 
 export interface BlogPostRecord {
@@ -154,7 +151,7 @@ export default function AdminBlogManager() {
     if (typeof parsedContent === "string") {
       try {
         parsedContent = JSON.parse(parsedContent);
-      } catch (e) {
+      } catch {
         parsedContent = [];
       }
     }

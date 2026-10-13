@@ -38,7 +38,7 @@ export default function PortfolioGallery() {
           }));
           setGalleryItems(mapped);
         }
-      } catch (err) {
+      } catch {
         // Fallback to static items
       }
     }
@@ -114,7 +114,7 @@ export default function PortfolioGallery() {
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredItems.map((item, index) => {
+          {filteredItems.map((item) => {
             return (
               <div
                 key={item.id}

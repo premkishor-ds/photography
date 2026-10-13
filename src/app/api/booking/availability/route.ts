@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase";
 import {
   generateAvailableSlots,
   validateBookingDuration,
-  calculateBlockedTimes,
   ExistingBooking,
   ServiceDurationConfig,
 } from "@/lib/bookingAvailability";
@@ -69,19 +68,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // 2. Fetch studio operating hours
-    const { data: studioData } = await supabase
-      .from("studio_settings")
-      .select("working_hours")
-      .eq("id", "default")
-      .single();
-
     // Check operating hours for day of week
     const targetDateObj = new Date(date + "T00:00:00");
     const dayOfWeek = targetDateObj.getDay(); // 0 is Sunday, 6 is Saturday
     let openTime = "09:00";
     let closeTime = "19:00";
-    let isOpen = true;
+    const isOpen = true;
 
     if (dayOfWeek === 0) {
       // Sunday - By appointment (reduced hours or appointment only, default 10:00-16:00)

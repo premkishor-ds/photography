@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, MessageSquare, Calendar } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { siteConfig } from "@/config/siteConfig";
 import { WhatsAppIcon } from "@/components/Icons";
 import { useLanguage } from "@/context/LanguageContext";

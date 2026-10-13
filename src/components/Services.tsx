@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SERVICES, ServiceItem } from "@/data/photographyData";
 import ServiceModal from "./ServiceModal";
 import { useLanguage } from "@/context/LanguageContext";
@@ -38,7 +38,7 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
           }));
           setServicesList(mapped);
         }
-      } catch (err) {
+      } catch {
         // Fallback to static services
       }
     }
@@ -82,7 +82,6 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
         {/* Services Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {servicesList.map((service, index) => {
-            const isWideCard = index === 3 || index === 4;
             return (
               <div
                 key={service.id}

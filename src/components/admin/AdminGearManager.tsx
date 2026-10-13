@@ -10,14 +10,10 @@ import {
   Trash2,
   Search,
   ExternalLink,
-  ShieldCheck,
   AlertCircle,
   CheckCircle2,
   Save,
   X,
-  Filter,
-  Sparkles,
-  Link as LinkIcon,
 } from "lucide-react";
 import { GEAR_CATEGORIES, GearCategory } from "@/data/gearData";
 

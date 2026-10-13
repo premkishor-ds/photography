@@ -8,18 +8,14 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import AffiliateDisclosure from "@/components/AffiliateDisclosure";
 import JsonLd from "@/components/JsonLd";
 import { constructMetadata } from "@/lib/metadata";
+import { siteConfig } from "@/config/siteConfig";
+import { GEAR_ITEMS } from "@/data/gearData";
 import {
   generateBreadcrumbSchema,
   generateFAQSchema,
   getAbsoluteUrl,
 } from "@/lib/schema";
 import { fetchGearItems, fetchGearItemBySlug } from "@/lib/supabase";
-import {
-  GEAR_ITEMS,
-  GearItem,
-  getGearItemBySlug,
-} from "@/data/gearData";
-import { siteConfig } from "@/config/siteConfig";
 import {
   Check,
   AlertTriangle,
@@ -29,8 +25,6 @@ import {
   Layers,
   ArrowRight,
   HelpCircle,
-  Sparkles,
-  Info,
 } from "lucide-react";
 
 interface PageProps {

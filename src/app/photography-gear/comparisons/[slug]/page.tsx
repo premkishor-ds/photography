@@ -13,7 +13,7 @@ import {
   generateFAQSchema,
   getAbsoluteUrl,
 } from "@/lib/schema";
-import { GEAR_COMPARISONS, GearComparison } from "@/data/gearData";
+import { GEAR_COMPARISONS } from "@/data/gearData";
 import { siteConfig } from "@/config/siteConfig";
 import {
   Scale,

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, MapPin, Calendar, ZoomIn } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, MapPin, Calendar } from "lucide-react";
 import { PortfolioItem } from "@/data/photographyData";
 
 interface LightboxProps {

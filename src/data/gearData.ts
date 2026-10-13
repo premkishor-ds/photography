@@ -1,5 +1,3 @@
-import { siteConfig } from "@/config/siteConfig";
-
 export type GearCategory =
   | "camera-bodies"
   | "lenses"

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Image from "next/image";
 import {
   MapPin,
   ExternalLink,
@@ -13,7 +12,6 @@ import {
   Layers,
   Compass,
 } from "lucide-react";
-import { siteConfig } from "@/config/siteConfig";
 
 export interface GoogleStaticMapProps {
   latitude?: number;
@@ -84,7 +82,6 @@ export default function GoogleStaticMap({
   }, [latitude, longitude, zoom, mapType, effectiveApiKey]);
 
   // Google Maps Direct Navigation Link
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   const googleMapsDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 
   const handleCopyPlusCode = () => {

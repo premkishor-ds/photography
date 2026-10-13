@@ -8,9 +8,7 @@ import {
   Edit2,
   Trash2,
   CheckCircle2,
-  AlertCircle,
   RefreshCw,
-  Layers,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
@@ -279,7 +277,7 @@ export default function AdminFaqManager() {
         </div>
       ) : (
         <div className="space-y-3">
-          {filteredFaqs.map((faq, index) => {
+          {filteredFaqs.map((faq) => {
             const isExpanded = expandedId === faq.id;
             return (
               <div

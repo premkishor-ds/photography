@@ -9,11 +9,8 @@ import {
   Send,
   CheckCircle2,
   Calendar,
-  User,
-  Camera,
   AlertCircle,
   ShieldCheck,
-  ChevronRight,
   Sparkles,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
@@ -143,7 +140,7 @@ export default function ContactAndBooking({
             }))
           );
         }
-      } catch (err) {
+      } catch {
         // Fallback to default photography services
       }
     }
@@ -164,6 +161,7 @@ export default function ContactAndBooking({
         handleServiceChange(serviceParam);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preselectedService, availableServices]);
 
   // Match selected service configuration
@@ -251,7 +249,7 @@ export default function ContactAndBooking({
           setSlots([]);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         if (isSubscribed) {
           setSlotsError("Could not retrieve availability. Please try again.");
           setSlots([]);
@@ -264,6 +262,7 @@ export default function ContactAndBooking({
     return () => {
       isSubscribed = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.preferredDate, formData.service, formData.durationMinutes]);
 
   const validate = (): boolean => {

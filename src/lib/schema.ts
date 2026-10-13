@@ -1,6 +1,5 @@
 import { siteConfig, getMergedSiteConfig, StudioSettingsInput } from "@/config/siteConfig";
 import { ServiceDetail } from "@/data/servicesData";
-import { FAQItem } from "@/data/faqData";
 import { BlogPost } from "@/data/blogData";
 import { DetailedPortfolioItem } from "@/data/portfolioData";
 

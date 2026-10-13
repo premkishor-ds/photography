@@ -4,8 +4,6 @@ import { supabase } from "@/lib/supabase";
 import {
   calculateBlockedTimes,
   hasTravelBufferConflict,
-  validateBookingDuration,
-  ExistingBooking,
 } from "@/lib/bookingAvailability";
 
 export async function POST(req: NextRequest) {
@@ -102,7 +100,7 @@ export async function POST(req: NextRequest) {
           );
         }
       }
-    } catch (e) {
+    } catch {
       // Continue gracefully
     }
 

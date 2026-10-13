@@ -96,7 +96,7 @@ export function parseWorkingHoursToOpeningHours(rawString?: string): OpeningHour
     try {
       const parsed = JSON.parse(rawString);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    } catch (e) {}
+    } catch {}
   }
 
   // Remove parenthesis/bracket notes like (Sunday by Appointment) or [Holiday: ...]
@@ -165,7 +165,7 @@ function getInitialOpeningHours(): OpeningHoursItem[] {
     try {
       const parsed = JSON.parse(process.env.NEXT_PUBLIC_OPENING_HOURS_JSON);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    } catch (e) {}
+    } catch {}
   }
 
   // 2. Custom comma-separated days override

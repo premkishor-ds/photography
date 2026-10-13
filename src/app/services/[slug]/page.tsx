@@ -7,9 +7,6 @@ import {
   Calendar,
   Check,
   ShieldCheck,
-  ArrowRight,
-  ArrowLeft,
-  Sparkles,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

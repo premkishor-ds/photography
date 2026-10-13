@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowRight, Award, Camera, Heart, Sparkles } from "lucide-react";
+import { ArrowRight, Camera } from "lucide-react";
 import { PHOTOGRAPHER_INFO } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";

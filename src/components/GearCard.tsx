@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Layers, ShieldCheck, Camera, Sparkles } from "lucide-react";
+import { ArrowRight, Layers, Camera } from "lucide-react";
 import { GearItem } from "@/data/gearData";
 
 interface GearCardProps {

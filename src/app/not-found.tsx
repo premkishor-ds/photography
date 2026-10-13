@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, ArrowRight, Home, Search, Compass } from "lucide-react";
+import { Home, Compass } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
