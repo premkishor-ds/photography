@@ -173,7 +173,7 @@ export default async function PhotographyGearHubPage() {
                       className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors group/link"
                     >
                       <span>Read Field Comparison</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-link-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </article>

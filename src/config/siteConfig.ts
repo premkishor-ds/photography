@@ -204,7 +204,7 @@ export const siteConfig = {
   brandSubtitle:
     process.env.NEXT_PUBLIC_BRAND_SUBTITLE ||
     "Professional fine-art, portrait, royal wedding, sports, and commercial photography across Jaipur, Rajasthan, and India.",
-  logoUrl: process.env.NEXT_PUBLIC_LOGO_URL || "/logo.png",
+  logoUrl: process.env.NEXT_PUBLIC_LOGO_URL || "/logo.svg",
   defaultOgImage:
     process.env.NEXT_PUBLIC_HERO_IMAGE_URL ||
     process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE ||
