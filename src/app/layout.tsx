@@ -4,6 +4,7 @@ import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import Analytics from "@/components/Analytics";
 import WhatsAppConcierge from "@/components/WhatsAppConcierge";
+import ScrollToTop from "@/components/ScrollToTop";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { StudioProvider } from "@/context/StudioContext";
 
@@ -82,6 +83,12 @@ export const metadata: Metadata = {
       google: siteConfig.verification.google,
     },
   }),
+  alternates: {
+    canonical: siteConfig.baseUrl,
+    types: {
+      "application/rss+xml": `${siteConfig.baseUrl}/feed.xml`,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -95,6 +102,7 @@ export default function RootLayout({
         <LanguageProvider>
           <StudioProvider>
             {children}
+            <ScrollToTop />
             <WhatsAppConcierge />
             <Analytics />
           </StudioProvider>

@@ -39,7 +39,9 @@ export default function Home() {
         <Services />
         <AboutMe />
         <TestimonialsSection />
-        <ContactAndBooking />
+        <React.Suspense fallback={null}>
+          <ContactAndBooking />
+        </React.Suspense>
       </main>
       <Footer />
     </>

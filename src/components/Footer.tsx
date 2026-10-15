@@ -228,6 +228,15 @@ export default function Footer() {
               {t("footer.terms", "Terms & Conditions")}
             </Link>
             <span>•</span>
+            <a
+              href="/feed.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              RSS Feed
+            </a>
+            <span>•</span>
             <button
               onClick={scrollToTop}
               className="inline-flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"

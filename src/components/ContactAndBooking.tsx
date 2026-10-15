@@ -174,8 +174,27 @@ export default function ContactAndBooking({
     } else if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const serviceParam = urlParams.get("service");
+      const durationParam = urlParams.get("duration");
+      const addonsParam = urlParams.get("addons");
+      const estimateParam = urlParams.get("estimate");
+
       if (serviceParam) {
         handleServiceChange(serviceParam);
+      }
+
+      if (estimateParam || durationParam || addonsParam) {
+        setFormData((prev) => {
+          if (prev.message) return prev;
+          const summaryParts = [];
+          if (estimateParam) summaryParts.push(`• Estimated Budget: ${estimateParam}`);
+          if (durationParam) summaryParts.push(`• Requested Scope: ${durationParam}`);
+          if (addonsParam) summaryParts.push(`• Selected Add-ons: ${addonsParam}`);
+          const customMessage = `Bespoke Package Inquiry:\n${summaryParts.join("\n")}\n\nPlease share your calendar availability and complete proposal details.`;
+          return {
+            ...prev,
+            message: customMessage,
+          };
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
