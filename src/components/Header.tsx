@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, Menu, X, ArrowRight } from "lucide-react";
+import { Camera, Menu, X, ArrowRight, Search } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import SpotlightSearch from "./SpotlightSearch";
 import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";
 
@@ -24,6 +25,7 @@ export default function Header() {
   const { settings } = useStudioSettings();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
   const isHomepage = pathname === "/";
 
@@ -34,6 +36,18 @@ export default function Header() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Global Cmd+K or / search hotkey
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const handleLinkClick = (href: string) => {
@@ -127,8 +141,23 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Right Action Bar: CTA, Language Switcher & Menu Toggle */}
+        {/* Right Action Bar: Search, Language Switcher, CTA & Menu Toggle */}
         <div className="flex items-center gap-2 xl:gap-3 shrink-0">
+          {/* Spotlight Search Trigger */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className={`flex items-center gap-1.5 h-9 px-2.5 sm:px-3 text-xs uppercase tracking-wider transition-colors duration-200 border cursor-pointer ${
+              isScrolled || !isHomepage
+                ? "text-[#554837] hover:text-[#121212] border-[#E8DED0] hover:bg-[#F4EFE6]"
+                : "text-white/90 hover:text-white border-white/20 hover:bg-white/10"
+            }`}
+            title="Search Archive (Shortcut: Cmd+K / Ctrl+K)"
+            aria-label="Open search modal"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span className="hidden md:inline font-mono text-[10px] opacity-75">⌘K</span>
+          </button>
+
           <LanguageSwitcher
             variant="header"
             isScrolled={isScrolled}
@@ -199,6 +228,12 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {/* Spotlight Search Modal */}
+      <SpotlightSearch
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
     </header>
   );
 }

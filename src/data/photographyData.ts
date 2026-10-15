@@ -1,5 +1,14 @@
 import { siteConfig } from "@/config/siteConfig";
 
+export interface ExifData {
+  camera: string;
+  lens: string;
+  focalLength?: string;
+  aperture: string;
+  shutterSpeed: string;
+  iso: string;
+}
+
 export interface PortfolioItem {
   id: string;
   title: string;
@@ -15,6 +24,7 @@ export interface PortfolioItem {
   location: string;
   year: string;
   description: string;
+  exif?: ExifData;
 }
 
 export interface ServiceItem {
@@ -76,6 +86,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Amer Fort, Jaipur",
     year: "2026",
     description: "An intimate editorial portrait emphasizing natural warm reflections and authentic character amid historic stone textures.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/2.0",
+      shutterSpeed: "1/800s",
+      iso: "ISO 100",
+    },
   },
   {
     id: "wed-1",
@@ -86,6 +104,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "City Palace, Jaipur",
     year: "2026",
     description: "Tender golden hour vows and emotional pheras surrounded by historic carved stone arches and palace illumination.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/2.2",
+      shutterSpeed: "1/400s",
+      iso: "ISO 200",
+    },
   },
   {
     id: "spo-1",
@@ -96,6 +122,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Sawai Mansingh Stadium, Jaipur",
     year: "2026",
     description: "High-shutter capture freezing crisp seam rotation, bat speed, and intense athletic focus under stadium floodlights.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 200-600mm G OSS",
+      focalLength: "400mm",
+      aperture: "f/5.6",
+      shutterSpeed: "1/2000s",
+      iso: "ISO 1600",
+    },
   },
   {
     id: "eve-1",
@@ -106,6 +140,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Diggi Palace, Jaipur",
     year: "2026",
     description: "Atmospheric evening celebrating cultural thought leaders under warm ambient candlelight and historic carved arches.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/1.8",
+      shutterSpeed: "1/160s",
+      iso: "ISO 800",
+    },
   },
   {
     id: "nat-1",
@@ -116,6 +158,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Ranthambore Tiger Reserve, Rajasthan",
     year: "2026",
     description: "A breathtaking, respectful telephoto portrait of a dominant Royal Bengal tiger moving through the ancient forests of Ranthambore.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 200-600mm G OSS",
+      focalLength: "560mm",
+      aperture: "f/6.3",
+      shutterSpeed: "1/1250s",
+      iso: "ISO 400",
+    },
   },
   {
     id: "tra-1",
@@ -126,6 +176,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Badi Choupad, Pink City, Jaipur",
     year: "2026",
     description: "Intricate honeycomb architecture of Jaipur's 953 jharokhas bathed in soft morning light, capturing the soul of Rajasthan.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/5.6",
+      shutterSpeed: "1/500s",
+      iso: "ISO 100",
+    },
   },
   {
     id: "spo-2",
@@ -136,6 +194,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Jaipur Polo Club, Jaipur",
     year: "2026",
     description: "Dynamic telephoto capture carving through competitive chukker action with turf flying and mallets swung in synchronized precision.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 200-600mm G OSS",
+      focalLength: "280mm",
+      aperture: "f/5.6",
+      shutterSpeed: "1/2500s",
+      iso: "ISO 800",
+    },
   },
   {
     id: "port-2",
@@ -146,6 +212,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Studio 215, Shri Kishanpura, Jaipur",
     year: "2026",
     description: "High-contrast studio lighting capturing authentic character and quiet strength in our flagship Jaipur studio.",
+    exif: {
+      camera: "Sony A6000",
+      lens: "Sony E 50mm f/1.8 OSS",
+      focalLength: "50mm (75mm eq.)",
+      aperture: "f/2.8",
+      shutterSpeed: "1/200s",
+      iso: "ISO 100",
+    },
   },
   {
     id: "wed-2",
@@ -156,6 +230,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Jagmandir Island Palace, Udaipur",
     year: "2026",
     description: "Delicate handcrafted zardozi embroidery caught in the gentle evening lake breeze on a secluded palace terrace in Rajasthan.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/2.0",
+      shutterSpeed: "1/640s",
+      iso: "ISO 200",
+    },
   },
   {
     id: "nat-2",
@@ -166,6 +248,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Sam Sand Dunes, Jaisalmer, Rajasthan",
     year: "2026",
     description: "Golden hour shadows rolling across infinite rippling sand dunes as evening winds sweep through the Thar Desert.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 200-600mm G OSS",
+      focalLength: "200mm",
+      aperture: "f/8.0",
+      shutterSpeed: "1/500s",
+      iso: "ISO 100",
+    },
   },
   {
     id: "tra-2",
@@ -176,6 +266,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Amer Fort, Jaipur, Rajasthan",
     year: "2026",
     description: "Towering 16th-century ramparts and golden sandstone bastions glowing above the calm waters of Maota Lake at sunrise.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/5.6",
+      shutterSpeed: "1/320s",
+      iso: "ISO 100",
+    },
   },
   {
     id: "eve-2",
@@ -186,6 +284,14 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
     location: "Albert Hall Museum, Jaipur",
     year: "2026",
     description: "Dynamic stage illumination and candid backstage energy captured during an open-air classical fusion performance in Jaipur.",
+    exif: {
+      camera: "Sony A7 V",
+      lens: "Sony FE 50mm f/1.8",
+      focalLength: "50mm",
+      aperture: "f/1.8",
+      shutterSpeed: "1/250s",
+      iso: "ISO 1600",
+    },
   },
 ];
 

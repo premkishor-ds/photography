@@ -16,6 +16,7 @@ export const FOOTER_NAV_LINKS = [
   { name: "Photography Gear", href: "/photography-gear", key: "nav.gear" },
   { name: "About", href: "/about", key: "nav.about" },
   { name: "Journal & Guides", href: "/blog", key: "nav.journal" },
+  { name: "Client Proofing Portal", href: "/client-portal", key: "nav.proofing" },
   { name: "FAQ", href: "/faq", key: "nav.faq" },
   { name: "Contact & Booking", href: "/contact", key: "nav.contact" },
 ];

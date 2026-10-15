@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import Analytics from "@/components/Analytics";
+import WhatsAppConcierge from "@/components/WhatsAppConcierge";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { StudioProvider } from "@/context/StudioContext";
 
@@ -94,6 +95,7 @@ export default function RootLayout({
         <LanguageProvider>
           <StudioProvider>
             {children}
+            <WhatsAppConcierge />
             <Analytics />
           </StudioProvider>
         </LanguageProvider>

@@ -2,8 +2,10 @@ import React from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import PortfolioGallery from "@/components/PortfolioGallery";
+import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import Services from "@/components/Services";
 import AboutMe from "@/components/AboutMe";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactAndBooking from "@/components/ContactAndBooking";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
@@ -33,8 +35,10 @@ export default function Home() {
       <main className="min-h-screen">
         <Hero />
         <PortfolioGallery />
+        <BeforeAfterSlider />
         <Services />
         <AboutMe />
+        <TestimonialsSection />
         <ContactAndBooking />
       </main>
       <Footer />

@@ -68,6 +68,9 @@ const ALL_ROUTES = [
   { category: "Gear Aliases", name: "Alias: DJI Action 6 ND Filters", path: "/photography-gear/dji-osmo-action-6-nd-filters" },
   { category: "Gear Aliases", name: "Alias: DJI Action 6 Waterproof Case", path: "/photography-gear/dji-osmo-action-6-waterproof-case" },
 
+  // --- Client Portal ---
+  { category: "Client", name: "Client Proofing Portal", path: "/client-portal" },
+
   // --- Admin ---
   { category: "Admin", name: "Admin Dashboard", path: "/admin" },
 ];
