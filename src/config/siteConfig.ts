@@ -276,7 +276,7 @@ export const siteConfig = {
 
   // Photographer Lead Identity (Person Schema)
   photographer: {
-    name: process.env.NEXT_PUBLIC_PHOTOGRAPHER_NAME || "Kishor Prem",
+    name: process.env.NEXT_PUBLIC_PHOTOGRAPHER_NAME || "Lead Photographer",
     role:
       process.env.NEXT_PUBLIC_PHOTOGRAPHER_ROLE ||
       "Principal Photographer & Creative Director",

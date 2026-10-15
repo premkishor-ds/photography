@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
           title,
           excerpt: excerpt || "",
           category: category || "Portrait Tips",
-          author: author || "Prem Kishor",
+          author: author || "Lead Photographer",
           author_role: author_role || "Principal Photographer",
           read_time: read_time || "5 min read",
           hero_image:

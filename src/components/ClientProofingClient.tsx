@@ -51,11 +51,11 @@ interface ProofAlbum {
 const DEMO_ALBUMS: Record<string, ProofAlbum> = {
   ROYAL2026: {
     code: "ROYAL2026",
-    clientName: "Aanya & Devraj Rathore",
+    clientName: "Private Wedding Patron",
     eventTitle: "Royal Palace Wedding & Pheras",
     shootDate: "February 18, 2026",
     location: "City Palace & Rambagh Palace, Jaipur",
-    photographer: "Kishor Prem",
+    photographer: "Lead Photographer",
     maxSelections: 40,
     deliveryDate: "March 15, 2026",
     photos: [
@@ -127,11 +127,11 @@ const DEMO_ALBUMS: Record<string, ProofAlbum> = {
   },
   JAIPUR101: {
     code: "JAIPUR101",
-    clientName: "Dr. Vikram Singhania",
+    clientName: "Executive Portrait Patron",
     eventTitle: "Keynote Editorial & Studio Portraits",
     shootDate: "January 24, 2026",
     location: "Studio 215, Shri Kishanpura, Jaipur",
-    photographer: "Kishor Prem",
+    photographer: "Lead Photographer",
     maxSelections: 10,
     deliveryDate: "February 05, 2026",
     photos: [
@@ -335,7 +335,7 @@ export default function ClientProofingClient() {
               </div>
               <p className="text-xs sm:text-sm text-emerald-800 font-light">
                 Thank you, {currentAlbum.clientName}! Your {selectedCount} selected frames have
-                been received by Kishor Prem Studio. We are now preparing your fine-art layout and
+                been received by our studio team. We are now preparing your fine-art layout and
                 will send your digital album proofing PDF by {currentAlbum.deliveryDate}.
               </p>
             </div>

@@ -306,7 +306,7 @@ export default function AdminPage() {
     address: "Room 215, 2nd Floor, RV2J+5PQ, Karolan Ka Barh, Shri Kishanpura, Jaipur, Rajasthan 302017",
     hindi_address: "कमरा नं. 215, द्वितीय तल, RV2J+5PQ, करोलां का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
     working_hours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
-    photographer_name: "Kishor Prem",
+    photographer_name: "Lead Photographer",
     photographer_role: "Principal Photographer & Visual Artist",
     photographer_bio_1:
       "For over twelve years, I have dedicated my life to the delicate art of seeing. Photography, to me, is not merely capturing what is before the lens, but feeling the heartbeat of a fleeting moment and preserving it before it disappears into memory.",
@@ -4695,7 +4695,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setStudioSettings({ ...studioSettings, photographer_name: e.target.value })
                       }
-                      placeholder="e.g. Kishor Prem"
+                      placeholder="e.g. Lead Photographer"
                       className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-sm text-[#121212] focus:outline-none focus:border-[#BFA076]"
                     />
                   </div>

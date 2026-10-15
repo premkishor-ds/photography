@@ -14,7 +14,7 @@ export default function AboutPageContent() {
   const isHindi = language === "hi";
 
   const photographerName =
-    settings.photographer_name || siteConfig.photographer.name || "Kishor Prem";
+    settings.photographer_name || siteConfig.photographer.name || "Lead Photographer";
   const photographerRole = isHindi
     ? "प्रधान फोटोग्राफर एवं क्रिएटिव डायरेक्टर"
     : settings.photographer_role ||

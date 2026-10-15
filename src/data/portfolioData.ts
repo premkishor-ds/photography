@@ -147,7 +147,7 @@ export const ALL_PORTFOLIO_ITEMS: DetailedPortfolioItem[] = [
     imageAlt: "Indian bride and groom in royal wedding attire with palace illumination in Jaipur",
     location: "City Palace, Jaipur",
     year: "2026",
-    client: "Aanya & Kabir",
+    client: "Private Wedding Patron",
     aspectRatio: "landscape",
     description:
       "Tender golden hour vows and emotional pheras surrounded by historic carved stone arches, marigold garlands, and palace illumination.",
@@ -163,7 +163,7 @@ export const ALL_PORTFOLIO_ITEMS: DetailedPortfolioItem[] = [
     imageAlt: "Intricate bridal veil and traditional embroidered dupatta caught in the breeze on a palace terrace",
     location: "Jagmandir Island Palace, Udaipur",
     year: "2026",
-    client: "Pooja & Rohan",
+    client: "Destination Wedding Couple",
     aspectRatio: "portrait",
     description:
       "Delicate handcrafted zardozi embroidery caught in the gentle evening lake breeze on a secluded palace terrace in Rajasthan.",
@@ -179,7 +179,7 @@ export const ALL_PORTFOLIO_ITEMS: DetailedPortfolioItem[] = [
     imageAlt: "Wedding couple slow dancing outdoors under festive evening fairy lights in Rajasthan palace courtyard",
     location: "Samode Palace, Jaipur",
     year: "2026",
-    client: "Meera & Siddharth",
+    client: "Heritage Palace Couple",
     aspectRatio: "landscape",
     description:
       "Unscripted joy and spontaneous celebration under suspended fairy lights and starlit Rajasthani skies.",
@@ -407,7 +407,7 @@ export const ALL_PORTFOLIO_ITEMS_HINDI: Record<string, Partial<DetailedPortfolio
     title: "शाही महल फेरे एवं वचन",
     category: "वेडिंग फोटोग्राफी",
     location: "सिटी पैलेस, जयपुर",
-    client: "आन्या एवं कबीर",
+    client: "निजी वैवाहिक युगल",
     description:
       "ऐतिहासिक नक्काशीदार पत्थर के मेहराबों, गेंदे के फूलों और महल की रोशनी के बीच सुनहरी शाम के भावुक फेरे।",
   },
@@ -415,7 +415,7 @@ export const ALL_PORTFOLIO_ITEMS_HINDI: Record<string, Partial<DetailedPortfolio
     title: "हेरिटेज ब्राइडल वैभव",
     category: "वेडिंग फोटोग्राफी",
     location: "जगमंदिर आइलैंड पैलेस, उदयपुर",
-    client: "पूजा एवं रोहन",
+    client: "डेस्टिनेशन वेडिंग युगल",
     description:
       "राजस्थान में एक शांत महल की छत पर शाम की हल्की झील की हवा में लहराती हाथ से बनी जरदोजी कढ़ाई।",
   },
@@ -423,7 +423,7 @@ export const ALL_PORTFOLIO_ITEMS_HINDI: Record<string, Partial<DetailedPortfolio
     title: "हवेली प्रांगण में पहला नृत्य",
     category: "वेडिंग फोटोग्राफी",
     location: "समोद पैलेस, जयपुर",
-    client: "मीरा एवं सिद्धार्थ",
+    client: "हेरिटेज पैलेस युगल",
     description:
       "झिलमिलाती फेयरी लाइट्स और तारों भरे राजस्थानी आसमान के नीचे सहज आनंद और उत्सव।",
   },

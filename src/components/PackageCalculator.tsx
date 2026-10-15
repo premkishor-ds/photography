@@ -224,8 +224,8 @@ export default function PackageCalculator() {
     const rawPhone = settings.whatsapp_number || settings.phone || "+91 94140 00000";
     const phone = rawPhone.replace(/[^0-9]/g, "");
     const text = isHindi
-      ? `नमस्ते प्रेम! मैंने आपकी वेबसाइट पर एक कस्टम पैकेज तैयार किया है:\n• सेवा: ${selectedShoot.titleHindi}\n• अवधि: ${selectedDuration.labelHindi}\n• अतिरिक्त: ${selectedAddonIds.join(", ") || "कोई नहीं"}\n• अनुमानित बजट: ${formattedTotal}\nकृपया आगामी उपलब्धता बताएं।`
-      : `Hello Prem! I crafted a bespoke estimate on your studio calculator:\n• Service: ${selectedShoot.title}\n• Duration: ${selectedDuration.label}\n• Add-ons: ${selectedAddonIds.join(", ") || "None"}\n• Estimated Total: ${formattedTotal}\nCould you share your calendar availability?`;
+      ? `नमस्ते! मैंने आपकी वेबसाइट पर एक कस्टम पैकेज तैयार किया है:\n• सेवा: ${selectedShoot.titleHindi}\n• अवधि: ${selectedDuration.labelHindi}\n• अतिरिक्त: ${selectedAddonIds.join(", ") || "कोई नहीं"}\n• अनुमानित बजट: ${formattedTotal}\nकृपया आगामी उपलब्धता बताएं।`
+      : `Hello! I crafted a bespoke estimate on your studio calculator:\n• Service: ${selectedShoot.title}\n• Duration: ${selectedDuration.label}\n• Add-ons: ${selectedAddonIds.join(", ") || "None"}\n• Estimated Total: ${formattedTotal}\nCould you share your calendar availability?`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
   }, [settings.whatsapp_number, settings.phone, isHindi, selectedShoot, selectedDuration, selectedAddonIds, formattedTotal]);
 

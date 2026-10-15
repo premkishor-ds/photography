@@ -17,7 +17,7 @@ export default function WhatsAppConcierge() {
   const quickPrompts = [
     {
       label: language === "hi" ? "तारीख की उपलब्धता जांचें" : "Check Date Availability",
-      text: "Hello Kishor, I would like to check your availability for an upcoming photoshoot.",
+      text: "Hello, I would like to check availability for an upcoming photoshoot.",
     },
     {
       label: language === "hi" ? "शाही शादी पैकेज विवरण" : "Wedding Package Inquiry",
@@ -25,14 +25,14 @@ export default function WhatsAppConcierge() {
     },
     {
       label: language === "hi" ? "पोर्ट्रेट स्टूडियो सत्र" : "Portrait Session Booking",
-      text: "Hi, I am interested in booking an editorial portrait session at your Jaipur studio.",
+      text: "Hi, I am interested in booking an editorial portrait session at your studio.",
     },
   ];
 
   const handleOpenWhatsApp = (customText?: string) => {
     const message = encodeURIComponent(
       customText ||
-        "Hello Kishor, I am visiting your website and would love to discuss a photography session."
+        "Hello, I am visiting your website and would love to discuss a photography session."
     );
     window.open(`https://wa.me/${phone}?text=${message}`, "_blank", "noopener,noreferrer");
   };
@@ -54,7 +54,7 @@ export default function WhatsAppConcierge() {
               </div>
               <div>
                 <h4 className="font-serif text-sm font-medium tracking-wide">
-                  {settings.photographer_name || siteConfig.photographer.name} Studio
+                  {settings.studio_name || "Your Photography"} Concierge
                 </h4>
                 <p className="text-[10px] text-[#FAF7F2]/70 font-sans flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

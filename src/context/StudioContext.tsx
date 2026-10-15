@@ -55,7 +55,7 @@ const defaultSettings: StudioSettings = {
   address: `${siteConfig.business.address.streetAddress}, ${siteConfig.business.address.addressLocality}, ${siteConfig.business.address.addressRegion} ${siteConfig.business.address.postalCode}`,
   hindi_address: siteConfig.business.address.hindiAddress || "कमरा नं. 215, द्वितीय तल, RV2J+5PQ, करोलां का बाड़, श्री किशनपुरा, जयपुर, राजस्थान 302017",
   working_hours: "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)",
-  photographer_name: siteConfig.photographer.name || "Kishor Prem",
+  photographer_name: siteConfig.photographer.name || "Lead Photographer",
   photographer_role: siteConfig.photographer.role || "Principal Photographer & Visual Artist",
   photographer_bio_1:
     "For over twelve years, I have dedicated my life to the delicate art of seeing. Photography, to me, is not merely capturing what is before the lens, but feeling the heartbeat of a fleeting moment and preserving it before it disappears into memory.",

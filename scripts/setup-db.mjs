@@ -303,8 +303,8 @@ const SERVICES = [
 
 const INITIAL_INQUIRIES = [
   {
-    name: "Vikramaditya Rathore",
-    email: "vikram.rathore@example.com",
+    name: "Private Wedding Client",
+    email: "wedding.client@example.com",
     phone: "+91 98290 12345",
     service: "Wedding Photography",
     preferred_date: "2026-11-20",
@@ -313,8 +313,8 @@ const INITIAL_INQUIRIES = [
     notes: "VIP inquiry received via website contact portal."
   },
   {
-    name: "Ananya Deshmukh",
-    email: "ananya.d@example.com",
+    name: "Executive Portrait Client",
+    email: "editorial.client@example.com",
     phone: "+91 98201 54321",
     service: "Portrait Photography",
     preferred_date: "2026-10-28",

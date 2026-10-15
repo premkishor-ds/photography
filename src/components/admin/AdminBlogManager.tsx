@@ -62,7 +62,7 @@ export default function AdminBlogManager() {
   const [formSlug, setFormSlug] = useState("");
   const [formCategory, setFormCategory] = useState("Portrait Tips");
   const [formExcerpt, setFormExcerpt] = useState("");
-  const [formAuthor, setFormAuthor] = useState("Prem Kishor");
+  const [formAuthor, setFormAuthor] = useState("Lead Photographer");
   const [formAuthorRole, setFormAuthorRole] = useState("Principal Photographer");
   const [formReadTime, setFormReadTime] = useState("5 min read");
   const [formHeroImage, setFormHeroImage] = useState(
@@ -113,7 +113,7 @@ export default function AdminBlogManager() {
     setFormSlug("");
     setFormCategory("Portrait Tips");
     setFormExcerpt("");
-    setFormAuthor("Prem Kishor");
+    setFormAuthor("Lead Photographer");
     setFormAuthorRole("Principal Photographer");
     setFormReadTime("5 min read");
     setFormHeroImage(
@@ -138,7 +138,7 @@ export default function AdminBlogManager() {
     setFormSlug(post.slug);
     setFormCategory(post.category);
     setFormExcerpt(post.excerpt || "");
-    setFormAuthor(post.author || "Prem Kishor");
+    setFormAuthor(post.author || "Lead Photographer");
     setFormAuthorRole(post.author_role || "Principal Photographer");
     setFormReadTime(post.read_time || "5 min read");
     setFormHeroImage(post.hero_image || "");
@@ -610,7 +610,7 @@ export default function AdminBlogManager() {
                     type="text"
                     value={formAuthor}
                     onChange={(e) => setFormAuthor(e.target.value)}
-                    placeholder="Prem Kishor"
+                    placeholder="Lead Photographer"
                     className="w-full p-2.5 bg-[#FAF7F2] border border-[#D7C7B2] text-xs text-[#121212] focus:outline-none focus:border-[#BFA076]"
                   />
                 </div>

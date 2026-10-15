@@ -73,12 +73,12 @@ export default function SpotlightSearch({
 
     list.push({
       id: "page-about",
-      title: "About Prem Kishor & Studio Heritage",
+      title: "About The Photographer & Studio Heritage",
       description: "Learn about our fine-art philosophy, international acclaim, and 14+ years of heritage documentation.",
       url: "/about",
       category: "Pages",
       badge: "Artist Bio",
-      keywords: ["about", "prem kishor", "photographer", "bio", "heritage", "philosophy", "हमारे बारे में", "प्रोफ़ाइल", "कलाकार", "जीवनी", "इतिहास"],
+      keywords: ["about", "photographer", "lead photographer", "artist", "bio", "heritage", "philosophy", "हमारे बारे में", "प्रोफ़ाइल", "कलाकार", "जीवनी", "इतिहास"],
     });
 
     list.push({
