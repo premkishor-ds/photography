@@ -8,7 +8,6 @@ import { constructMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/config/siteConfig";
 import { GEAR_ITEMS } from "@/data/gearData";
 import {
-  generateBreadcrumbSchema,
   generateFAQSchema,
   getAbsoluteUrl,
 } from "@/lib/schema";
@@ -55,11 +54,15 @@ export async function generateMetadata({ params }: PageProps) {
     });
   }
 
-  const title = `${item.name} | Studio Equipment Record`;
-  const description =
+  const title = `${item.name} | Equipment Record`;
+  const rawDesc =
     item.description ||
     item.overview ||
     `Technical specifications, operational applications, and verified compatibility for the ${item.name}.`;
+  const description =
+    rawDesc.length > 160
+      ? rawDesc.slice(0, 157).replace(/\s+\S*$/, "") + "..."
+      : rawDesc;
 
   return constructMetadata({
     title,
@@ -78,12 +81,6 @@ export default async function PhotographyGearItemPage({ params }: PageProps) {
   if (!item) {
     notFound();
   }
-
-  const breadcrumbsSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Photography Gear", url: "/photography-gear" },
-    { name: item.name, url: `/photography-gear/${item.slug}` },
-  ]);
 
   const faqSchema =
     item.faqs && item.faqs.length > 0
@@ -123,7 +120,6 @@ export default async function PhotographyGearItemPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#121212]">
-      <JsonLd data={breadcrumbsSchema} />
       <JsonLd data={articleSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <Header />

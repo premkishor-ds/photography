@@ -23,7 +23,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "what-to-wear-for-a-portrait-photoshoot",
-    title: "What to Wear for a Portrait Photoshoot: Stylist Guide",
+    title: "What to Wear for a Portrait Photoshoot",
     excerpt:
       "Essential wardrobe advice, flattering color palettes, and texture combinations to ensure your portraits look timeless, authentic, and effortlessly elegant.",
     publishedDate: "2026-02-14",

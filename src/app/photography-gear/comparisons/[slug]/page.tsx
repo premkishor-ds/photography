@@ -6,7 +6,6 @@ import JsonLd from "@/components/JsonLd";
 import GearComparisonClient from "@/components/GearComparisonClient";
 import { constructMetadata } from "@/lib/metadata";
 import {
-  generateBreadcrumbSchema,
   generateFAQSchema,
   getAbsoluteUrl,
 } from "@/lib/schema";
@@ -58,12 +57,6 @@ export default async function GearComparisonPage({ params }: PageProps) {
     notFound();
   }
 
-  const breadcrumbsSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Photography Gear", url: "/photography-gear" },
-    { name: comp.title, url: `/photography-gear/comparisons/${comp.slug}` },
-  ]);
-
   const faqSchema = comp.faqs.length > 0 ? generateFAQSchema(comp.faqs) : null;
 
   const articleSchema = {
@@ -97,7 +90,6 @@ export default async function GearComparisonPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#121212]">
-      <JsonLd data={breadcrumbsSchema} />
       <JsonLd data={articleSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <Header />

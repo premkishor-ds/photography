@@ -4,11 +4,11 @@ import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import PhotographyGearClient from "@/components/PhotographyGearClient";
 import { constructMetadata } from "@/lib/metadata";
-import { generateWebPageSchema, generateBreadcrumbSchema } from "@/lib/schema";
+import { generateWebPageSchema } from "@/lib/schema";
 import { fetchGearItems } from "@/lib/supabase";
 
 export const metadata = constructMetadata({
-  title: "My Photography Gear | Cameras, Lenses & Audio Equipment",
+  title: "Studio Equipment & Gear Inventory",
   description:
     "Explore the cameras, lenses, audio equipment, and accessories I use for wildlife, sports, portraits, travel, and video creation.",
   path: "/photography-gear",
@@ -25,15 +25,9 @@ export default async function PhotographyGearHubPage() {
     "Explore the cameras, lenses, audio equipment, and accessories I use for wildlife, sports, portraits, travel, and video creation."
   );
 
-  const breadcrumbsSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Photography Gear", url: "/photography-gear" },
-  ]);
-
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#121212]">
       <JsonLd data={webPageSchema} />
-      <JsonLd data={breadcrumbsSchema} />
       <Header />
 
       <main className="flex-1 pt-28 pb-20">

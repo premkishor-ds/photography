@@ -11,7 +11,7 @@ import { siteConfig } from "@/config/siteConfig";
 export const metadata = constructMetadata({
   title: `About ${siteConfig.photographer.name} | Lead Photographer`,
   description:
-    `Learn about lead photographer ${siteConfig.photographer.name}, our 12+ years of fine-art experience, documentary philosophy, and technical dedication to capturing life's most meaningful moments.`,
+    `Meet lead photographer ${siteConfig.photographer.name}: 12+ years of editorial experience, artistic vision, and dedication to capturing authentic moments.`,
   path: "/about",
 });
 
