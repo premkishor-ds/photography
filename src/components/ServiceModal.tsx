@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { X, Check, Clock, Calendar, ArrowRight, ShieldCheck } from "lucide-react";
-import { ServiceItem } from "@/data/photographyData";
+import { ServiceItem, getLocalizedService } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ServiceModalProps {
@@ -39,18 +39,19 @@ export default function ServiceModal({
 
   if (!isOpen || !service) return null;
 
+  const isHindi = language === "hi";
+  const s = getLocalizedService(service, language);
+
   const handleBook = () => {
     onClose();
-    onBookService(service.title);
+    onBookService(s.title);
   };
-
-  const isHindi = language === "hi";
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`${service.title} details`}
+      aria-label={`${s.title} details`}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md transition-all duration-300"
       onClick={onClose}
     >
@@ -72,8 +73,8 @@ export default function ServiceModal({
           {/* Header Image Banner */}
           <div className="relative h-60 sm:h-72 w-full bg-[#121212]">
             <Image
-              src={service.imageUrl}
-              alt={service.title}
+              src={s.imageUrl}
+              alt={s.title}
               fill
               className="object-cover object-center filter brightness-[0.85]"
             />
@@ -83,10 +84,10 @@ export default function ServiceModal({
                 {isHindi ? "सेवा पैकेज" : "Service Package"}
               </span>
               <h3 className="font-serif text-2xl sm:text-4xl font-normal mt-1">
-                {service.title}
+                {s.title}
               </h3>
               <p className="text-xs sm:text-sm text-white/80 font-sans mt-1 max-w-xl">
-                {service.tagline}
+                {s.tagline}
               </p>
             </div>
           </div>
@@ -101,7 +102,7 @@ export default function ServiceModal({
                   <span>{isHindi ? "अवधि" : "Duration"}</span>
                 </div>
                 <p className="font-medium text-sm text-[#121212] mt-1">
-                  {service.duration}
+                  {s.duration}
                 </p>
               </div>
 
@@ -111,7 +112,7 @@ export default function ServiceModal({
                   <span>{isHindi ? "डिलीवरी" : "Turnaround"}</span>
                 </div>
                 <p className="font-medium text-sm text-[#121212] mt-1">
-                  {service.deliveryTime}
+                  {s.deliveryTime}
                 </p>
               </div>
 
@@ -132,7 +133,7 @@ export default function ServiceModal({
                 {isHindi ? "इस अनुभव के बारे में" : "About This Experience"}
               </h4>
               <p className="text-sm text-[#554837] leading-relaxed font-light">
-                {service.detailedDescription}
+                {s.detailedDescription}
               </p>
             </div>
 
@@ -142,7 +143,7 @@ export default function ServiceModal({
                 {isHindi ? "क्या शामिल है" : "What's Included"}
               </h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {service.deliverables.map((item, idx) => (
+                {s.deliverables.map((item, idx) => (
                   <li
                     key={idx}
                     className="flex items-start gap-2.5 text-xs sm:text-sm text-[#2C2C2C] font-sans"
@@ -162,7 +163,7 @@ export default function ServiceModal({
                 {isHindi ? "किसके लिए उपयुक्त" : "Ideal For"}
               </p>
               <p className="text-xs sm:text-sm text-[#121212] mt-1">
-                {service.idealFor}
+                {s.idealFor}
               </p>
             </div>
 

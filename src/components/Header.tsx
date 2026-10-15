@@ -20,7 +20,7 @@ export const PRIMARY_NAV_LINKS = [
 ];
 
 export default function Header() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { settings } = useStudioSettings();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -82,7 +82,7 @@ export default function Header() {
                 isScrolled || !isHomepage ? "text-[#7B6955]" : "text-white/80"
               }`}
             >
-              Fine Art & Editorial
+              {language === "hi" ? "फाइन आर्ट एवं एडिटोरियल" : "Fine Art & Editorial"}
             </span>
           </div>
         </Link>

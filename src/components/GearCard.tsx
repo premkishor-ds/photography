@@ -1,24 +1,30 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Layers, Camera } from "lucide-react";
-import { GearItem } from "@/data/gearData";
+import { GearItem, getLocalizedGearItem } from "@/data/gearData";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface GearCardProps {
   item: GearItem;
 }
 
 export default function GearCard({ item }: GearCardProps) {
-  const shortDescription = item.description || item.overview || "";
-  const primaryUses = (item.primaryUses && item.primaryUses.length > 0)
-    ? item.primaryUses
-    : (item.bestFor || []);
-  const portfolioLinks = item.relatedPortfolioUrls || (
-    item.relatedPortfolioSlug
-      ? [{ label: item.relatedPortfolioCategory || "Portfolio", url: item.relatedPortfolioSlug }]
+  const { t, language } = useLanguage();
+  const localized = getLocalizedGearItem(item, language);
+
+  const shortDescription = localized.description || localized.overview || "";
+  const primaryUses = (localized.primaryUses && localized.primaryUses.length > 0)
+    ? localized.primaryUses
+    : (localized.bestFor || []);
+  const portfolioLinks = localized.relatedPortfolioUrls || (
+    localized.relatedPortfolioSlug
+      ? [{ label: localized.relatedPortfolioCategory || "Portfolio", url: localized.relatedPortfolioSlug }]
       : []
   );
-  const reviewLink = item.reviewUrl || (item.slug ? `/photography-gear/${item.slug}` : null);
+  const reviewLink = localized.reviewUrl || (localized.slug ? `/photography-gear/${localized.slug}` : null);
 
   return (
     <article
@@ -41,11 +47,11 @@ export default function GearCard({ item }: GearCardProps) {
             {/* Category Badge & Verification Status */}
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
               <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 bg-[#121212]/90 text-[#FAF7F2] backdrop-blur-xs font-medium">
-                {item.categoryLabel}
+                {localized.categoryLabel}
               </span>
-              {item.ownershipStatus && (
+              {localized.ownershipStatus && (
                 <span className="text-[10px] tracking-wider px-2 py-0.5 bg-[#FAF7F2]/95 text-[#554837] border border-[#E8DED0] backdrop-blur-xs font-mono font-medium">
-                  {item.ownershipStatus}
+                  {localized.ownershipStatus}
                 </span>
               )}
             </div>
@@ -54,7 +60,7 @@ export default function GearCard({ item }: GearCardProps) {
           <div className="relative aspect-[16/10] w-full bg-[#F4EFE6] border-b border-[#E8DED0] flex flex-col items-center justify-center p-6 text-center text-[#7B6955]">
             <Camera className="w-8 h-8 stroke-[1.2] opacity-60 mb-2" />
             <span className="text-xs uppercase tracking-widest font-sans font-medium">
-              Image Pending Verification
+              {t("gear.card.pendingImage", "Image Pending Verification")}
             </span>
           </div>
         )}
@@ -65,11 +71,11 @@ export default function GearCard({ item }: GearCardProps) {
           <div>
             <div className="flex items-center justify-between gap-2">
               <p className="text-[11px] uppercase tracking-[0.2em] text-[#7B6955] font-sans font-medium">
-                {item.manufacturer}
+                {localized.manufacturer}
               </p>
-              {item.modelNumber && (
+              {localized.modelNumber && (
                 <span className="text-[10px] font-mono text-[#9E8870] bg-[#FAF7F2] px-2 py-0.5 border border-[#E8DED0]">
-                  {item.modelNumber}
+                  {localized.modelNumber}
                 </span>
               )}
             </div>
@@ -77,15 +83,15 @@ export default function GearCard({ item }: GearCardProps) {
             <h3 className="font-serif text-2xl text-[#121212] font-normal mt-1 leading-snug">
               {reviewLink ? (
                 <Link href={reviewLink} className="hover:text-[#7B6955] transition-colors">
-                  {item.name}
+                  {localized.name}
                 </Link>
               ) : (
-                <span>{item.name}</span>
+                <span>{localized.name}</span>
               )}
             </h3>
             
             <p className="text-xs uppercase tracking-wider text-[#BFA076] font-sans font-medium mt-1">
-              {item.categoryLabel}
+              {localized.categoryLabel}
             </p>
           </div>
 
@@ -100,7 +106,7 @@ export default function GearCard({ item }: GearCardProps) {
           {primaryUses.length > 0 && (
             <div className="space-y-1.5 pt-1">
               <p className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans font-medium">
-                Primary Use Cases
+                {t("gear.card.primaryUses", "Primary Use Cases")}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {primaryUses.map((use, i) => (
@@ -116,14 +122,14 @@ export default function GearCard({ item }: GearCardProps) {
           )}
 
           {/* Compatibility Information */}
-          {item.compatibility && (
+          {localized.compatibility && (
             <div className="p-3 bg-[#FAF7F2] border border-[#E8DED0] space-y-1">
               <p className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans font-medium flex items-center gap-1.5">
                 <Layers className="w-3 h-3 text-[#BFA076]" />
-                <span>Compatibility & System</span>
+                <span>{t("gear.card.compatibility", "Compatibility & System")}</span>
               </p>
               <p className="text-xs text-[#3E3427] font-light leading-relaxed">
-                {item.compatibility}
+                {localized.compatibility}
               </p>
             </div>
           )}
@@ -139,12 +145,12 @@ export default function GearCard({ item }: GearCardProps) {
               href={reviewLink}
               className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors group/btn py-1.5"
             >
-              <span>View Detailed Specs & Field Review</span>
+              <span>{t("gear.card.viewSpecs", "View Detailed Specs & Field Review")}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
             </Link>
           ) : (
             <span className="text-[11px] text-[#9E8870] font-sans italic">
-              Review undergoing field verification
+              {t("gear.card.pendingReview", "Review undergoing field verification")}
             </span>
           )}
         </div>
@@ -153,7 +159,7 @@ export default function GearCard({ item }: GearCardProps) {
         {portfolioLinks.length > 0 && (
           <div className="pt-2 border-t border-[#F0E8DC] flex flex-wrap items-center gap-2">
             <span className="text-[10px] uppercase tracking-wider text-[#7B6955] font-sans">
-              Relevant Work:
+              {t("gear.card.relevantWork", "Relevant Work:")}
             </span>
             <div className="flex flex-wrap gap-2">
               {portfolioLinks.map((p, idx) => (

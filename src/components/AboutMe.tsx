@@ -8,8 +8,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";
 
 export default function AboutMe() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { settings } = useStudioSettings();
+  const isHindi = language === "hi";
 
   const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -20,17 +21,25 @@ export default function AboutMe() {
   };
 
   const photographerName = settings.photographer_name || PHOTOGRAPHER_INFO.name;
-  const photographerRole = settings.photographer_role || PHOTOGRAPHER_INFO.role;
+  const photographerRole = isHindi
+    ? "फाइन आर्ट एवं पोर्ट्रेट फोटोग्राफर"
+    : (settings.photographer_role || PHOTOGRAPHER_INFO.role);
   const portraitUrl = settings.photographer_portrait_url || PHOTOGRAPHER_INFO.portraitUrl;
-  const quote = settings.photographer_quote || PHOTOGRAPHER_INFO.quote;
-  const bio1 = settings.photographer_bio_1 || PHOTOGRAPHER_INFO.bioParagraph1;
-  const bio2 = settings.photographer_bio_2 || PHOTOGRAPHER_INFO.bioParagraph2;
+  const quote = isHindi
+    ? "“प्रकाश वह दिखाता है जो मौजूद है; भावना वह दिखाती है जो वास्तव में मायने रखता है।”"
+    : (settings.photographer_quote || PHOTOGRAPHER_INFO.quote);
+  const bio1 = isHindi
+    ? "बारह से अधिक वर्षों से, मैंने अपना जीवन दृश्य कला और पलों को संजोने के सूक्ष्म शिल्प को समर्पित किया है। मेरे लिए फोटोग्राफी केवल कैमरे के सामने जो है उसे कैद करना नहीं, बल्कि क्षणभंगुर पल की धड़कन को महसूस करना और स्मृति में विलीन होने से पहले उसे अमर बनाना है।"
+    : (settings.photographer_bio_1 || PHOTOGRAPHER_INFO.bioParagraph1);
+  const bio2 = isHindi
+    ? "शास्त्रीय फाइन-आर्ट, वृत्तचित्र और गतिशील एक्शन फोटोग्राफी में प्रशिक्षित, मेरी शैली कोमल, गर्म प्राकृतिक प्रकाश को सूक्ष्म संपादकीय रचना के साथ जोड़ती है। मैं अप्रत्याशित पलों को ढूंढता हूं: फेरों से पहले हाथों का मौन स्पर्श, आंखों में एक क्षणिक चमक, या हवा में एक एथलीट की विस्फोटक ऊर्जा।"
+    : (settings.photographer_bio_2 || PHOTOGRAPHER_INFO.bioParagraph2);
 
   const dynamicStats = [
-    { label: "Years of Craft", value: settings.stats_experience || "12+" },
-    { label: "Sessions Completed", value: settings.stats_sessions || "650+" },
-    { label: "Weddings Documented", value: settings.stats_weddings || "180+" },
-    { label: "Editorial Features", value: settings.stats_features || "24+" },
+    { label: isHindi ? "वर्षों का अनुभव" : "Years of Craft", value: settings.stats_experience || "12+" },
+    { label: isHindi ? "सत्र संपन्न" : "Sessions Completed", value: settings.stats_sessions || "650+" },
+    { label: isHindi ? "विवाह प्रलेखित" : "Weddings Documented", value: settings.stats_weddings || "180+" },
+    { label: isHindi ? "संपादकीय प्रकाशन" : "Editorial Features", value: settings.stats_features || "24+" },
   ];
 
   return (

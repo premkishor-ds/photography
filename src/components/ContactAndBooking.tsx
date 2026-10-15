@@ -18,7 +18,7 @@ import {
   RotateCw,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/Icons";
-import { CONTACT_DETAILS, SERVICES } from "@/data/photographyData";
+import { CONTACT_DETAILS, SERVICES, getLocalizedService } from "@/data/photographyData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useStudioSettings } from "@/context/StudioContext";
 import GoogleStaticMap from "@/components/GoogleStaticMap";
@@ -626,7 +626,9 @@ export default function ContactAndBooking({
   const studioWhatsapp = settings.whatsapp_number || CONTACT_DETAILS.whatsappNumber;
   const studioAddress = settings.address || CONTACT_DETAILS.address;
   const studioHindiAddress = settings.hindi_address || CONTACT_DETAILS.hindiAddress;
-  const studioWorkingHours = settings.working_hours || CONTACT_DETAILS.workingHours;
+  const studioWorkingHours = language === "hi"
+    ? (settings.hindi_working_hours || "सोमवार – शनिवार: प्रातः 9:30 – सायं 7:00 IST (रविवार केवल पूर्व अपॉइंटमेंट द्वारा)")
+    : (settings.working_hours || CONTACT_DETAILS.workingHours);
 
   const whatsappMessage = encodeURIComponent(
     `Hello! I'd like to inquire about booking a ${formData.durationMinutes / 60}-hour photography session with ${
@@ -684,28 +686,36 @@ export default function ContactAndBooking({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#121212]">
                     <ShieldCheck className="w-4 h-4 text-[#BFA076]" />
-                    <span>Protected Travel Buffers</span>
+                    <span>{language === "hi" ? "सुरक्षित यात्रा बफर" : "Protected Travel Buffers"}</span>
                   </div>
                   <span className="text-[10px] uppercase tracking-widest text-[#7B6955] font-sans font-medium px-2 py-0.5 bg-white border border-[#E8DED0]">
-                    Zero-Overlap Policy
+                    {language === "hi" ? "शून्य-ओवरलैप नीति" : "Zero-Overlap Policy"}
                   </span>
                 </div>
                 <p className="text-xs text-[#554837] leading-relaxed font-light">
-                  To ensure punctual arrival, equipment staging, and travel between locations, our studio automatically reserves <strong>1 hour before</strong> and <strong>1 hour after</strong> every booking. Appointments must be at least <strong>60 minutes</strong>.
+                  {language === "hi" ? (
+                    <>
+                      समय पर आगमन, उपकरण तैयारी और लोकेशन के बीच आवागमन सुनिश्चित करने के लिए, हमारा स्टूडियो प्रत्येक बुकिंग से पहले <strong>1 घंटा</strong> और बाद में <strong>1 घंटा</strong> स्वतः आरक्षित करता है। सत्र कम से कम <strong>60 मिनट</strong> का होना चाहिए।
+                    </>
+                  ) : (
+                    <>
+                      To ensure punctual arrival, equipment staging, and travel between locations, our studio automatically reserves <strong>1 hour before</strong> and <strong>1 hour after</strong> every booking. Appointments must be at least <strong>60 minutes</strong>.
+                    </>
+                  )}
                 </p>
                 {/* Visual Timeline Buffer Bar */}
                 <div className="grid grid-cols-3 gap-2 pt-1 text-center text-[10px] font-sans">
                   <div className="py-1.5 px-2 bg-white border border-[#E8DED0] text-[#7B6955]">
-                    <span className="block font-semibold text-[#121212]">-60 Min</span>
-                    <span className="text-[9px]">Arrival & Prep</span>
+                    <span className="block font-semibold text-[#121212]">{language === "hi" ? "-60 मिनट" : "-60 Min"}</span>
+                    <span className="text-[9px]">{language === "hi" ? "आगमन एवं तैयारी" : "Arrival & Prep"}</span>
                   </div>
                   <div className="py-1.5 px-2 bg-[#121212] text-[#FAF7F2] border border-[#121212]">
-                    <span className="block font-semibold text-white">Your Session</span>
-                    <span className="text-[9px] text-[#D7C7B2]">60+ Min Shoot</span>
+                    <span className="block font-semibold text-white">{language === "hi" ? "आपका सत्र" : "Your Session"}</span>
+                    <span className="text-[9px] text-[#D7C7B2]">{language === "hi" ? "60+ मिनट शूट" : "60+ Min Shoot"}</span>
                   </div>
                   <div className="py-1.5 px-2 bg-white border border-[#E8DED0] text-[#7B6955]">
-                    <span className="block font-semibold text-[#121212]">+60 Min</span>
-                    <span className="text-[9px]">Wrap & Buffer</span>
+                    <span className="block font-semibold text-[#121212]">{language === "hi" ? "+60 मिनट" : "+60 Min"}</span>
+                    <span className="text-[9px]">{language === "hi" ? "समापन एवं बफर" : "Wrap & Buffer"}</span>
                   </div>
                 </div>
               </div>
@@ -848,7 +858,9 @@ export default function ContactAndBooking({
                     {t("contact.form.thankYou", "Booking Request Reserved")}, {formData.name}!
                   </h4>
                   <p className="text-sm text-[#554837] max-w-md mx-auto leading-relaxed">
-                    Your appointment has been successfully recorded in our booking calendar. Travel buffers before and after have been blocked to guarantee our full availability.
+                    {language === "hi"
+                      ? "आपकी अपॉइंटमेंट हमारे बुकिंग कैलेंडर में सफलतापूर्वक दर्ज कर ली गई है। हमारी पूर्ण उपलब्धता सुनिश्चित करने के लिए पहले और बाद के यात्रा बफर सुरक्षित कर लिए गए हैं।"
+                      : "Your appointment has been successfully recorded in our booking calendar. Travel buffers before and after have been blocked to guarantee our full availability."}
                   </p>
                 </div>
 
@@ -856,24 +868,30 @@ export default function ContactAndBooking({
                 {submittedBooking && (
                   <div className="max-w-md mx-auto p-5 bg-[#FAF7F2] border border-[#E8DED0] text-left text-xs space-y-2.5">
                     <div className="flex justify-between border-b border-[#E8DED0] pb-2">
-                      <span className="text-[#7B6955] uppercase tracking-wider">Service:</span>
+                      <span className="text-[#7B6955] uppercase tracking-wider">
+                        {language === "hi" ? "सेवा:" : "Service:"}
+                      </span>
                       <strong className="text-[#121212]">{submittedBooking.service || formData.service}</strong>
                     </div>
                     <div className="flex justify-between border-b border-[#E8DED0] pb-2">
-                      <span className="text-[#7B6955] uppercase tracking-wider">Date & Time:</span>
+                      <span className="text-[#7B6955] uppercase tracking-wider">
+                        {language === "hi" ? "तिथि एवं समय:" : "Date & Time:"}
+                      </span>
                       <strong className="text-[#121212]">
-                        {submittedBooking.preferredDate || formData.preferredDate} at {submittedBooking.appointmentTime || formData.appointmentTime}
+                        {submittedBooking.preferredDate || formData.preferredDate} {language === "hi" ? "को" : "at"} {submittedBooking.appointmentTime || formData.appointmentTime}
                       </strong>
                     </div>
                     <div className="flex justify-between border-b border-[#E8DED0] pb-2">
-                      <span className="text-[#7B6955] uppercase tracking-wider">Duration:</span>
+                      <span className="text-[#7B6955] uppercase tracking-wider">
+                        {language === "hi" ? "अवधि:" : "Duration:"}
+                      </span>
                       <strong className="text-[#121212]">
-                        {(submittedBooking.durationMinutes || formData.durationMinutes) / 60} Hour(s) ({submittedBooking.durationMinutes || formData.durationMinutes} min)
+                        {(submittedBooking.durationMinutes || formData.durationMinutes) / 60} {language === "hi" ? "घंटा/घंटे" : "Hour(s)"} ({(submittedBooking.durationMinutes || formData.durationMinutes)} {language === "hi" ? "मिनट" : "min"})
                       </strong>
                     </div>
                     {submittedBooking.blockedStartTime && submittedBooking.blockedEndTime && (
                       <div className="flex justify-between pt-1 text-[11px] text-[#7B6955]">
-                        <span>Protected Travel Window:</span>
+                        <span>{language === "hi" ? "सुरक्षित यात्रा विंडो:" : "Protected Travel Window:"}</span>
                         <span className="font-mono font-medium text-[#121212]">
                           {submittedBooking.blockedStartTime} – {submittedBooking.blockedEndTime}
                         </span>
@@ -1067,12 +1085,17 @@ export default function ContactAndBooking({
                       }`}
                     >
                       <option value="">{t("contact.form.selectService", "Select a service category")}</option>
-                      {availableServices.map((s) => (
-                        <option key={s.id} value={s.title}>
-                          {s.title} {s.min_duration_minutes ? `(Min ${s.min_duration_minutes / 60}h)` : ""}
-                        </option>
-                      ))}
-                      <option value="Custom Photography Project">Custom Photography Session</option>
+                      {availableServices.map((s) => {
+                        const localized = getLocalizedService(s as any, language);
+                        return (
+                          <option key={s.id} value={s.title}>
+                            {language === "hi" ? localized.title : s.title} {s.min_duration_minutes ? `(${language === "hi" ? "न्यूनतम " : "Min "}${s.min_duration_minutes / 60}${language === "hi" ? " घंटे" : "h"})` : ""}
+                          </option>
+                        );
+                      })}
+                      <option value="Custom Photography Project">
+                        {language === "hi" ? "कस्टम फोटोग्राफी सत्र" : "Custom Photography Session"}
+                      </option>
                     </select>
                     {errors.service && (
                       <p id="service-error" role="alert" className="text-xs text-red-600 mt-1.5 flex items-center gap-1 font-sans">
@@ -1088,21 +1111,21 @@ export default function ContactAndBooking({
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <label className="text-xs uppercase tracking-wider text-[#121212] font-sans font-medium flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#BFA076]" />
-                      <span>{t("contact.form.duration", "Booking Duration")} (Min: 60 min)</span>
+                      <span>{language === "hi" ? "बुकिंग अवधि" : "Booking Duration"} ({language === "hi" ? "न्यूनतम: 60 मिनट" : "Min: 60 min"})</span>
                     </label>
                     <span className="text-[11px] text-[#7B6955] font-sans">
-                      Selected: <strong className="text-[#121212]">{formData.durationMinutes / 60} Hour(s) ({formData.durationMinutes} min)</strong>
+                      {language === "hi" ? "चयनित: " : "Selected: "}<strong className="text-[#121212]">{formData.durationMinutes / 60} {language === "hi" ? "घंटा/घंटे" : "Hour(s)"} ({formData.durationMinutes} {language === "hi" ? "मिनट" : "min"})</strong>
                     </span>
                   </div>
 
                   {isFixedDuration ? (
                     <div className="p-3 bg-white border border-[#D7C7B2] flex items-center justify-between text-xs">
                       <div>
-                        <span className="font-medium text-[#121212]">Fixed Service Duration:</span>{" "}
-                        <span className="text-[#554837]">{serviceMinMinutes / 60} Hours ({serviceMinMinutes} minutes)</span>
+                        <span className="font-medium text-[#121212]">{language === "hi" ? "निर्धारित सेवा अवधि:" : "Fixed Service Duration:"}</span>{" "}
+                        <span className="text-[#554837]">{serviceMinMinutes / 60} {language === "hi" ? "घंटे" : "Hours"} ({serviceMinMinutes} {language === "hi" ? "मिनट" : "minutes"})</span>
                       </div>
                       <span className="px-2 py-0.5 bg-[#FAF7F2] border border-[#E8DED0] text-[10px] text-[#7B6955] uppercase tracking-wider">
-                        Non-adjustable
+                        {language === "hi" ? "अपरिवर्तनीय" : "Non-adjustable"}
                       </span>
                     </div>
                   ) : (
@@ -1124,10 +1147,10 @@ export default function ContactAndBooking({
                               }`}
                             >
                               <div className="font-sans font-semibold">
-                                {hours === 1 ? "1 Hour" : `${hours} Hours`}
+                                {hours === 1 ? (language === "hi" ? "1 घंटा" : "1 Hour") : `${hours} ${language === "hi" ? "घंटे" : "Hours"}`}
                               </div>
                               <div className={`text-[10px] ${isSelected ? "text-white/80" : "text-[#7B6955]"}`}>
-                                {dur === 60 ? "Minimum" : `${dur} min`}
+                                {dur === 60 ? (language === "hi" ? "न्यूनतम" : "Minimum") : `${dur} ${language === "hi" ? "मिनट" : "min"}`}
                               </div>
                             </button>
                           );
@@ -1136,7 +1159,7 @@ export default function ContactAndBooking({
 
                       {/* Extended / Custom Duration Selector */}
                       <div className="flex items-center justify-between gap-2 pt-0.5 text-xs text-[#7B6955]">
-                        <span className="text-[11px] font-sans">Need extended coverage?</span>
+                        <span className="text-[11px] font-sans">{language === "hi" ? "क्या आपको अतिरिक्त समय चाहिए?" : "Need extended coverage?"}</span>
                         <select
                           value={formData.durationMinutes > 240 ? formData.durationMinutes : ""}
                           onChange={(e) => {
@@ -1151,11 +1174,13 @@ export default function ContactAndBooking({
                           }`}
                         >
                           <option value="" disabled={formData.durationMinutes > 240}>
-                            {formData.durationMinutes > 240 ? `${formData.durationMinutes / 60} Hours (${formData.durationMinutes} min)` : "Custom (5h – 8h)..."}
+                            {formData.durationMinutes > 240
+                              ? `${formData.durationMinutes / 60} ${language === "hi" ? "घंटे" : "Hours"} (${formData.durationMinutes} min)`
+                              : (language === "hi" ? "कस्टम (5 से 8 घंटे)..." : "Custom (5h – 8h)...")}
                           </option>
-                          <option value={300} className="bg-white text-[#121212]">5 Hours (300 min)</option>
-                          <option value={360} className="bg-white text-[#121212]">6 Hours (360 min)</option>
-                          <option value={480} className="bg-white text-[#121212]">8 Hours (Full Day)</option>
+                          <option value={300} className="bg-white text-[#121212]">{language === "hi" ? "5 घंटे (300 मिनट)" : "5 Hours (300 min)"}</option>
+                          <option value={360} className="bg-white text-[#121212]">{language === "hi" ? "6 घंटे (360 मिनट)" : "6 Hours (360 min)"}</option>
+                          <option value={480} className="bg-white text-[#121212]">{language === "hi" ? "8 घंटे (पूरा दिन)" : "8 Hours (Full Day)"}</option>
                         </select>
                       </div>
                     </div>
@@ -1206,23 +1231,23 @@ export default function ContactAndBooking({
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-[#F3ECE1] pb-2">
                       <label className="text-xs uppercase tracking-wider text-[#121212] font-sans font-medium flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-[#BFA076]" />
-                        <span>Available Appointment Time Slots</span>
+                        <span>{language === "hi" ? "उपलब्ध अपॉइंटमेंट समय स्लॉट" : "Available Appointment Time Slots"}</span>
                       </label>
                       <span className="text-[11px] text-[#7B6955]">
-                        Includes 1-hr travel buffers before & after
+                        {language === "hi" ? "आने-जाने के लिए 1 घंटे का बफर समय शामिल है" : "Includes 1-hr travel buffers before & after"}
                       </span>
                     </div>
 
                     {isLoadingSlots ? (
                       <div className="py-8 text-center text-xs text-[#7B6955] flex flex-col items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-[#121212] border-t-transparent rounded-full animate-spin" />
-                        <span>Checking studio calendar & travel buffer availability...</span>
+                        <span>{language === "hi" ? "स्टूडियो कैलेंडर और समय की उपलब्धता जांची जा रही है..." : "Checking studio calendar & travel buffer availability..."}</span>
                       </div>
                     ) : slotsError ? (
                       <p className="text-xs text-red-600 p-2 bg-red-50">{slotsError}</p>
                     ) : slots.length === 0 ? (
                       <div className="py-6 text-center text-xs text-[#7B6955] space-y-2">
-                        <p>No available slots found for the selected date.</p>
+                        <p>{language === "hi" ? "चयनित तिथि के लिए कोई उपलब्ध स्लॉट नहीं मिला।" : "No available slots found for the selected date."}</p>
                         {nextAvailable && (
                           <div className="pt-2">
                             <button
@@ -1237,7 +1262,7 @@ export default function ContactAndBooking({
                               className="px-4 py-2 bg-[#121212] text-[#FAF7F2] hover:bg-[#2C2C2C] text-xs uppercase tracking-wider cursor-pointer inline-flex items-center gap-1.5"
                             >
                               <Sparkles className="w-3.5 h-3.5 text-[#BFA076]" />
-                              <span>Switch to Next Available: {nextAvailable.date} ({nextAvailable.displayTime})</span>
+                              <span>{language === "hi" ? "अगले उपलब्ध स्लॉट पर जाएं:" : "Switch to Next Available:"} {nextAvailable.date} ({nextAvailable.displayTime})</span>
                             </button>
                           </div>
                         )}
@@ -1274,20 +1299,20 @@ export default function ContactAndBooking({
                                   </span>
                                   {!slot.available && (
                                     <span className="text-[9px] uppercase tracking-wider bg-red-100 text-red-700 px-1 py-0.2 rounded-xs">
-                                      Conflict
+                                      {language === "hi" ? "आरक्षित" : "Conflict"}
                                     </span>
                                   )}
                                   {isSelected && (
                                     <span className="text-[9px] uppercase tracking-wider bg-white text-[#121212] px-1 py-0.2 font-bold rounded-xs">
-                                      Selected
+                                      {language === "hi" ? "चयनित" : "Selected"}
                                     </span>
                                   )}
                                 </div>
                                 <div className={`text-[10px] mt-1 ${isSelected ? "text-white/80" : "text-[#7B6955]"}`}>
-                                  Session: {slot.displayTime} – {slot.displayEndTime}
+                                  {language === "hi" ? "सत्र: " : "Session: "}{slot.displayTime} – {slot.displayEndTime}
                                 </div>
                                 <div className={`text-[9px] font-mono mt-0.5 ${isSelected ? "text-[#BFA076]" : "text-[#9E8870]"}`}>
-                                  Buffer: {slot.travelBuffer.blockedStartTime} – {slot.travelBuffer.blockedEndTime}
+                                  {language === "hi" ? "बफर: " : "Buffer: "}{slot.travelBuffer.blockedStartTime} – {slot.travelBuffer.blockedEndTime}
                                 </div>
                               </button>
                             );
@@ -1297,10 +1322,10 @@ export default function ContactAndBooking({
                         {/* Notice about travel buffers */}
                         <div className="p-2.5 bg-[#FAF7F2] border border-[#E8DED0] text-[11px] text-[#554837] flex items-center justify-between">
                           <span>
-                            Selected Slot: <strong>{formData.appointmentTime || "None"}</strong> for <strong>{formData.durationMinutes / 60} Hour(s)</strong>
+                            {language === "hi" ? "चयनित स्लॉट: " : "Selected Slot: "}<strong>{formData.appointmentTime || (language === "hi" ? "कोई नहीं" : "None")}</strong> {language === "hi" ? "अवधि " : "for "}<strong>{formData.durationMinutes / 60} {language === "hi" ? "घंटा/घंटे" : "Hour(s)"}</strong>
                           </span>
                           <span className="text-[#7B6955]">
-                            ±1h Travel Buffer Reserved
+                            {language === "hi" ? "±1 घंटा यात्रा बफर आरक्षित" : "±1h Travel Buffer Reserved"}
                           </span>
                         </div>
                       </div>
@@ -1413,10 +1438,12 @@ export default function ContactAndBooking({
                 <KeyRound className="w-6 h-6 text-[#BFA076]" />
               </div>
               <h3 id="otp-modal-title" className="font-serif text-2xl text-[#121212]">
-                Verify Your Email Address
+                {language === "hi" ? "अपना ईमेल पता सत्यापित करें" : "Verify Your Email Address"}
               </h3>
               <p className="text-xs text-[#554837] leading-relaxed font-light">
-                To guarantee genuine appointments and prevent spam reservations, please enter the 6-digit confirmation code dispatched to:
+                {language === "hi"
+                  ? "वास्तविक अपॉइंटमेंट सुनिश्चित करने और स्पैम रोकने के लिए, कृपया निम्नलिखित पते पर भेजा गया 6-अंकीय कोड दर्ज करें:"
+                  : "To guarantee genuine appointments and prevent spam reservations, please enter the 6-digit confirmation code dispatched to:"}
               </p>
               <p className="text-xs font-semibold text-[#121212] bg-[#FAF7F2] py-1.5 px-3 border border-[#E8DED0] inline-block font-mono">
                 {formData.email}
@@ -1427,14 +1454,14 @@ export default function ContactAndBooking({
             {debugOtp && (
               <div className="p-3 bg-[#FAF7F2] border border-[#E8DED0] text-xs flex items-center justify-between gap-2">
                 <span className="text-[#7B6955]">
-                  Development Code: <strong className="font-mono text-[#121212] tracking-wider">{debugOtp}</strong>
+                  {language === "hi" ? "डेवलपमेंट कोड: " : "Development Code: "}<strong className="font-mono text-[#121212] tracking-wider">{debugOtp}</strong>
                 </span>
                 <button
                   type="button"
                   onClick={() => fillDebugCode(debugOtp)}
                   className="text-[11px] uppercase tracking-wider font-semibold text-[#121212] hover:text-[#BFA076] underline cursor-pointer"
                 >
-                  Auto-Fill
+                  {language === "hi" ? "स्वतः भरें" : "Auto-Fill"}
                 </button>
               </div>
             )}
@@ -1456,7 +1483,7 @@ export default function ContactAndBooking({
             {/* 6 Digit Inputs */}
             <div>
               <label className="block text-[11px] uppercase tracking-wider text-[#7B6955] text-center mb-3 font-sans font-medium">
-                Enter 6-Digit Verification Code
+                {language === "hi" ? "6-अंकीय सत्यापन कोड दर्ज करें" : "Enter 6-Digit Verification Code"}
               </label>
               <div className="flex justify-center gap-2 sm:gap-3" onPaste={handleOtpPaste}>
                 {otpDigits.map((digit, idx) => (
@@ -1490,11 +1517,11 @@ export default function ContactAndBooking({
                 {isVerifyingOtp ? (
                   <span className="inline-flex items-center gap-2">
                     <RotateCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Verifying Code...</span>
+                    <span>{language === "hi" ? "कोड सत्यापित हो रहा है..." : "Verifying Code..."}</span>
                   </span>
                 ) : (
                   <>
-                    <span>Verify & Confirm Booking</span>
+                    <span>{language === "hi" ? "सत्यापित करें एवं बुकिंग सुरक्षित करें" : "Verify & Confirm Booking"}</span>
                     <Check className="w-3.5 h-3.5" />
                   </>
                 )}
@@ -1510,10 +1537,10 @@ export default function ContactAndBooking({
                   }`}
                 >
                   {resendCooldown > 0
-                    ? `Resend code in ${resendCooldown}s`
+                    ? `${language === "hi" ? "कोड पुनः भेजें (" : "Resend code in "}${resendCooldown}s${language === "hi" ? ")" : ""}`
                     : isSendingOtp
-                    ? "Dispatching code..."
-                    : "Resend Code"}
+                    ? (language === "hi" ? "कोड भेजा जा रहा है..." : "Dispatching code...")
+                    : (language === "hi" ? "कोड पुनः भेजें" : "Resend Code")}
                 </button>
 
                 <button
@@ -1525,7 +1552,7 @@ export default function ContactAndBooking({
                   }}
                   className="text-xs text-[#7B6955] hover:text-[#121212] hover:underline cursor-pointer"
                 >
-                  Change Email
+                  {language === "hi" ? "ईमेल बदलें" : "Change Email"}
                 </button>
               </div>
             </div>

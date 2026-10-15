@@ -7,6 +7,7 @@ import {
   PORTFOLIO_CATEGORIES,
   PORTFOLIO_ITEMS,
   PortfolioItem,
+  getLocalizedPortfolioItem,
 } from "@/data/photographyData";
 import Lightbox from "./Lightbox";
 import { useLanguage } from "@/context/LanguageContext";
@@ -56,8 +57,12 @@ export default function PortfolioGallery() {
     return galleryItems.filter((item) => item.category === selectedCategory);
   }, [selectedCategory, galleryItems]);
 
+  const localizedItems = useMemo(() => {
+    return filteredItems.map((item) => getLocalizedPortfolioItem(item, language));
+  }, [filteredItems, language]);
+
   const handleOpenLightbox = (item: PortfolioItem) => {
-    const index = filteredItems.findIndex((i) => i.id === item.id);
+    const index = localizedItems.findIndex((i) => i.id === item.id);
     setActiveImageIndex(index !== -1 ? index : 0);
     setLightboxOpen(true);
   };
@@ -71,6 +76,8 @@ export default function PortfolioGallery() {
       case "Event Photography": return "कार्यक्रम";
       case "Sports Photography": return "खेल";
       case "Commercial Photography": return "कमर्शियल";
+      case "Nature & Wildlife": return "प्रकृति एवं वन्यजीव";
+      case "Travel Photography": return "यात्रा एवं धरोहर";
       case "Travel & Wildlife": return "यात्रा एवं वन्यजीव";
       default: return category;
     }
@@ -114,7 +121,7 @@ export default function PortfolioGallery() {
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredItems.map((item) => {
+          {localizedItems.map((item) => {
             return (
               <div
                 key={item.id}
@@ -143,7 +150,7 @@ export default function PortfolioGallery() {
                   {/* Hover Caption Details */}
                   <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-white">
                     <span className="text-[10px] uppercase tracking-[0.25em] text-[#E8DED0] font-sans block mb-1">
-                      {item.category}
+                      {getCategoryLabel(item.category)}
                     </span>
                     <h3 className="font-serif text-xl sm:text-2xl font-normal leading-tight text-[#FAF7F2]">
                       {item.title}
@@ -162,11 +169,11 @@ export default function PortfolioGallery() {
                       {item.title}
                     </h4>
                     <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans mt-0.5">
-                      {item.category}
+                      {getCategoryLabel(item.category)}
                     </p>
                   </div>
                   <span className="text-xs text-[#9E8870] font-sans font-medium group-hover:translate-x-1 transition-transform">
-                    View →
+                    {language === "hi" ? "देखें →" : "View →"}
                   </span>
                 </div>
               </div>
@@ -175,14 +182,16 @@ export default function PortfolioGallery() {
         </div>
 
         {/* Empty State Fallback (just in case) */}
-        {filteredItems.length === 0 && (
+        {localizedItems.length === 0 && (
           <div className="text-center py-20 bg-white border border-[#E8DED0]">
-            <p className="font-serif text-xl text-[#554837]">No works found in this category.</p>
+            <p className="font-serif text-xl text-[#554837]">
+              {language === "hi" ? "इस श्रेणी में कोई कार्य नहीं मिला।" : "No works found in this category."}
+            </p>
             <button
               onClick={() => setSelectedCategory("All Works")}
-              className="mt-4 px-6 py-2.5 text-xs uppercase tracking-widest bg-[#121212] text-white"
+              className="mt-4 px-6 py-2.5 text-xs uppercase tracking-widest bg-[#121212] text-white cursor-pointer"
             >
-              Reset Filter
+              {language === "hi" ? "फ़िल्टर रीसेट करें" : "Reset Filter"}
             </button>
           </div>
         )}
@@ -192,7 +201,7 @@ export default function PortfolioGallery() {
       <Lightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        items={filteredItems}
+        items={localizedItems}
         currentIndex={activeImageIndex}
         onNavigate={(newIndex) => setActiveImageIndex(newIndex)}
       />

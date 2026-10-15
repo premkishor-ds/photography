@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { SERVICES, ServiceItem } from "@/data/photographyData";
+import { SERVICES, ServiceItem, getLocalizedService } from "@/data/photographyData";
 import ServiceModal from "./ServiceModal";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -81,7 +81,8 @@ export default function Services({ onSelectServiceForBooking }: ServicesProps) {
 
         {/* Services Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {servicesList.map((service, index) => {
+          {servicesList.map((rawService, index) => {
+            const service = getLocalizedService(rawService, language);
             return (
               <div
                 key={service.id}

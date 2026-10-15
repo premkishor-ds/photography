@@ -5,15 +5,18 @@ import { siteConfig } from "@/config/siteConfig";
 
 export interface StudioSettings {
   studio_name: string;
-  tagline: string;
-  subtagline: string;
-  hero_image_url: string;
   email: string;
   phone: string;
   whatsapp_number: string;
   address: string;
   hindi_address: string;
   working_hours: string;
+  hindi_working_hours?: string;
+  tagline: string;
+  hindi_tagline?: string;
+  subtagline: string;
+  hindi_subtagline?: string;
+  hero_image_url: string;
   photographer_name: string;
   photographer_role: string;
   photographer_bio_1: string;

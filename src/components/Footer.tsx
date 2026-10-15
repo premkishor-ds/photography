@@ -53,13 +53,17 @@ export default function Footer() {
                   {settings.studio_name || siteConfig.siteName}
                 </span>
                 <span className="text-[10px] tracking-[0.3em] uppercase text-[#BFA076] font-sans">
-                  {settings.subtagline || t("footer.subtagline", "Fine Art & Editorial Studio • Jaipur, Rajasthan")}
+                  {language === "hi"
+                    ? (settings.hindi_subtagline || t("footer.subtagline", "फाइन आर्ट एवं एडिटोरियल स्टूडियो • जयपुर, राजस्थान"))
+                    : (settings.subtagline || t("footer.subtagline", "Fine Art & Editorial Studio • Jaipur, Rajasthan"))}
                 </span>
               </div>
             </div>
 
             <p className="text-sm text-[#FAF7F2]/75 font-light leading-relaxed max-w-md font-sans">
-              {settings.tagline || t("footer.tagline", "Capturing moments, creating memories. Timeless visual storytelling dedicated to fine-art portraits, royal Rajasthan weddings, authentic events, sports, and commercial commissions.")}
+              {language === "hi"
+                ? (settings.hindi_tagline || t("footer.tagline", "क्षणों को कैद करना, यादें बनाना। फाइन-आर्ट पोर्ट्रेट, शाही राजस्थान विवाह, प्रामाणिक कार्यक्रम, खेल और वाणिज्यिक फोटोग्राफी के लिए समर्पित कालातीत दृश्य कला।"))
+                : (settings.tagline || t("footer.tagline", "Capturing moments, creating memories. Timeless visual storytelling dedicated to fine-art portraits, royal Rajasthan weddings, authentic events, sports, and commercial commissions."))}
             </p>
 
             {/* Social Icons */}
@@ -194,7 +198,9 @@ export default function Footer() {
               <div className="flex items-start gap-2.5 pt-0.5">
                 <Clock className="w-3.5 h-3.5 text-[#BFA076] shrink-0 mt-0.5" />
                 <p className="text-xs text-[#FAF7F2]/75 leading-relaxed">
-                  {settings.working_hours || "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)"}
+                  {language === "hi"
+                    ? (settings.hindi_working_hours || "सोमवार – शनिवार: प्रातः 9:30 – सायं 7:00 IST (रविवार केवल पूर्व अपॉइंटमेंट द्वारा)")
+                    : (settings.working_hours || "Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)")}
                 </p>
               </div>
             </div>

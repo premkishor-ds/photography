@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export interface FaqItemProp {
   question: string;
   answer: string;
+  questionHindi?: string;
+  answerHindi?: string;
 }
 
 interface FaqAccordionProps {
@@ -17,6 +20,8 @@ export default function FaqAccordion({
   items,
   idPrefix = "faq",
 }: FaqAccordionProps) {
+  const { language } = useLanguage();
+  const isHindi = language === "hi";
   const [openIndexes, setOpenIndexes] = useState<number[]>([0]);
 
   const toggleIndex = (index: number) => {
@@ -31,6 +36,8 @@ export default function FaqAccordion({
         const isOpen = openIndexes.includes(index);
         const headerId = `${idPrefix}-header-${index}`;
         const panelId = `${idPrefix}-panel-${index}`;
+        const question = isHindi && item.questionHindi ? item.questionHindi : item.question;
+        const answer = isHindi && item.answerHindi ? item.answerHindi : item.answer;
 
         return (
           <div
@@ -45,7 +52,7 @@ export default function FaqAccordion({
                 onClick={() => toggleIndex(index)}
                 className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 font-serif text-lg sm:text-xl text-[#121212] hover:text-[#7B6955] transition-colors cursor-pointer"
               >
-                <span>{item.question}</span>
+                <span>{question}</span>
                 <ChevronDown
                   className={`w-5 h-5 text-[#7B6955] shrink-0 transition-transform duration-300 ${
                     isOpen ? "rotate-180" : ""
@@ -63,7 +70,7 @@ export default function FaqAccordion({
               }`}
             >
               <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-sm text-[#554837] leading-relaxed font-sans border-t border-[#F3ECE1] pt-4">
-                {item.answer}
+                {answer}
               </div>
             </div>
           </div>
