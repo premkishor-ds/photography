@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { ZoomIn, MapPin } from "lucide-react";
+import { ZoomIn, MapPin, Moon, Sun } from "lucide-react";
 import {
   PORTFOLIO_CATEGORIES,
   PORTFOLIO_ITEMS,
@@ -18,6 +18,7 @@ export default function PortfolioGallery() {
   const [galleryItems, setGalleryItems] = useState<PortfolioItem[]>(PORTFOLIO_ITEMS);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isTheaterMode, setIsTheaterMode] = useState(false);
 
   // Dynamically load updated items from Supabase
   useEffect(() => {
@@ -84,19 +85,67 @@ export default function PortfolioGallery() {
   };
 
   return (
-    <section id="portfolio" className="py-24 sm:py-32 bg-[#FAF7F2] text-[#121212]">
+    <section
+      id="portfolio"
+      className={`py-24 sm:py-32 transition-colors duration-700 ${
+        isTheaterMode ? "bg-[#0A0A0A] text-[#FAF7F2]" : "bg-[#FAF7F2] text-[#121212]"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-18">
-          <p className="text-xs uppercase tracking-[0.3em] text-[#7B6955] font-sans font-medium mb-3">
-            {t("portfolio.badge", "Selected Works")}
-          </p>
-          <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-tight text-[#121212]">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span
+              className={`text-xs uppercase tracking-[0.3em] font-sans font-medium ${
+                isTheaterMode ? "text-[#D4AF37]" : "text-[#7B6955]"
+              }`}
+            >
+              {t("portfolio.badge", "Selected Works")}
+            </span>
+          </div>
+          <h2
+            className={`font-serif text-3xl sm:text-5xl font-light tracking-tight transition-colors duration-500 ${
+              isTheaterMode ? "text-white" : "text-[#121212]"
+            }`}
+          >
             {t("portfolio.title", "Portfolio Gallery")}
           </h2>
-          <p className="mt-4 text-sm sm:text-base text-[#554837] font-light max-w-xl mx-auto leading-relaxed">
-            {t("portfolio.desc", "A curated collection of captured light, raw emotion, and timeless storytelling spanning fine-art portraits, weddings, and natural landscapes.")}
+          <p
+            className={`mt-4 text-sm sm:text-base font-light max-w-xl mx-auto leading-relaxed transition-colors duration-500 ${
+              isTheaterMode ? "text-[#A89F91]" : "text-[#554837]"
+            }`}
+          >
+            {t(
+              "portfolio.desc",
+              "A curated collection of captured light, raw emotion, and timeless storytelling spanning fine-art portraits, weddings, and natural landscapes."
+            )}
           </p>
+
+          {/* Theater Mode Ambient Toggle */}
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setIsTheaterMode(!isTheaterMode)}
+              className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-xs uppercase tracking-[0.15em] font-sans border transition-all duration-300 cursor-pointer ${
+                isTheaterMode
+                  ? "bg-[#1A1A1A] text-[#D4AF37] border-[#333333] hover:bg-[#222222] shadow-inner"
+                  : "bg-white text-[#554837] border-[#E8DED0] hover:bg-[#F4EFE6] hover:text-[#121212] shadow-xs"
+              }`}
+              title="Toggle Dark Theater Viewing Mode"
+              aria-label="Toggle Dark Theater Viewing Mode"
+            >
+              {isTheaterMode ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span>{language === "hi" ? "स्टूडियो लाइट" : "Switch to Studio Light"}</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-[#7B6955]" />
+                  <span>{language === "hi" ? "डार्क थिएटर मोड" : "Dark Theater Mode"}</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Category Filters */}
@@ -109,7 +158,11 @@ export default function PortfolioGallery() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 sm:px-5 py-2 text-xs uppercase tracking-[0.18em] transition-all duration-300 font-sans cursor-pointer ${
                   isActive
-                    ? "bg-[#121212] text-[#FAF7F2] shadow-sm font-medium"
+                    ? isTheaterMode
+                      ? "bg-[#FAF7F2] text-[#121212] shadow-md font-medium"
+                      : "bg-[#121212] text-[#FAF7F2] shadow-sm font-medium"
+                    : isTheaterMode
+                    ? "bg-[#161616] text-[#A89F91] border border-[#262626] hover:bg-[#222222] hover:text-white"
                     : "bg-[#F3ECE1]/80 text-[#554837] hover:bg-[#E8DED0] hover:text-[#121212]"
                 }`}
               >
@@ -126,7 +179,11 @@ export default function PortfolioGallery() {
               <div
                 key={item.id}
                 onClick={() => handleOpenLightbox(item)}
-                className="group relative cursor-pointer overflow-hidden bg-[#E8DED0] shadow-sm transition-all duration-500 hover:shadow-xl"
+                className={`group relative cursor-pointer overflow-hidden transition-all duration-500 hover:shadow-2xl ${
+                  isTheaterMode
+                    ? "bg-[#161616] border border-[#262626]"
+                    : "bg-[#E8DED0] shadow-sm hover:shadow-xl"
+                }`}
               >
                 {/* Image Container with responsive aspect ratio */}
                 <div className="relative aspect-[4/5] sm:aspect-[3/4] w-full overflow-hidden">
@@ -163,16 +220,36 @@ export default function PortfolioGallery() {
                 </div>
 
                 {/* Subtle static label beneath for high visibility on touch devices */}
-                <div className="p-4 sm:p-5 bg-white flex items-center justify-between border-t border-[#F3ECE1]">
+                <div
+                  className={`p-4 sm:p-5 flex items-center justify-between border-t transition-colors duration-500 ${
+                    isTheaterMode
+                      ? "bg-[#141414] border-[#222222]"
+                      : "bg-white border-[#F3ECE1]"
+                  }`}
+                >
                   <div>
-                    <h4 className="font-serif text-base sm:text-lg text-[#121212] font-medium group-hover:text-[#7B6955] transition-colors">
+                    <h4
+                      className={`font-serif text-base sm:text-lg font-medium transition-colors ${
+                        isTheaterMode
+                          ? "text-[#FAF7F2] group-hover:text-[#D4AF37]"
+                          : "text-[#121212] group-hover:text-[#7B6955]"
+                      }`}
+                    >
                       {item.title}
                     </h4>
-                    <p className="text-[11px] uppercase tracking-wider text-[#7B6955] font-sans mt-0.5">
+                    <p
+                      className={`text-[11px] uppercase tracking-wider font-sans mt-0.5 transition-colors ${
+                        isTheaterMode ? "text-[#8E8271]" : "text-[#7B6955]"
+                      }`}
+                    >
                       {getCategoryLabel(item.category)}
                     </p>
                   </div>
-                  <span className="text-xs text-[#9E8870] font-sans font-medium group-hover:translate-x-1 transition-transform">
+                  <span
+                    className={`text-xs font-sans font-medium group-hover:translate-x-1 transition-transform ${
+                      isTheaterMode ? "text-[#D4AF37]" : "text-[#9E8870]"
+                    }`}
+                  >
                     {language === "hi" ? "देखें →" : "View →"}
                   </span>
                 </div>

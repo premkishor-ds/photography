@@ -13,6 +13,8 @@ import {
   ArrowRight,
   HelpCircle,
   Scale,
+  Globe,
+  Lock,
 } from "lucide-react";
 import { PORTFOLIO_ITEMS } from "@/data/photographyData";
 import { SERVICES_DATA } from "@/data/servicesData";
@@ -25,8 +27,9 @@ interface SearchResultItem {
   title: string;
   description: string;
   url: string;
-  category: "Portfolio" | "Gear" | "Services" | "Journal" | "Locations" | "FAQ";
+  category: "Portfolio" | "Gear" | "Services" | "Journal" | "Locations" | "FAQ" | "Pages";
   badge?: string;
+  keywords?: string[];
 }
 
 export default function SpotlightSearch({
@@ -57,8 +60,70 @@ export default function SpotlightSearch({
   const searchableItems: SearchResultItem[] = useMemo(() => {
     const list: SearchResultItem[] = [];
 
-    // 1. Portfolio items
+    // 1. Core Studio Pages & Portals
+    list.push({
+      id: "page-client-portal",
+      title: "Private Client Proofing Portal",
+      description: "Exclusive access for couples and private patrons to review, curate, and request retouches.",
+      url: "/client-portal",
+      category: "Pages",
+      badge: "Private",
+      keywords: ["client", "portal", "proofing", "photos", "login", "access", "क्लाइंट", "पोर्टल", "गैलरी", "प्रूफिंग", "डाउनलोड", "royal2026", "jaipur101"],
+    });
+
+    list.push({
+      id: "page-about",
+      title: "About Prem Kishor & Studio Heritage",
+      description: "Learn about our fine-art philosophy, international acclaim, and 14+ years of heritage documentation.",
+      url: "/about",
+      category: "Pages",
+      badge: "Artist Bio",
+      keywords: ["about", "prem kishor", "photographer", "bio", "heritage", "philosophy", "हमारे बारे में", "प्रोफ़ाइल", "कलाकार", "जीवनी", "इतिहास"],
+    });
+
+    list.push({
+      id: "page-contact",
+      title: "Consultation & Booking Concierge",
+      description: "Inquire about bespoke commissions, destination weddings, and studio availability.",
+      url: "/contact",
+      category: "Pages",
+      badge: "Inquiries",
+      keywords: ["contact", "book", "inquiry", "commission", "consultation", "rates", "संपर्क", "बुकिंग", "अपॉइंटमेंट", "परामर्श", "फीस"],
+    });
+
+    list.push({
+      id: "page-services-hub",
+      title: "Complete Services & Bespoke Packages",
+      description: "Explore our royal wedding cinematography, fine-art portraiture, and commercial campaigns.",
+      url: "/services",
+      category: "Services",
+      badge: "Services Hub",
+      keywords: ["services", "packages", "pricing", "wedding", "portrait", "commercial", "सेवाएं", "पैकेज", "दरें", "शादी", "विवाह"],
+    });
+
+    list.push({
+      id: "page-comparisons-hub",
+      title: "Camera & Lens Comparison Hub",
+      description: "Side-by-side technical benchmarks: Sony vs Canon vs Hasselblad in real-world shooting.",
+      url: "/photography-gear/comparisons",
+      category: "Gear",
+      badge: "Benchmarks",
+      keywords: ["compare", "comparisons", "versus", "vs", "benchmark", "तुलना", "मुकाबला", "कैमरा"],
+    });
+
+    // 2. Portfolio items
     PORTFOLIO_ITEMS.forEach((p) => {
+      const isWedding = p.category.toLowerCase().includes("wedding");
+      const isPortrait = p.category.toLowerCase().includes("portrait");
+      const hindiKeywords = [
+        "फोटोग्राफी",
+        "तस्वीर",
+        isWedding ? "शादी" : "",
+        isWedding ? "विवाह" : "",
+        isPortrait ? "पोर्ट्रेट" : "",
+        isPortrait ? "व्यक्तिचित्र" : "",
+      ].filter(Boolean);
+
       list.push({
         id: `port-${p.id}`,
         title: p.title,
@@ -66,11 +131,24 @@ export default function SpotlightSearch({
         url: "/portfolio",
         category: "Portfolio",
         badge: p.category,
+        keywords: [p.category.toLowerCase(), p.location.toLowerCase(), ...hindiKeywords],
       });
     });
 
-    // 2. Services
+    // 3. Services
     SERVICES_DATA.forEach((s) => {
+      const isWedding = s.slug.includes("wedding");
+      const isPortrait = s.slug.includes("portrait");
+      const isCommercial = s.slug.includes("commercial");
+      const hindiKeywords = [
+        "सेवा",
+        "पैकेज",
+        isWedding ? "शादी" : "",
+        isWedding ? "विवाह" : "",
+        isPortrait ? "पोर्ट्रेट" : "",
+        isCommercial ? "वाणिज्यिक" : "",
+      ].filter(Boolean);
+
       list.push({
         id: `srv-${s.slug}`,
         title: s.title,
@@ -78,10 +156,11 @@ export default function SpotlightSearch({
         url: `/services/${s.slug}`,
         category: "Services",
         badge: "Service",
+        keywords: [s.slug, "service", "booking", ...hindiKeywords],
       });
     });
 
-    // 3. Gear items
+    // 4. Gear items
     GEAR_ITEMS.forEach((g) => {
       list.push({
         id: `gear-${g.id}`,
@@ -90,10 +169,20 @@ export default function SpotlightSearch({
         url: `/photography-gear/${g.slug}`,
         category: "Gear",
         badge: g.categoryLabel,
+        keywords: [
+          g.manufacturer.toLowerCase(),
+          g.categoryLabel.toLowerCase(),
+          "camera",
+          "lens",
+          "gear",
+          "कैमरा",
+          "उपकरण",
+          "लेंस",
+        ],
       });
     });
 
-    // 4. Gear comparisons
+    // 5. Gear comparisons
     GEAR_COMPARISONS.forEach((c) => {
       list.push({
         id: `comp-${c.slug}`,
@@ -102,10 +191,11 @@ export default function SpotlightSearch({
         url: `/photography-gear/comparisons/${c.slug}`,
         category: "Gear",
         badge: "Comparison",
+        keywords: ["compare", "vs", "versus", "तुलना", "कैमरा"],
       });
     });
 
-    // 5. Blog posts
+    // 6. Blog posts
     BLOG_POSTS.forEach((b) => {
       list.push({
         id: `blog-${b.slug}`,
@@ -114,10 +204,11 @@ export default function SpotlightSearch({
         url: `/blog/${b.slug}`,
         category: "Journal",
         badge: b.category,
+        keywords: [b.category.toLowerCase(), "journal", "guide", "लेख", "गाइड"],
       });
     });
 
-    // 6. Locations & Hubs
+    // 7. Locations & Hubs
     list.push({
       id: "loc-jaipur",
       title: "Jaipur Flagship Studio & Coverage Areas",
@@ -125,6 +216,7 @@ export default function SpotlightSearch({
       url: "/locations/jaipur",
       category: "Locations",
       badge: "Flagship Base",
+      keywords: ["jaipur", "rajasthan", "amer fort", "city palace", "जयपुर", "राजस्थान"],
     });
     list.push({
       id: "loc-ny",
@@ -133,6 +225,7 @@ export default function SpotlightSearch({
       url: "/locations/new-york",
       category: "Locations",
       badge: "International",
+      keywords: ["new york", "nyc", "manhattan", "usa", "न्यूयॉर्क"],
     });
     list.push({
       id: "faq-hub",
@@ -141,6 +234,7 @@ export default function SpotlightSearch({
       url: "/faq",
       category: "FAQ",
       badge: "Support",
+      keywords: ["faq", "help", "questions", "answers", "turnaround", "pricing", "प्रश्न", "उत्तर", "सहायता"],
     });
 
     return list;
@@ -157,12 +251,13 @@ export default function SpotlightSearch({
     }
     const cleanQ = query.toLowerCase().trim();
     return results
-      .filter(
-        (item) =>
-          item.title.toLowerCase().includes(cleanQ) ||
-          item.description.toLowerCase().includes(cleanQ) ||
-          (item.badge && item.badge.toLowerCase().includes(cleanQ))
-      )
+      .filter((item) => {
+        if (item.title.toLowerCase().includes(cleanQ)) return true;
+        if (item.description.toLowerCase().includes(cleanQ)) return true;
+        if (item.badge && item.badge.toLowerCase().includes(cleanQ)) return true;
+        if (item.keywords && item.keywords.some((k) => k.toLowerCase().includes(cleanQ))) return true;
+        return false;
+      })
       .slice(0, 10);
   }, [searchableItems, query, activeCategoryFilter]);
 
@@ -204,6 +299,8 @@ export default function SpotlightSearch({
         return <Layers className="w-4 h-4 text-[#BFA076]" />;
       case "Gear":
         return <Scale className="w-4 h-4 text-[#BFA076]" />;
+      case "Pages":
+        return <Globe className="w-4 h-4 text-[#BFA076]" />;
       case "Journal":
         return <BookOpen className="w-4 h-4 text-[#BFA076]" />;
       case "Locations":
@@ -240,8 +337,8 @@ export default function SpotlightSearch({
             }}
             placeholder={
               language === "hi"
-                ? "पोर्टफोलियो, उपकरण, सेवाएं या लेख खोजें..."
-                : "Search portfolio, gear reviews, wedding packages, guides..."
+                ? "पोर्टफोलियो, उपकरण, क्लाइंट पोर्टल, शादी पैकेज..."
+                : "Search portfolio, gear, client portal, wedding packages..."
             }
             className="w-full bg-transparent text-sm sm:text-base text-[#121212] placeholder-[#9E8870] focus:outline-none font-sans"
           />
@@ -260,7 +357,7 @@ export default function SpotlightSearch({
 
         {/* Category Pill Filters */}
         <div className="px-4 py-2.5 bg-white border-b border-[#F0E8DC] flex items-center gap-1.5 overflow-x-auto">
-          {["All", "Portfolio", "Gear", "Services", "Journal", "Locations"].map((cat) => {
+          {["All", "Portfolio", "Gear", "Services", "Pages", "Journal", "Locations"].map((cat) => {
             const isActive = activeCategoryFilter === cat;
             return (
               <button

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, Menu, X, ArrowRight, Search } from "lucide-react";
+import { Camera, Menu, X, ArrowRight, Search, Lock } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SpotlightSearch from "./SpotlightSearch";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,6 +16,7 @@ export const PRIMARY_NAV_LINKS = [
   { key: "nav.gear", name: "Gear", href: "/photography-gear" },
   { key: "nav.about", name: "About", href: "/about" },
   { key: "nav.journal", name: "Journal", href: "/blog" },
+  { key: "nav.portal", name: "Client Access", href: "/client-portal" },
   { key: "nav.faq", name: "FAQ", href: "/faq" },
   { key: "nav.contact", name: "Contact", href: "/contact" },
 ];
@@ -118,16 +119,19 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-[11px] xl:text-xs tracking-[0.16em] xl:tracking-[0.2em] uppercase transition-all duration-200 relative py-1.5 whitespace-nowrap ${
+                className={`text-[11px] xl:text-xs tracking-[0.16em] xl:tracking-[0.2em] uppercase transition-all duration-200 relative py-1.5 whitespace-nowrap inline-flex items-center gap-1 ${
                   isDarkHeader
                     ? isActive
                       ? "text-[#121212] font-semibold"
-                      : "text-[#554837] hover:text-[#121212]"
+                    : "text-[#554837] hover:text-[#121212]"
                     : isActive
                     ? "text-white font-semibold"
                     : "text-white/85 hover:text-white"
                 }`}
               >
+                {link.key === "nav.portal" && (
+                  <Lock className="w-2.5 h-2.5 opacity-70" />
+                )}
                 {t(link.key, link.name)}
                 {isActive && (
                   <span
@@ -202,18 +206,43 @@ export default function Header() {
       {/* Mobile Drawer Menu */}
       <div
         className={`xl:hidden fixed inset-x-0 top-full bg-[#FAF7F2] border-b border-[#E8DED0] shadow-xl transition-all duration-300 overflow-hidden ${
-          mobileMenuOpen ? "max-h-[550px] opacity-100 py-6" : "max-h-0 opacity-0 py-0"
+          mobileMenuOpen ? "max-h-[650px] opacity-100 py-6" : "max-h-0 opacity-0 py-0"
         }`}
       >
         <div className="flex flex-col px-8 space-y-3">
+          {/* Quick Mobile Search Trigger */}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setSearchOpen(true);
+            }}
+            className="flex items-center justify-between w-full px-4 py-2.5 text-xs uppercase tracking-wider text-[#554837] bg-[#F4EFE6] border border-[#E8DED0] hover:bg-[#EBE3D5] transition-colors mb-1"
+          >
+            <span className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-[#BFA076]" />
+              <span>{language === "hi" ? "सर्च करें..." : "Search archive, gear, services..."}</span>
+            </span>
+            <span className="font-mono text-[10px] opacity-60">⌘K</span>
+          </button>
+
           {PRIMARY_NAV_LINKS.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => handleLinkClick(link.href)}
-              className="text-sm tracking-[0.15em] uppercase text-[#121212] py-2 border-b border-[#F3ECE1] hover:text-[#7B6955] transition-colors"
+              className="text-sm tracking-[0.15em] uppercase text-[#121212] py-2 border-b border-[#F3ECE1] hover:text-[#7B6955] transition-colors flex items-center justify-between"
             >
-              {t(link.key, link.name)}
+              <span className="flex items-center gap-2">
+                {link.key === "nav.portal" && (
+                  <Lock className="w-3.5 h-3.5 text-[#BFA076]" />
+                )}
+                <span>{t(link.key, link.name)}</span>
+              </span>
+              {link.key === "nav.portal" && (
+                <span className="text-[9px] px-1.5 py-0.5 bg-[#F0E8DC] text-[#7B6955] font-mono tracking-widest uppercase">
+                  Private
+                </span>
+              )}
             </Link>
           ))}
           <LanguageSwitcher variant="mobile" />

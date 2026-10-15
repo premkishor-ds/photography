@@ -7,6 +7,9 @@ import { ArrowRight } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BookingCtaBanner from "@/components/BookingCtaBanner";
 import FaqAccordion, { FaqItemProp } from "@/components/FaqAccordion";
+import PackageCalculator from "@/components/PackageCalculator";
+import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import { useLanguage } from "@/context/LanguageContext";
 import { ServiceDetail, getLocalizedServicesData } from "@/data/servicesData";
 import { FAQItem } from "@/data/faqData";
@@ -112,6 +115,19 @@ export default function ServicesPageClient({
             </div>
           </article>
         ))}
+      </div>
+
+      {/* Interactive Bespoke Package & Cost Estimator */}
+      <PackageCalculator />
+
+      {/* Retouching Mastery & Color Science */}
+      <div className="my-16">
+        <BeforeAfterSlider />
+      </div>
+
+      {/* Client Endorsements & Social Proof */}
+      <div className="my-16">
+        <TestimonialsSection />
       </div>
 
       {/* Service Questions & Answers */}
