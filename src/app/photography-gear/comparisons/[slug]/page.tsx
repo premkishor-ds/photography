@@ -19,6 +19,8 @@ interface PageProps {
   }>;
 }
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   return GEAR_COMPARISONS.map((comp) => ({
     slug: comp.slug,

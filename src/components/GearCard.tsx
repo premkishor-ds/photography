@@ -82,7 +82,7 @@ export default function GearCard({ item }: GearCardProps) {
             
             <h3 className="font-serif text-2xl text-[#121212] font-normal mt-1 leading-snug">
               {reviewLink ? (
-                <Link href={reviewLink} className="hover:text-[#7B6955] transition-colors">
+                <Link href={reviewLink} prefetch={false} className="hover:text-[#7B6955] transition-colors">
                   {localized.name}
                 </Link>
               ) : (
@@ -143,6 +143,7 @@ export default function GearCard({ item }: GearCardProps) {
           {reviewLink ? (
             <Link
               href={reviewLink}
+              prefetch={false}
               className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-medium text-[#121212] hover:text-[#7B6955] transition-colors group/btn py-1.5"
             >
               <span>{t("gear.card.viewSpecs", "View Detailed Specs & Field Review")}</span>

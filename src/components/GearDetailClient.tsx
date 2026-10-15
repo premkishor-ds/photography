@@ -370,6 +370,7 @@ export default function GearDetailClient({ item, relatedGear }: GearDetailClient
               <Link
                 key={locRel.id}
                 href={`/photography-gear/${locRel.slug}`}
+                prefetch={false}
                 className="bg-white border border-[#E8DED0] p-5 hover:shadow-md hover:border-[#BFAB93] transition-all group flex flex-col justify-between"
               >
                 <div>

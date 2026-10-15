@@ -14,6 +14,8 @@ export const metadata = constructMetadata({
   path: "/photography-gear",
 });
 
+export const revalidate = 3600;
+
 export default async function PhotographyGearHubPage() {
   const gearItems = await fetchGearItems();
 

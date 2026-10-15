@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cache } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -13,6 +13,12 @@ import {
   getAbsoluteUrl,
 } from "@/lib/schema";
 import { fetchGearItems, fetchGearItemBySlug } from "@/lib/supabase";
+
+export const revalidate = 3600;
+
+const getCachedGearItem = cache(async (slug: string) => {
+  return await fetchGearItemBySlug(slug);
+});
 
 interface PageProps {
   params: Promise<{
@@ -38,7 +44,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const item = await fetchGearItemBySlug(slug);
+  const item = await getCachedGearItem(slug);
 
   if (!item) {
     return constructMetadata({
@@ -67,7 +73,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function PhotographyGearItemPage({ params }: PageProps) {
   const { slug } = await params;
-  const item = await fetchGearItemBySlug(slug);
+  const item = await getCachedGearItem(slug);
 
   if (!item) {
     notFound();

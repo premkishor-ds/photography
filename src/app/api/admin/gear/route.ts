@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabase, invalidateGearCache } from "@/lib/supabase";
 import { GEAR_ITEMS } from "@/data/gearData";
 
 export const dynamic = "force-dynamic";
@@ -129,6 +129,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
+    invalidateGearCache();
     return NextResponse.json({ success: true, item: data }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
@@ -176,6 +177,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
+    invalidateGearCache();
     return NextResponse.json({ success: true, item: data });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
@@ -197,6 +199,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
+    invalidateGearCache();
     return NextResponse.json({ success: true, message: "Equipment record deleted successfully" });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });

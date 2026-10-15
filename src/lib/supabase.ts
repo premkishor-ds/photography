@@ -374,19 +374,39 @@ export interface DynamicGearRecord {
   updated_at?: string;
 }
 
+let cachedGearItems: { data: GearItem[]; expiresAt: number } | null = null;
+const GEAR_CACHE_TTL_MS = 1000 * 60 * 5; // 5 minutes cache
+
+export function invalidateGearCache() {
+  cachedGearItems = null;
+}
+
 export async function fetchGearItems(): Promise<GearItem[]> {
+  const now = Date.now();
+  if (cachedGearItems && now < cachedGearItems.expiresAt) {
+    return cachedGearItems.data;
+  }
+
   try {
-    const { data, error } = await supabase
+    // 2-second timeout so slow network doesn't stall the page
+    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: new Error("Supabase gear query timeout") }), 2000)
+    );
+
+    const queryPromise = supabase
       .from("gear_items")
       .select("*")
       .eq("published", true)
       .order("created_at", { ascending: false });
 
+    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+
     if (error || !data || data.length === 0) {
+      cachedGearItems = { data: GEAR_ITEMS, expiresAt: now + GEAR_CACHE_TTL_MS };
       return GEAR_ITEMS;
     }
 
-    return data.map((item: DynamicGearRecord) => {
+    const items = data.map((item: DynamicGearRecord) => {
       const baseStatic = GEAR_ITEMS.find((g) => g.id === item.id || g.slug === item.slug);
       return {
         ...(baseStatic || {}),
@@ -421,6 +441,9 @@ export async function fetchGearItems(): Promise<GearItem[]> {
         published: item.published !== false,
       } as GearItem;
     });
+
+    cachedGearItems = { data: items, expiresAt: now + GEAR_CACHE_TTL_MS };
+    return items;
   } catch (err) {
     console.error("Failed to fetch dynamic gear items:", err);
     return GEAR_ITEMS;
@@ -428,9 +451,20 @@ export async function fetchGearItems(): Promise<GearItem[]> {
 }
 
 export async function fetchGearItemBySlug(slug: string): Promise<GearItem | null> {
+  const normalized = slug.toLowerCase();
+
+  // Fast path: if cache is hot, find in cache instantly without any async network delay
+  if (cachedGearItems && Date.now() < cachedGearItems.expiresAt) {
+    const cachedMatch = cachedGearItems.data.find(
+      (i) =>
+        i.slug.toLowerCase() === normalized ||
+        (i.aliases && i.aliases.some((a) => a.toLowerCase() === normalized))
+    );
+    if (cachedMatch) return cachedMatch;
+  }
+
   try {
     const items = await fetchGearItems();
-    const normalized = slug.toLowerCase();
     const found = items.find(
       (i) =>
         i.slug.toLowerCase() === normalized ||

@@ -75,6 +75,7 @@ export default function GearComparisonClient({ comp }: GearComparisonClientProps
             {c.itemA.slug ? (
               <Link
                 href={`/photography-gear/${c.itemA.slug}`}
+                prefetch={false}
                 className="hover:text-[#7B6955] transition-colors"
               >
                 {c.itemA.name}
@@ -97,6 +98,7 @@ export default function GearComparisonClient({ comp }: GearComparisonClientProps
             {c.itemB.slug ? (
               <Link
                 href={`/photography-gear/${c.itemB.slug}`}
+                prefetch={false}
                 className="hover:text-[#7B6955] transition-colors"
               >
                 {c.itemB.name}
