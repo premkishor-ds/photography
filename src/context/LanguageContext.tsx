@@ -22,7 +22,11 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.contact": "Contact",
     "nav.book": "Book a Session",
-    "nav.locations": "Locations",
+    "nav.locations": "Locations & Studios",
+    "nav.portal": "Client Access",
+    "nav.proofing": "Client Proofing Portal",
+    "nav.comparisons": "Gear Comparisons",
+    "nav.admin": "Studio Admin",
 
     // Hero
     "hero.pill": "Fine Art • Portraiture • Weddings • Sports • Expeditions",
@@ -87,11 +91,28 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "contact.form.messagePlaceholder": "Tell us about your event, location, creative vision, or any special requests...",
     "contact.form.submit": "Submit Booking Request",
     "contact.form.submitting": "Sending inquiry...",
+    "contact.form.submitVerified": "Confirm Booking (Verified)",
+    "contact.form.submitWithOtp": "Verify Email & Submit Booking",
     "contact.form.privacyNote": "We treat your details with absolute privacy. No spam guaranteed.",
     "contact.form.thankYou": "Thank You",
     "contact.form.received": "Your inquiry for {service} has been received. Our studio team will review your preferred date ({date}) and reply to {email} within 24 hours.",
     "contact.form.followUp": "Follow up on WhatsApp",
     "contact.form.sendAnother": "Send Another Message",
+    "contact.mapHeader": "Studio Google Map & Location",
+
+    // Retouching & Post-Processing
+    "retouch.badge": "Artistic Mastery & Post-Processing",
+    "retouch.title": "The Craft Behind Every Frame",
+    "retouch.desc": "Photography doesn't end with the shutter click. Explore the meticulous color grading, dynamic range balancing, and fine-art skin retouching applied to every delivered photograph.",
+
+    // Client Proofing
+    "proofing.title": "Private Client Proofing Gallery",
+    "proofing.desc": "Enter your studio access key to view your private shoot proofs, mark favorite selects for luxury album print design, and leave retouching notes.",
+
+    // Testimonials
+    "testimonials.badge": "Client Words & Recognition",
+    "testimonials.title": "Stories Entrusted to Our Lens",
+    "testimonials.desc": "Over a decade of documenting royal celebrations, artistic milestones, and intimate family legacies across Rajasthan and worldwide.",
 
     // About
     "about.badge": "Behind The Lens",
@@ -112,6 +133,8 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "footer.rights": "All rights reserved.",
     "footer.privacy": "Privacy Policy",
     "footer.terms": "Terms & Conditions",
+    "footer.backToTop": "Back to Top",
+    "footer.lang": "Language / भाषा:",
     // Gear Hub & Reviews
     "gear.badge": "Equipment & Optics Inventory",
     "gear.title": "My Photography Gear",
@@ -172,7 +195,11 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "nav.faq": "सामान्य प्रश्न",
     "nav.contact": "संपर्क करें",
     "nav.book": "सत्र बुक करें",
-    "nav.locations": "स्थान",
+    "nav.locations": "स्टूडियो एवं लोकेशन",
+    "nav.portal": "क्लाइंट एक्सेस",
+    "nav.proofing": "क्लाइंट प्रूफिंग पोर्टल",
+    "nav.comparisons": "उपकरण तुलना",
+    "nav.admin": "स्टूडियो एडमिन",
 
     // Hero
     "hero.pill": "फाइन आर्ट • पोर्ट्रेट • विवाह • खेल • यात्रा",
@@ -237,11 +264,28 @@ const DICTIONARY: Record<Language, Record<string, string>> = {
     "contact.form.messagePlaceholder": "अपने कार्यक्रम, स्थान, रचनात्मक दृष्टिकोण या विशेष अनुरोधों के बारे में बताएं...",
     "contact.form.submit": "बुकिंग अनुरोध भेजें",
     "contact.form.submitting": "भेजा जा रहा है...",
+    "contact.form.submitVerified": "बुकिंग की पुष्टि करें (सत्यापित)",
+    "contact.form.submitWithOtp": "ईमेल सत्यापित करें एवं बुकिंग भेजें",
     "contact.form.privacyNote": "हम आपके विवरण को पूर्ण गोपनीयता के साथ रखते हैं। स्पैम मुक्त गारंटी।",
     "contact.form.thankYou": "धन्यवाद",
     "contact.form.received": "आपकी पूछताछ प्राप्त हो गई है। हमारी स्टूडियो टीम आपकी पसंदीदा तिथि की समीक्षा करेगी और 24 घंटे के भीतर ईमेल पर जवाब देगी।",
     "contact.form.followUp": "व्हाट्सएप पर संपर्क जारी रखें",
     "contact.form.sendAnother": "एक और संदेश भेजें",
+    "contact.mapHeader": "स्टूडियो गूगल मैप एवं लोकेशन",
+
+    // Retouching & Post-Processing (हिन्दी)
+    "retouch.badge": "कलात्मक महारत एवं पोस्ट-प्रोसेसिंग",
+    "retouch.title": "हर फ्रेम के पीछे की शिल्पकला",
+    "retouch.desc": "फोटोग्राफी केवल शटर दबाने पर समाप्त नहीं होती। हमारी सिग्नेचर नॉन-डिस्ट्रक्टिव कलर-ग्रेडिंग, फिल्म इम्यूलेशन और सूक्ष्म हाई-एंड स्किन रीटचिंग देखें।",
+
+    // Client Proofing (हिन्दी)
+    "proofing.title": "निजी क्लाइंट प्रूफिंग गैलरी",
+    "proofing.desc": "अपने निजी शूट प्रूफ देखने, एल्बम प्रिंट डिजाइन के लिए पसंदीदा फोटो चुनने और रीटचिंग नोट्स छोड़ने के लिए अपनी एक्सेस की दर्ज करें।",
+
+    // Testimonials (हिन्दी)
+    "testimonials.badge": "ग्राहकों के विचार एवं सम्मान",
+    "testimonials.title": "हमारे लेंस को सौंपी गई कहानियां",
+    "testimonials.desc": "राजस्थान और दुनिया भर में शाही समारोहों, कलात्मक उपलब्धियों और आत्मीय पारिवारिक धरोहरों के दस्तावेजीकरण का एक दशक।",
 
     // About
     "about.badge": "लेंस के पीछे",

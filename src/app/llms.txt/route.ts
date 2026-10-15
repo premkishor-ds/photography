@@ -42,6 +42,11 @@ ${SERVICES_DATA.map(
 ${GEAR_ITEMS.map((g) => `- [${g.name} Review](${siteConfig.baseUrl}/photography-gear/${g.slug}): ${g.tagline || g.description}`).join("\n")}
 ${GEAR_COMPARISONS.map((c) => `- [${c.title}](${siteConfig.baseUrl}/photography-gear/comparisons/${c.slug}): ${c.description}`).join("\n")}
 
+## Studio Locations & Coverage
+- Global Locations Directory: ${siteConfig.baseUrl}/locations
+- Jaipur Flagship Studio (Rajasthan, India): ${siteConfig.baseUrl}/locations/jaipur
+- New York Destination Base (USA): ${siteConfig.baseUrl}/locations/new-york
+
 ## Booking & Inquiries
 Sessions are scheduled by advance consultation. To check calendar availability or obtain a tailored proposal, visit:
 ${siteConfig.baseUrl}/contact

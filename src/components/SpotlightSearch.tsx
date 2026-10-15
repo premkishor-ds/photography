@@ -210,6 +210,15 @@ export default function SpotlightSearch({
 
     // 7. Locations & Hubs
     list.push({
+      id: "loc-directory-hub",
+      title: "Global Studios & Locations Directory",
+      description: "Flagship heritage studio in Jaipur, Rajasthan and international project base in New York City.",
+      url: "/locations",
+      category: "Locations",
+      badge: "Directory",
+      keywords: ["locations", "studios", "jaipur", "new york", "directory", "लोकेशन", "स्टूडियो", "स्थान"],
+    });
+    list.push({
       id: "loc-jaipur",
       title: "Jaipur Flagship Studio & Coverage Areas",
       description: "Room 215, Karolan Ka Barh, 302017. Amer Fort, City Palace, Jal Mahal destination shoots.",
@@ -235,6 +244,15 @@ export default function SpotlightSearch({
       category: "FAQ",
       badge: "Support",
       keywords: ["faq", "help", "questions", "answers", "turnaround", "pricing", "प्रश्न", "उत्तर", "सहायता"],
+    });
+    list.push({
+      id: "admin-portal",
+      title: "Studio Administration Portal",
+      description: "Manage portfolio items, client bookings, inquiries, blog guides, gear records, and studio settings.",
+      url: "/admin",
+      category: "Pages",
+      badge: "Admin",
+      keywords: ["admin", "dashboard", "settings", "manage", "studio", "प्रबंधन", "एडमिन"],
     });
 
     return list;

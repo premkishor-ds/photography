@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Camera, ArrowUp, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Camera, ArrowUp, Mail, Phone, MapPin, Clock, Lock } from "lucide-react";
 import { InstagramIcon, FacebookIcon, PinterestIcon, YouTubeIcon } from "@/components/Icons";
 import { siteConfig } from "@/config/siteConfig";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -14,7 +14,9 @@ export const FOOTER_NAV_LINKS = [
   { name: "Portfolio", href: "/portfolio", key: "nav.portfolio" },
   { name: "Services", href: "/services", key: "nav.services" },
   { name: "Photography Gear", href: "/photography-gear", key: "nav.gear" },
+  { name: "Gear Comparisons", href: "/photography-gear/comparisons", key: "nav.comparisons" },
   { name: "About", href: "/about", key: "nav.about" },
+  { name: "Locations & Studios", href: "/locations", key: "nav.locations" },
   { name: "Journal & Guides", href: "/blog", key: "nav.journal" },
   { name: "Client Proofing Portal", href: "/client-portal", key: "nav.proofing" },
   { name: "FAQ", href: "/faq", key: "nav.faq" },
@@ -236,6 +238,15 @@ export default function Footer() {
             >
               RSS Feed
             </a>
+            <span>•</span>
+            <Link
+              href="/admin"
+              className="hover:text-white transition-colors inline-flex items-center gap-1 opacity-70 hover:opacity-100"
+              title="Studio Management & Admin Dashboard"
+            >
+              <Lock className="w-3 h-3 text-[#BFA076]" />
+              <span>{t("nav.admin", "Studio Admin")}</span>
+            </Link>
             <span>•</span>
             <button
               onClick={scrollToTop}
