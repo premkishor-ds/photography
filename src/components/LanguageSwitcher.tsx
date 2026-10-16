@@ -123,7 +123,7 @@ export default function LanguageSwitcher({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`h-9 px-3 text-[11px] xl:text-xs uppercase tracking-wider font-medium transition-all duration-200 cursor-pointer border flex items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap ${
+        className={`h-8.5 px-2.5 xl:px-3 text-[11px] xl:text-xs uppercase tracking-wider font-medium transition-all duration-200 cursor-pointer border flex items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap ${
           isDarkHeader
             ? "border-[#D8CFC4] text-[#121212] bg-[#FAF7F2]/80 hover:bg-[#FAF7F2] hover:border-[#121212]"
             : "border-white/30 text-white bg-black/30 hover:bg-black/50 hover:border-white/60 backdrop-blur-sm"
@@ -134,8 +134,8 @@ export default function LanguageSwitcher({
       >
         <Globe className="w-3.5 h-3.5 text-[#BFA076] shrink-0" />
         <span className="font-sans font-medium tracking-wider">
-          <span className="hidden xl:inline">{language === "hi" ? "हिन्दी" : "English"}</span>
-          <span className="xl:hidden">{language === "hi" ? "HI" : "EN"}</span>
+          <span className="hidden 2xl:inline">{language === "hi" ? "हिन्दी" : "English"}</span>
+          <span className="2xl:hidden">{language === "hi" ? "HI" : "EN"}</span>
         </span>
         <ChevronDown
           className={`w-3 h-3 opacity-60 transition-transform duration-200 shrink-0 ${

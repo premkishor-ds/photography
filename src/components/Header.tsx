@@ -67,16 +67,16 @@ export default function Header() {
           : "bg-gradient-to-b from-black/60 via-black/30 to-transparent py-6"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between gap-4 xl:gap-8">
+      <div className="max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between gap-3 xl:gap-5 2xl:gap-8">
         {/* Logo */}
         <Link
           href="/"
           onClick={() => handleLinkClick("/")}
-          className="group flex items-center gap-3 shrink-0 transition-opacity duration-200"
+          className="group flex items-center gap-2.5 xl:gap-3 shrink-0 transition-opacity duration-200"
           aria-label={`${settings.studio_name || "Your Photography"} - Home`}
         >
           <div
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-300 ${
+            className={`w-8.5 h-8.5 xl:w-9 xl:h-9 rounded-full flex items-center justify-center transition-colors duration-300 shrink-0 ${
               isScrolled || !isHomepage
                 ? "bg-[#121212] text-[#FAF7F2]"
                 : "bg-white/90 text-[#121212] backdrop-blur-sm"
@@ -86,14 +86,14 @@ export default function Header() {
           </div>
           <div className="flex flex-col">
             <span
-              className={`font-serif text-lg xl:text-xl tracking-[0.18em] xl:tracking-[0.2em] uppercase font-medium transition-colors duration-300 leading-tight ${
+              className={`font-serif text-base xl:text-lg 2xl:text-xl tracking-[0.16em] xl:tracking-[0.18em] uppercase font-medium transition-colors duration-300 leading-tight whitespace-nowrap ${
                 isScrolled || !isHomepage ? "text-[#121212]" : "text-white"
               }`}
             >
               {settings.studio_name || "Your Photography"}
             </span>
             <span
-              className={`text-[8.5px] xl:text-[9px] tracking-[0.28em] xl:tracking-[0.3em] uppercase font-sans transition-colors duration-300 ${
+              className={`text-[8px] xl:text-[8.5px] 2xl:text-[9px] tracking-[0.24em] xl:tracking-[0.28em] uppercase font-sans transition-colors duration-300 whitespace-nowrap ${
                 isScrolled || !isHomepage ? "text-[#7B6955]" : "text-white/80"
               }`}
             >
@@ -104,7 +104,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden xl:flex items-center gap-3.5 xl:gap-5 2xl:gap-6 shrink-0"
+          className="hidden xl:flex items-center gap-2.5 xl:gap-3 2xl:gap-5 shrink-0"
           aria-label="Main Navigation"
         >
           {PRIMARY_NAV_LINKS.map((link) => {
@@ -114,12 +114,15 @@ export default function Header() {
                 : pathname.startsWith(link.href);
 
             const isDarkHeader = isScrolled || !isHomepage;
+            const isContactLink = link.key === "nav.contact";
 
             return (
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-[11px] xl:text-xs tracking-[0.16em] xl:tracking-[0.2em] uppercase transition-all duration-200 relative py-1.5 whitespace-nowrap inline-flex items-center gap-1 ${
+                className={`text-[11px] xl:text-[11.5px] 2xl:text-xs tracking-[0.14em] xl:tracking-[0.16em] 2xl:tracking-[0.18em] uppercase transition-all duration-200 relative py-1.5 whitespace-nowrap items-center gap-1 ${
+                  isContactLink ? "hidden 2xl:inline-flex" : "inline-flex"
+                } ${
                   isDarkHeader
                     ? isActive
                       ? "text-[#121212] font-semibold"
@@ -146,11 +149,11 @@ export default function Header() {
         </nav>
 
         {/* Right Action Bar: Search, Language Switcher, CTA & Menu Toggle */}
-        <div className="flex items-center gap-2 xl:gap-3 shrink-0">
+        <div className="flex items-center gap-2 xl:gap-2.5 2xl:gap-3 shrink-0">
           {/* Spotlight Search Trigger */}
           <button
             onClick={() => setSearchOpen(true)}
-            className={`flex items-center gap-1.5 h-9 px-2.5 sm:px-3 text-xs uppercase tracking-wider transition-colors duration-200 border cursor-pointer ${
+            className={`flex items-center gap-1.5 h-8.5 px-2.5 text-xs uppercase tracking-wider transition-colors duration-200 border cursor-pointer shrink-0 ${
               isScrolled || !isHomepage
                 ? "text-[#554837] hover:text-[#121212] border-[#E8DED0] hover:bg-[#F4EFE6]"
                 : "text-white/90 hover:text-white border-white/20 hover:bg-white/10"
@@ -169,14 +172,14 @@ export default function Header() {
           />
           <Link
             href="/contact"
-            className={`hidden sm:flex h-9 px-3.5 xl:px-5 text-[11px] xl:text-xs uppercase tracking-[0.16em] xl:tracking-[0.18em] font-medium transition-all duration-300 rounded-none border items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap group ${
+            className={`hidden sm:flex h-8.5 px-3 xl:px-4 text-[11px] xl:text-xs uppercase tracking-[0.14em] xl:tracking-[0.16em] font-medium transition-all duration-300 rounded-none border items-center gap-1.5 xl:gap-2 shrink-0 whitespace-nowrap group ${
               isScrolled || !isHomepage
                 ? "bg-[#121212] text-[#FAF7F2] border-[#121212] hover:bg-transparent hover:text-[#121212]"
                 : "bg-white text-[#121212] border-white hover:bg-transparent hover:text-white hover:border-white shadow-sm"
             }`}
           >
-            <span>{t("nav.book", "Book a Session")}</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            <span>{language === "hi" ? "सत्र बुक करें" : "Book Session"}</span>
+            <ArrowRight className="w-3.5 h-3.5 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
 
           {/* Mobile/Tablet Menu Toggle (Visible on < xl / when zoomed in) */}
