@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/siteConfig";
 import Analytics from "@/components/Analytics";
 import WhatsAppConcierge from "@/components/WhatsAppConcierge";
 import ScrollToTop from "@/components/ScrollToTop";
+import StudioChatbot from "@/components/StudioChatbot";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { StudioProvider } from "@/context/StudioContext";
 
@@ -104,6 +105,7 @@ export default function RootLayout({
             {children}
             <ScrollToTop />
             <WhatsAppConcierge />
+            <StudioChatbot />
             <Analytics />
           </StudioProvider>
         </LanguageProvider>

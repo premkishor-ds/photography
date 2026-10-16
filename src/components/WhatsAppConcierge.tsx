@@ -38,7 +38,7 @@ export default function WhatsAppConcierge() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 select-none">
+    <div className="fixed bottom-22 right-6 z-40 select-none">
       {/* Expanded Quick Concierge Card */}
       {isOpen && (
         <div className="mb-3 w-[320px] sm:w-[350px] bg-white border border-[#E8DED0] shadow-2xl rounded-xs overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
